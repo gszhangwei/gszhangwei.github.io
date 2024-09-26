@@ -33,7 +33,7 @@
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/Frontend_result_2.png">
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/Backend_result_2.png">
 <meta property="article:published_time" content="2024-09-26T11:42:26.000Z">
-<meta property="article:modified_time" content="2024-09-26T14:20:29.094Z">
+<meta property="article:modified_time" content="2024-09-26T14:26:25.172Z">
 <meta property="article:author" content="Wiilie Zhang">
 <meta property="article:tag" content="Cursor">
 <meta name="twitter:card" content="summary">
@@ -191,7 +191,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：22:20:29" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
+              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：22:26:25" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -224,10 +224,10 @@
 <li>我的机器能够支持（只有一台常规配置的MacOS M1 16G物理机）</li>
 <li>参数足够以进行文本到行为的转换</li>
 </ul>
-<p>最终，Ollama的llama3.1 8B模型进入了我的视野。它可以直接在Ollama上运行，而2020年的M1 MacBook Pro刚好符合要求，在自然语言处理方面表现理想。官方是这么描述的：<img src="/../images/llama3.1_8_B_description.png" alt="llama3.1_8_B_description"></p>
+<p>最终，Ollama的Llama3.1 8B模型进入了我的视野。它可以直接在Ollama上运行，而2020年的M1 MacBook Pro刚好符合要求，在自然语言处理方面表现理想。官方是这么描述的：<img src="/../images/llama3.1_8_B_description.png" alt="llama3.1_8_B_description"></p>
 <h2 id="分析与任务规划"><a href="#分析与任务规划" class="headerlink" title="分析与任务规划"></a>分析与任务规划</h2><p>有了想法和“大”模型后，剩下的就是考虑如何实现。多亏了我花了两周晚上学习完的LLM编程入门课程，让我了解了Langchain这个框架。使用Langchain可以轻松实现这一需求。大致步骤如下：</p>
 <ul>
-<li>在本地使用Ollama运行llama3.1 8B模型。</li>
+<li>在本地使用Ollama运行Llama3.1 8B模型。</li>
 <li>构建脚本并放入合适的包中。</li>
 <li>使用Langchain构建链和代理，并对方法及提示进行封装。</li>
 <li>调用封装好的方法进行自然语言分析，选择并执行需要的脚本。</li>
@@ -307,8 +307,8 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">import subprocess</span><br><span class="line">from langchain_community.llms import Ollama</span><br><span class="line">from prompt_generator_factory import PromptGeneratorFactory</span><br><span class="line">from config import SCRIPTS</span><br><span class="line"></span><br><span class="line">def execute_script(script_name):</span><br><span class="line">    try:</span><br><span class="line">        result = subprocess.run([&#x27;python&#x27;, script_name], capture_output=True, text=True)</span><br><span class="line">        print(result.stdout)</span><br><span class="line">    except Exception as e:</span><br><span class="line">        print(f&quot;Error executing script &#123;script_name&#125;: &#123;e&#125;&quot;)</span><br><span class="line"></span><br><span class="line">def analyze_and_execute(input_text, generator_type=&quot;default&quot;):</span><br><span class="line">    prompt_generator = PromptGeneratorFactory.get_prompt_generator(generator_type)</span><br><span class="line">    llm = Ollama(model=&quot;llama3.1&quot;)</span><br><span class="line">    prompt = prompt_generator.generate_prompt(input_text)</span><br><span class="line">    response = llm(prompt)</span><br><span class="line">    </span><br><span class="line">    script_name = response.strip()</span><br><span class="line">    if script_name in SCRIPTS:</span><br><span class="line">        execute_script(f&#x27;src/python_scripts/&#123;script_name&#125;&#x27;)</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;No matching script found or invalid response.&quot;)</span><br><span class="line"></span><br><span class="line">if __name__ == &quot;__main__&quot;:</span><br><span class="line">    user_input = input(&quot;请输入一段话: &quot;)</span><br><span class="line">    generator_type = input(&quot;请输入生成器类型（default或advanced）: &quot;)</span><br><span class="line">    analyze_and_execute(user_input, generator_type)</span><br></pre></td></tr></table></figure>
 </details>
 
-<p>到此为止，基本上就可以运行了。我还进行了多轮任务，包括让它帮助重构、生成前端页面等，但不一一列举。有兴趣的人可以下载<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/task_assistant/tree/main"><strong>完整代码库</strong></a>进行体验。</p>
-<h2 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h2><p>准备了两类任务，常规类和任务分配类：</p>
+<p>到此为止，基本上就可以运行了。我还进行了多轮任务，包括让它帮助优化、重构、生成前端页面等，但不一一列举了。有兴趣的人可以下载<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/task_assistant/tree/main"><strong>完整代码库</strong></a>进行体验。</p>
+<h2 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h2><p>准备了两类脚本任务，常规类和任务分配类：</p>
 <ul>
 <li>常规类<ul>
 <li>生成1到100之间的随机数</li>
@@ -326,6 +326,8 @@
 <h3 id="场景二：让助手给我执行-Dataset-权限分配的脚本"><a href="#场景二：让助手给我执行-Dataset-权限分配的脚本" class="headerlink" title="场景二：让助手给我执行 Dataset 权限分配的脚本"></a>场景二：让助手给我执行 Dataset 权限分配的脚本</h3><p>前端执行：<br><img src="/../images/Frontend_result_2.png" alt="Frontend_result_2.png"><br>后端输出结果：<br><img src="/../images/Backend_result_2.png" alt="Backend_result_2.png"></p>
 <h2 id="相关环境"><a href="#相关环境" class="headerlink" title="相关环境"></a>相关环境</h2><ul>
 <li>Python 3.10</li>
+<li>Ollama</li>
+<li>Llama 3.1 8B</li>
 <li>Cursor试用版本，2周试用期</li>
 <li>Cursor大模型使用情况：claude-3.5-sonnet与gpt-4o切换使用</li>
 </ul>
