@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：22:40:44" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
+              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：22:52:36" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -213,15 +213,15 @@
 <li>我的机器能够支持（只有一台常规配置的MacOS M1 16G物理机）</li>
 <li>参数足够以进行文本到行为的转换</li>
 </ul>
-<p>最终，Ollama的Llama3.1 8B模型进入了我的视野。它可以直接在Ollama上运行，而2020年的M1 MacBook Pro刚好符合要求，在自然语言处理方面表现理想。官方是这么描述的：<img src="/../images/llama3.1_8_B_description.png" alt="llama3.1_8_B_description"></p>
-<h2 id="分析与任务规划"><a href="#分析与任务规划" class="headerlink" title="分析与任务规划"></a>分析与任务规划</h2><p>有了想法和“大”模型后，剩下的就是考虑如何实现。多亏了我花了两周晚上学习完的LLM编程入门课程，让我了解了Langchain这个框架。使用Langchain可以轻松实现这一需求。大致步骤如下：</p>
+<p>最终，Ollama的Llama3.1 8B模型引起了我的注意。该模型可以直接在本地运行，而我2020年的M1 MacBook Pro恰好符合其要求，并且在自然语言处理方面表现出色。官方是这么描述的：<img src="/../images/llama3.1_8_B_description.png" alt="llama3.1_8_B_description"></p>
+<h2 id="分析与任务规划"><a href="#分析与任务规划" class="headerlink" title="分析与任务规划"></a>分析与任务规划</h2><p>有了想法和“大”模型后，剩下的就是考虑如何实现。经过两周晚上的LLM编程入门课程学习，我了解到了Langchain这个框架，以及如何使用。有了Langchain，实现这一需求变得轻而易举。大致步骤如下：</p>
 <ul>
 <li>在本地使用Ollama运行Llama3.1 8B模型。</li>
 <li>构建脚本并放入合适的包中。</li>
-<li>使用Langchain构建链和代理，并对方法及提示进行封装。</li>
+<li>使用Langchain构建链，并对方法及Prompt进行封装。</li>
 <li>调用封装好的方法进行自然语言分析，选择并执行需要的脚本。</li>
 </ul>
-<p>还有个问题是在于如何让大模型知道有哪些可执行脚本及其作用。针对这一问题，有多种选择，比如：</p>
+<p>还有个问题在于，如何让大模型知道有哪些可执行脚本及其作用。针对这一问题，有多种选择，比如：</p>
 <ul>
 <li>使用提示模板</li>
 <li>使用分类器</li>
@@ -272,7 +272,7 @@
 </tr>
 </tbody></table>
 <p>经过权衡优缺点、实现复杂度与当前需求，我决定采用提示模板作为解决方案。</p>
-<p>万事俱备，东风也来了，直接开干。</p>
+<p>万事俱备，“东风”-Cursor，也来了，直接开整。</p>
 <h2 id="实现步骤（Pair-with-Cursor）"><a href="#实现步骤（Pair-with-Cursor）" class="headerlink" title="实现步骤（Pair with Cursor）"></a>实现步骤（Pair with Cursor）</h2><h3 id="任务1-给定多个Python脚本，使用Ollama和大模型llama3-1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。"><a href="#任务1-给定多个Python脚本，使用Ollama和大模型llama3-1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。" class="headerlink" title="任务1: 给定多个Python脚本，使用Ollama和大模型llama3.1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。"></a><strong>任务1: 给定多个Python脚本，使用Ollama和大模型llama3.1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。</strong></h3><details>
 <summary>点击查看代码</summary>
 
