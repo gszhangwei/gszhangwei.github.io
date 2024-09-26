@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：22:54:45" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
+              <time title="创建时间：2024-09-26 19:42:26 / 修改时间：23:10:18" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -297,7 +297,7 @@
 </details>
 
 <p>到此为止，基本上就可以运行了。我还进行了多轮任务，包括让它帮助优化、重构、生成前端页面等，但不一一列举了。有兴趣的人可以下载<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/task_assistant/tree/main"><strong>完整代码库</strong></a>进行体验。</p>
-<h2 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h2><p>准备了两类脚本任务，常规类和任务分配类：</p>
+<h2 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h2><p>我准备了两类脚本任务进行测试：常规类和任务分配类。期望的结果是能够根据输入的自然语言，正确分析应该使用哪个提示生成器，并使用该提示模板构建Prompt，从而做出正确的脚本选择，并执行。</p>
 <ul>
 <li>常规类<ul>
 <li>生成1到100之间的随机数</li>
@@ -312,7 +312,7 @@
 </li>
 </ul>
 <h3 id="场景一：让助手给我执行获取当天日期的脚本"><a href="#场景一：让助手给我执行获取当天日期的脚本" class="headerlink" title="场景一：让助手给我执行获取当天日期的脚本"></a>场景一：让助手给我执行获取当天日期的脚本</h3><p>前端执行：<br><img src="/../images/frontend_result_1.png" alt="frontend_result_1.png"><br>后端输出结果：<br><img src="/../images/Backend_result_1.png" alt="Backend_result_1.png"></p>
-<h3 id="场景二：让助手给我执行-Dataset-权限分配的脚本"><a href="#场景二：让助手给我执行-Dataset-权限分配的脚本" class="headerlink" title="场景二：让助手给我执行 Dataset 权限分配的脚本"></a>场景二：让助手给我执行 Dataset 权限分配的脚本</h3><p>前端执行：<br><img src="/../images/Frontend_result_2.png" alt="Frontend_result_2.png"><br>后端输出结果：<br><img src="/../images/Backend_result_2.png" alt="Backend_result_2.png"></p>
+<h3 id="场景二：让助手给我执行-Dataset-权限分配的脚本"><a href="#场景二：让助手给我执行-Dataset-权限分配的脚本" class="headerlink" title="场景二：让助手给我执行 Dataset 权限分配的脚本"></a>场景二：让助手给我执行 Dataset 权限分配的脚本</h3><p>前端执行：<br><img src="/../images/Frontend_result_2.png" alt="Frontend_result_2.png"><br>后端输出结果：<br><img src="/../images/Backend_result_2.png" alt="Backend_result_2.png"><br>结果符合预期，AC通过。凭借微薄的AI编程基础，使用Cursor成功的开发了AI工具，并成功实现了阶段性目标！🎉</p>
 <h2 id="相关环境"><a href="#相关环境" class="headerlink" title="相关环境"></a>相关环境</h2><ul>
 <li>Python 3.10</li>
 <li>Ollama</li>
@@ -320,7 +320,7 @@
 <li>Cursor试用版本，2周试用期</li>
 <li>Cursor大模型使用情况：claude-3.5-sonnet与gpt-4o切换使用</li>
 </ul>
-<h2 id="体验感受"><a href="#体验感受" class="headerlink" title="体验感受"></a>体验感受</h2><ul>
+<h2 id="Cursor的体验感受"><a href="#Cursor的体验感受" class="headerlink" title="Cursor的体验感受"></a>Cursor的体验感受</h2><ul>
 <li><strong>易用性</strong>：整个过程，没写一行代码，扮演“嘴强王者”就行，它能无怨无求的按照要求写出代码。通过自然语言输入，用户可以轻松生成代码或执行复杂任务，这种无缝集成大大降低了技术门槛。</li>
 <li><strong>高效的代码生成</strong>：生成的代码通常处于可用状态，只需进行少量修改即可满足具体需求。</li>
 <li><strong>智能化的上下文理解</strong>：Cursor升级了模型后，支持超长上下文(200k)，使得它能够理解项目背景、代码结构及编码风格。这种能力不仅提升了生成代码的相关性和准确性，还使得模型能够根据历史交互进行智能响应，提供更为精准的建议和解决方案。能按照生成的既有风格进行演进。</li>
