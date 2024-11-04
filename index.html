@@ -180,7 +180,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-11-04 16:42:03 / 修改时间：17:49:01" itemprop="dateCreated datePublished" datetime="2024-11-04T16:42:03+08:00">2024-11-04</time>
+              <time title="创建时间：2024-11-04 16:42:03 / 修改时间：18:03:19" itemprop="dateCreated datePublished" datetime="2024-11-04T16:42:03+08:00">2024-11-04</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -260,24 +260,24 @@
 <p>Cursor composer的输出：<br><img src="/../images/prompt_result_1.png" alt="prompt_result_1.png"><br><img src="/../images/prompt_result_2.png" alt="prompt_result_2.png"></p>
 <h2 id="实验效果与经验总结"><a href="#实验效果与经验总结" class="headerlink" title="实验效果与经验总结"></a>实验效果与经验总结</h2><p>通过多轮实验，这种基于ReAct的重构Prompt编写方法展现出了明显的优势：</p>
 <ol>
-<li><strong>更高的结果正确性：</strong>通过多轮对话，这种重构方法能够在仅需两到三轮的互动中，快速达成预期结果。与传统方法相比，ReAct和COT的结合使得模型能够更有效地整合信息和推理过程，从而减少了错误和不确定性。这种高效性使得用户在处理复杂问题时，能够更快地获得准确答案。</li>
-<li><strong>目标导向的思考过程：</strong>采用ReAct框架后，模型的思考方向更加符合用户的期望，而不是受到幻觉（即生成不实信息）的影响。通过引入额外信息源（观察的步骤会引入需要的信息），模型能够实时验证和更新其推理路径，从而确保所生成的信息是基于事实而非虚构。这一特性显著提升了用户对模型输出的信任度。</li>
-<li><strong>可视化的思考与修改过程：</strong>在Cursor的composer模式中，用户可以清晰地看到思考和修改的中间过程。这种透明性让开发者能够追踪每一步的修改步骤，从而更好地理解模型如何得出最终结论。通过展示具体的推理轨迹和所采取的行动，用户不仅能审视模型的决策过程，还能对其进行必要的调整和优化。</li>
+<li><strong>更高的结果正确性：</strong> 这种重构方法能够在仅需两到三轮的互动中，快速达成预期结果。与传统方法相比，ReAct和COT的结合使得模型能够更有效地整合信息和推理过程，从而减少了错误和不确定性。这种高效性使得用户在处理复杂问题时，能够更快地获得准确答案。</li>
+<li><strong>目标导向的思考过程：</strong> 采用ReAct框架后，模型的思考方向更加符合用户的期望，而不是受到幻觉（即生成不实信息）的影响。通过引入额外信息源（观察的步骤会引入需要的信息），模型能够实时验证和更新其推理路径，从而确保所生成的信息是基于事实而非虚构。这一特性显著提升了用户对模型输出的信任度。</li>
+<li><strong>可视化的思考与修改过程：</strong> 在Cursor的composer模式中，用户可以清晰地看到思考和修改的中间过程。这种透明性让开发者能够追踪每一步的修改步骤，从而更好地理解模型如何得出最终结论。通过展示具体的推理轨迹和所采取的行动，用户不仅能审视模型的决策过程，还能对其进行必要的调整和优化。</li>
 </ol>
 <h3 id="效果提升的关键因素："><a href="#效果提升的关键因素：" class="headerlink" title="效果提升的关键因素："></a>效果提升的关键因素：</h3><ol>
 <li><strong><strong>边界清晰</strong></strong>：通过Context限定了AI的行为范围</li>
 <li><strong><strong>步骤明确</strong></strong>：让AI按照预定的思维方式进行重构</li>
 <li><strong><strong>反馈闭环</strong></strong>：每个步骤都有明确的观察和行动指南</li>
 </ol>
-<h3 id="思维方式的转变："><a href="#思维方式的转变：" class="headerlink" title="思维方式的转变："></a>思维方式的转变：</h3><p>这个过程让我们意识到，使用AI的关键在于转变思维方式：从”问题导向”转向”引导式合作”。我们需要做的是：</p>
+<h3 id="思维方式的转变："><a href="#思维方式的转变：" class="headerlink" title="思维方式的转变："></a>思维方式的转变：</h3><p>这个过程让我意识到，使用AI的关键在于转变思维方式：从”问题导向”转向”引导式合作”。我们需要做的是：</p>
 <ul>
 <li>人负责分析和规划</li>
 <li>AI负责执行具体细节</li>
 <li>通过精心设计的Prompt建立桥梁</li>
 </ul>
-<h2 id="结语：AI编码助手使用的新范式"><a href="#结语：AI编码助手使用的新范式" class="headerlink" title="结语：AI编码助手使用的新范式"></a>结语：AI编码助手使用的新范式</h2><p>这次的探索不仅帮助我解决了代码重构的难题，更重要的是让我领悟到了一个道理：AI不是万能的，但通过正确的引导，它可以成为我们强大的助手，起到放大器的作用。当我们学会用”教练”而不是”提问者”的身份与AI互动时，往往能获得更好的结果。这也给我们带来的新的要求，当我们和AI pairing的时候，了解最佳实践和方法论就成了前提条件，这样我们才能更好的指挥AI以正确的方式完成工作。</p>
+<h2 id="结语：AI编码助手使用的新范式"><a href="#结语：AI编码助手使用的新范式" class="headerlink" title="结语：AI编码助手使用的新范式"></a>结语：AI编码助手使用的新范式</h2><p>这次的探索不仅帮助我解决了代码重构的难题，更重要的是让我领悟到了一个道理：AI不是万能的，但通过正确的引导，它可以成为我们强大的助手，起到能力放大器的作用。当我们学会用”教练”而不是”提问者”的身份与AI互动时，往往能获得更好的结果。当然，这也给我们带来的新的要求，当我们和AI pairing的时候，了解最佳实践和方法论就成了前提条件，这样我们才能更好的指挥AI以正确的方式完成工作。</p>
 <p>这种思维方式的转变，让我们能够更好地发挥人类的创造力和AI的执行力，从而大幅提升开发效率。在未来，这种人机协作的模式也许会成为软件开发的一种新范式。</p>
-<h2 id="最后：干货分享"><a href="#最后：干货分享" class="headerlink" title="最后：干货分享"></a>最后：干货分享</h2><p>经过这些实践后，我总结出了一个针对代码异味（code smell）重构的提示模板。如果你对代码的基础异味重构感兴趣，欢迎尝试使用<a target="_blank" rel="noopener" href="https://aigo.netlify.app/docs/codesemell/%E4%BB%A3%E7%A0%81%E5%9D%8F%E5%91%B3%E9%81%93"><strong>这个模板</strong></a>。同时，我们也欢迎大家在使用Cursor或者其他AI代码辅助工具的过程中，将有效的提示分享至<a target="_blank" rel="noopener" href="https://github.com/AI-performance-improvement/prompt-helper"><strong>这个代码库</strong></a>中。通过共同努力，我们可以打造一个实用的重构提示集合，帮助大家提升日常的重构效率和代码质量。（后续会逐步的总结出面向对象重构和像DDD这种框架型代码重构的可复用prompt模板，并上传到这个<a target="_blank" rel="noopener" href="https://aigo.netlify.app/docs/codesemell/%E4%BB%A3%E7%A0%81%E5%9D%8F%E5%91%B3%E9%81%93/"><strong>站点</strong></a>，如有需要请持续关注。）</p>
+<h2 id="最后：干货分享"><a href="#最后：干货分享" class="headerlink" title="最后：干货分享"></a>最后：干货分享</h2><p>经过这些实践后，我总结出了一个针对代码基础的异味（code smell）重构提示模板。如果你对代码的基础异味重构感兴趣，欢迎尝试使用<a target="_blank" rel="noopener" href="https://aigo.netlify.app/docs/codesemell/%E4%BB%A3%E7%A0%81%E5%9D%8F%E5%91%B3%E9%81%93"><strong>这个模板</strong></a>。同时，我们也欢迎大家在使用Cursor或者其他AI代码辅助工具的过程中，将有效的提示分享至<a target="_blank" rel="noopener" href="https://github.com/AI-performance-improvement/prompt-helper"><strong>这个代码库</strong></a>中。通过共同努力，我们可以打造一个实用的重构提示集合，帮助大家提升日常的重构效率和代码质量。（后续会逐步的总结出面向对象重构和像DDD这种框架型代码重构的可复用prompt模板，并上传到这个<a target="_blank" rel="noopener" href="https://aigo.netlify.app/docs/codesemell/%E4%BB%A3%E7%A0%81%E5%9D%8F%E5%91%B3%E9%81%93/"><strong>站点</strong></a>，如有需要请持续关注。）</p>
 <p>到此，我们的讨论就告一段落了。感谢大家的阅读和关注!</p>
 
       
