@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gszhangwei.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Introduction: A Journey from Simple to Complex AI ProgrammingIn my previous blog, I enthusiastically shared how I used Cursor to achieve a 0 to 1 implementation of an AI tool in just half a day. At th">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Building Prompts Using the ReAct Framework for Efficient Code Refactoring with Cursor">
+<meta property="og:url" content="hhttps://gszhangwei.github.io/2024/11/15/refactoring-with-cursor-en/index.html">
+<meta property="og:site_name" content="Willie&#39;s Blog">
+<meta property="og:description" content="Introduction: A Journey from Simple to Complex AI ProgrammingIn my previous blog, I enthusiastically shared how I used Cursor to achieve a 0 to 1 implementation of an AI tool in just half a day. At th">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="hhttps://gszhangwei.github.io/images/new_refactoring_processing.jpg">
+<meta property="og:image" content="hhttps://gszhangwei.github.io/images/prompt_design.jpg">
+<meta property="og:image" content="hhttps://gszhangwei.github.io/images/prompt_result_1.png">
+<meta property="og:image" content="hhttps://gszhangwei.github.io/images/prompt_result_2.png">
+<meta property="article:published_time" content="2024-11-15T11:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-15T07:26:05.030Z">
+<meta property="article:author" content="Wiilie Zhang">
+<meta property="article:tag" content="Cursor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="hhttps://gszhangwei.github.io/images/new_refactoring_processing.jpg">
+
+<link rel="canonical" href="hhttps://gszhangwei.github.io/2024/11/15/refactoring-with-cursor-en/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Building Prompts Using the ReAct Framework for Efficient Code Refactoring with Cursor | Willie's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Willie's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/11/15/refactoring-with-cursor-en/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Building Prompts Using the ReAct Framework for Efficient Code Refactoring with Cursor
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-11-15 19:00:00 / 修改时间：15:26:05" itemprop="dateCreated datePublished" datetime="2024-11-15T19:00:00+08:00">2024-11-15</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Introduction-A-Journey-from-Simple-to-Complex-AI-Programming"><a href="#Introduction-A-Journey-from-Simple-to-Complex-AI-Programming" class="headerlink" title="Introduction: A Journey from Simple to Complex AI Programming"></a>Introduction: A Journey from Simple to Complex AI Programming</h2><p>In my previous blog, I enthusiastically shared how I used Cursor to achieve a 0 to 1 implementation of an AI tool in just half a day. At that time, I felt like a child who had just learned to ride a bicycle, filled with excitement about this “new toy.” However, I soon realized that this was just the tip of the iceberg. While code generation is thrilling, the challenges we face in actual development are far more complex.<br>This realization propelled me into a deeper exploration, particularly in the area of code refactoring. I discovered that Cursor exhibited surprising potential. When I provided it with some refactoring instructions, it not only understood my intentions but also restructured the code as expected, and at an astonishing speed. This made me dream: if I could apply this skill in daily development, I could be leisurely “fishing” while others were still buried in refactoring!</p>
+<h2 id="The-Reality-Check-The-Dilemma-of-Refactoring-Complex-Projects"><a href="#The-Reality-Check-The-Dilemma-of-Refactoring-Complex-Projects" class="headerlink" title="The Reality Check: The Dilemma of Refactoring Complex Projects"></a>The Reality Check: The Dilemma of Refactoring Complex Projects</h2><p>However, reality often delivers a harsh blow. When I confidently applied this straightforward refactoring approach to real projects, I quickly hit a wall. The complexity of real projects far exceeded that of simple AI tool code projects, and simple prompts felt like trying to use a toothpick to move an elephant.</p>
+<p><strong>Main Issues Encountered:</strong></p>
+<ol>
+<li><strong>Uncontrolled Scope of Changes</strong>: Each refactor felt like a random walk without a map.</li>
+<li><strong>Chaotic Refactoring Strategies</strong>: Relying entirely on large models to select refactoring strategies was akin to handing the steering wheel to a blindfolded driver.</li>
+<li><strong>Contextual Understanding Barriers</strong>: Even with @Codebase, Cursor seemed oblivious to the overall project context, leading to aimless refactoring.</li>
+<li><strong>Code Review Burden</strong>: Each change required meticulous review; otherwise, it felt like dancing on the edge of a knife.</li>
+<li><strong>Vicious Cycle</strong>: The more I refactored, the messier it became, ultimately forcing me to start over and fall into a “start over - fail again” loop.</li>
+</ol>
+<p><strong>Root Cause Analysis:</strong><br>After deep reflection, several core reasons emerged:</p>
+<ol>
+<li><strong>Excessive Logical Complexity:</strong> Real projects often contain intricate business logic and conditional judgments.</li>
+<li><strong>Lack of Framework Knowledge:</strong> There was insufficient onboarding for AI regarding frameworks.</li>
+<li><strong>Diversity in Coding Styles:</strong> Variations in coding styles among different developers posed challenges.</li>
+<li><strong>Overwhelming Contextual Burden:</strong> Too many interrelated codes formed a complex web of dependencies.</li>
+<li><strong>Unpredictable Behavior:</strong> It was impossible to accurately anticipate the AI’s next actions.</li>
+</ol>
+<h2 id="Human-vs-Machine-Differences-in-Refactoring-Mindsets"><a href="#Human-vs-Machine-Differences-in-Refactoring-Mindsets" class="headerlink" title="Human vs. Machine: Differences in Refactoring Mindsets"></a>Human vs. Machine: Differences in Refactoring Mindsets</h2><p>To find a breakthrough, I pondered why human developers could navigate refactoring relatively smoothly while AI frequently stumbled.</p>
+<p><strong>Human Developer’s Refactoring Approach:</strong></p>
+<ol>
+<li><strong>Systematic Analysis:</strong> Identifying and eliminating code smells first to enhance readability and scalability.</li>
+<li><strong>Object-Oriented Optimization:</strong> Refactoring based on best practices in object-oriented design.</li>
+<li><strong>Architectural Adjustments:</strong> Reorganizing code into appropriate hierarchical structures.</li>
+<li><strong>Testing Validation:</strong> Ensuring that the refactored code still meets expected behaviors.<br><strong>AI’s Refactoring Approach:</strong> It resembles a mechanical worker simply repeating the action of “modifying code,” lacking the systematic thinking and strategic planning we expect.</li>
+</ol>
+<h2 id="Inspiration-Strikes-Insights-from-the-ReAct-Framework"><a href="#Inspiration-Strikes-Insights-from-the-ReAct-Framework" class="headerlink" title="Inspiration Strikes: Insights from the ReAct Framework"></a>Inspiration Strikes: Insights from the ReAct Framework</h2><p>In my quest for solutions, I encountered Agent and ReAct along with Chain-of-Thought (CoT), which sparked an idea. If we could enable AI to think like humans and reason in ways we expect, could we overcome the current challenges?</p>
+<h3 id="Overview-of-the-ReAct-Framework"><a href="#Overview-of-the-ReAct-Framework" class="headerlink" title="Overview of the ReAct Framework"></a>Overview of the ReAct Framework</h3><p>The ReAct framework was proposed by Shunyu Yao et al. in 2022 as a method that combines reasoning and action to enhance the performance of large language models (LLMs). This framework allows LLMs to alternately generate <strong>reasoning traces</strong> and <strong>task-specific operations</strong>, enabling models to induce, track, and update operational plans effectively while handling exceptions.</p>
+<ul>
+<li><strong>Interaction with External Tools:</strong> The ReAct framework enables LLMs to interact with external knowledge bases or environments for additional information, providing more reliable responses.</li>
+<li><strong>Performance Improvement:</strong> Research shows that ReAct outperforms several advanced baseline models in language and decision-making tasks while enhancing LLMs’ interpretability and trustworthiness.</li>
+<li><strong>Integration with Chain-of-Thought (CoT):</strong> Combining ReAct with CoT allows for leveraging both internal knowledge and external information during reasoning for optimal results.</li>
+</ul>
+<h2 id="Practice-Constructing-Refactoring-Specific-Prompts"><a href="#Practice-Constructing-Refactoring-Specific-Prompts" class="headerlink" title="Practice: Constructing Refactoring-Specific Prompts"></a>Practice: Constructing Refactoring-Specific Prompts</h2><p><strong>Designing Refactoring Steps:</strong></p>
+<ol>
+<li><strong>Basic Cleanup:</strong> Identify and address fundamental code smells.</li>
+<li><strong>Object-Oriented Optimization:</strong> Apply best practices in object-oriented design.</li>
+<li><strong>Architectural Adjustments:</strong> Restructure code according to hexagonal architecture standards.</li>
+<li><strong>Error Fixing:</strong> Address obvious compilation errors.</li>
+<li><strong>Manual Review:</strong> Supplement detail optimization.</li>
+<li><strong>Test Fixes:</strong> Ensure all test cases pass.</li>
+</ol>
+<p><img src="/../images/new_refactoring_processing.jpg" alt="new_refactoring_processing.jpg"></p>
+<p><strong>Designing Refactoring Prompt Template:</strong></p>
+<ol>
+<li><strong>Context Explanation:</strong> Provide architectural standards and best practice guidelines.</li>
+<li><strong>Thinking Steps:</strong> Guide AI through systematic analysis.</li>
+<li><strong>Observation Records:</strong> Document identified issues. </li>
+<li><strong>Action Guidelines:</strong> Clearly outline specific refactoring steps.</li>
+</ol>
+<p><img src="/../images/prompt_design.jpg" alt="prompt_design.jpg"></p>
+<p>Based on insights from ReAct and CoT, I designed a prompt for DDD refactoring on the current project (covering the first three steps):<br><strong>Prompt for Refactoring</strong></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">Context: In hexagonal architecture DDD implementation patterns, there are best practices and experiences regarding the design and implementation of Application Service, Domain Service, Query, and Port. Here are summarized experiences and suitable refactoring prompts:</span><br><span class="line"><span class="bullet">1.</span> Application Service</span><br><span class="line"><span class="bullet">    -</span> Primarily responsible for use case orchestration and transaction management without business logic; instead calls Domain Service for specific operations.</span><br><span class="line"><span class="bullet">2.</span> Domain Service</span><br><span class="line"><span class="bullet">    -</span> Contains core business logic handling complex business rules and operations as part of the domain model.</span><br><span class="line"><span class="bullet">3.</span> Port</span><br><span class="line"><span class="bullet">    -</span> Defines interfaces between applications and external systems, including definitions of Repository interfaces within inbound and outbound packages.</span><br><span class="line"></span><br><span class="line">Based on this context, please refer to @AcademyCourseDomainService.java for refactoring the current file; modifications involving @EnrollmentApplicationService.java can also be made. Use the ReAct framework following these thinking steps to analyze, observe, execute, and ultimately complete code refactoring.</span><br><span class="line">Thought-1: Are there any obvious code smells?</span><br><span class="line">Observation-1: There is a code smell: xxxx</span><br><span class="line">Action-1: Refactor using best practices corresponding to this code smell.</span><br><span class="line"></span><br><span class="line">Thought-2: Are there any particularly concerning code smells regarding object-oriented principles such as single responsibility principle (SRP), open/closed principle (OCP), Liskov substitution principle (LSP), dependency inversion principle (DIP), and interface segregation principle (ISP)?</span><br><span class="line">Observation-2: Several areas xxxx do not comply with SRP.</span><br><span class="line">Action-2: Understand best practices of SRP and perform code refactoring accordingly.</span><br><span class="line"></span><br><span class="line">Thought-3: What layer does the current file belong to? What responsibilities must be adhered to?</span><br><span class="line">Observation-3: The current file is a Domain service; some implementations xxxx do not align with domain service responsibilities.</span><br><span class="line">Action-3: Refactor these implementations based on Domain service responsibilities by analyzing which layer&#x27;s duties they belong to and relocating them accordingly.</span><br></pre></td></tr></table></figure>
+<p>Output of Cursor composer:<br><img src="/../images/prompt_result_1.png" alt="prompt_result_1.png"><br><img src="/../images/prompt_result_2.png" alt="prompt_result_2.png"></p>
+<h2 id="Experimental-Results-and-Lessons-Learned"><a href="#Experimental-Results-and-Lessons-Learned" class="headerlink" title="Experimental Results and Lessons Learned"></a>Experimental Results and Lessons Learned</h2><p>Through multiple experiments, this ReAct-based prompt writing method demonstrated significant advantages:</p>
+<ol>
+<li><strong>Higher Result Accuracy:</strong> This refactoring method achieved expected results quickly within two or three interactions. The combination of ReAct and CoT allowed models to integrate information effectively during reasoning processes, reducing errors and uncertainties significantly.</li>
+<li><strong>Goal-Oriented Thinking Process:</strong> After adopting the ReAct framework, the model’s reasoning direction aligned more closely with user expectations rather than being influenced by hallucinations (i.e., generating false information). By introducing additional information sources (observational steps provide necessary information), models could verify and update their reasoning paths in real time.</li>
+<li><strong>Visualized Thinking and Modification Process:</strong> In Cursor’s composer mode, users can clearly see intermediate thought processes and modifications. This transparency enables developers to track each modification step better understand how models arrive at conclusions.</li>
+</ol>
+<h3 id="Key-Factors-for-Improved-Outcomes"><a href="#Key-Factors-for-Improved-Outcomes" class="headerlink" title="Key Factors for Improved Outcomes:"></a>Key Factors for Improved Outcomes:</h3><ol>
+<li><strong>Clear Boundaries:</strong> Context limits AI’s behavioral scope.</li>
+<li><strong>Defined Steps:</strong> Guides AI through predetermined thought processes during refactoring.</li>
+<li><strong>Feedback Loop Closure:</strong> Each step has clear observation and action guidelines.</li>
+</ol>
+<h3 id="Shift-in-Mindset"><a href="#Shift-in-Mindset" class="headerlink" title="Shift in Mindset:"></a>Shift in Mindset:</h3><p>This process made me realize that using AI effectively hinges on shifting our mindset from “problem-oriented” to “guided collaboration.” Our roles should be:</p>
+<ul>
+<li>Humans handle analysis and planning,</li>
+<li>AI executes specific details,</li>
+<li>Establish bridges through well-designed prompts.</li>
+</ul>
+<h2 id="Conclusion-A-New-Paradigm-for-AI-Coding-Assistants"><a href="#Conclusion-A-New-Paradigm-for-AI-Coding-Assistants" class="headerlink" title="Conclusion: A New Paradigm for AI Coding Assistants"></a>Conclusion: A New Paradigm for AI Coding Assistants</h2><p>This exploration not only helped me tackle the challenges of code refactoring but also imparted an important lesson: AI is not omnipotent; however, through proper guidance, it can become a powerful assistant that amplifies our capabilities. When we learn to interact with AI as “coaches” rather than “questioners,” we often achieve better results.<br>Of course, this brings new demands; understanding best practices and methodologies becomes essential when collaborating with AI so that we can guide it effectively towards completing tasks correctly.<br>This shift in thinking allows us to better leverage human creativity alongside AI execution capabilities—enhancing both code quality and development efficiency (ideally saving time should promote improved code quality rather than merely pursuing high output; otherwise, we risk falling into another quagmire where chasing output neglects quality). Balancing efficiency with quality is crucial; by emphasizing readability, maintainability, and sound best practices in our codebase, we can accelerate development while ensuring long-term software health and stability.<br>In future endeavors, this human-machine collaborative model may emerge as a new paradigm in software development.</p>
+<h2 id="Final-Note-Prompt-Sharing"><a href="#Final-Note-Prompt-Sharing" class="headerlink" title="Final Note: Prompt Sharing"></a>Final Note: Prompt Sharing</h2><p>Through practice, we’ve developed a prompt template specifically targeting code smell refactoring. If you’re interested in addressing code smells in your projects, feel free to try out this Prompt Template available on our site tailored for developers seeking efficient prompts that enhance their experience using Cursor for refactoring—especially aimed at those looking to optimize their refactoring processes through AI assistance.<br>This prompt template site aims at providing practical resources designed for developers looking for actionable templates that enhance their experience using Cursor for refactoring tasks while minimizing potential hallucinations during such processes.<br>We encourage everyone using Cursor or other AI coding assistance tools to share effective prompts within this repository. Together we can build a practical collection of refactoring prompts that enhance daily efficiency and code quality during development tasks!</p>
+<p>Thank you all for reading!</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Cursor/" rel="tag"># Cursor</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/11/04/refactoring-with-cursor/" rel="prev" title="参考ReAct框架构建Prompt，使用Cursor高效对代码进行重构">
+      <i class="fa fa-chevron-left"></i> 参考ReAct框架构建Prompt，使用Cursor高效对代码进行重构
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction-A-Journey-from-Simple-to-Complex-AI-Programming"><span class="nav-number">1.</span> <span class="nav-text">Introduction: A Journey from Simple to Complex AI Programming</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Reality-Check-The-Dilemma-of-Refactoring-Complex-Projects"><span class="nav-number">2.</span> <span class="nav-text">The Reality Check: The Dilemma of Refactoring Complex Projects</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Human-vs-Machine-Differences-in-Refactoring-Mindsets"><span class="nav-number">3.</span> <span class="nav-text">Human vs. Machine: Differences in Refactoring Mindsets</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Inspiration-Strikes-Insights-from-the-ReAct-Framework"><span class="nav-number">4.</span> <span class="nav-text">Inspiration Strikes: Insights from the ReAct Framework</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Overview-of-the-ReAct-Framework"><span class="nav-number">4.1.</span> <span class="nav-text">Overview of the ReAct Framework</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Practice-Constructing-Refactoring-Specific-Prompts"><span class="nav-number">5.</span> <span class="nav-text">Practice: Constructing Refactoring-Specific Prompts</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Experimental-Results-and-Lessons-Learned"><span class="nav-number">6.</span> <span class="nav-text">Experimental Results and Lessons Learned</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Key-Factors-for-Improved-Outcomes"><span class="nav-number">6.1.</span> <span class="nav-text">Key Factors for Improved Outcomes:</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Shift-in-Mindset"><span class="nav-number">6.2.</span> <span class="nav-text">Shift in Mindset:</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion-A-New-Paradigm-for-AI-Coding-Assistants"><span class="nav-number">7.</span> <span class="nav-text">Conclusion: A New Paradigm for AI Coding Assistants</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Final-Note-Prompt-Sharing"><span class="nav-number">8.</span> <span class="nav-text">Final Note: Prompt Sharing</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Wiilie Zhang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wiilie Zhang</span>
+</div>
+  <div class="powered-by">
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
