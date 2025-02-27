@@ -155,6 +155,97 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/02/27/prompts-driven-development/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/prompts-driven-development/" class="post-title-link" itemprop="url">结构化提示词驱动开发实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-27 17:00:00 / 修改时间：17:30:53" itemprop="dateCreated datePublished" datetime="2025-02-27T17:00:00+08:00">2025-02-27</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>上周六参加了公司组织的关于AI实践的对外直播，我分享的内容是《结构化提示词驱动开发实践》。现在将其记录成一篇博客，在此与大家分享我们团队在提示词驱动开发领域的一些实践与思考。随着大语言模型的不断成熟，我们逐步认识到，如何高效运用结构化提示词，引导AI生成高质量代码，已成为提升软件开发效率与质量的关键所在。本文将围绕“<strong>结构化提示词驱动开发</strong>”这一主题，从设计理念、实践路径到治理策略，全面解析提示词在软件开发中如何落地应用，并以数据与实例展示其显著成效。</p>
+<h2 id="解锁解决方案：克服关键挑战"><a href="#解锁解决方案：克服关键挑战" class="headerlink" title="解锁解决方案：克服关键挑战"></a>解锁解决方案：克服关键挑战</h2><p>在早期的AI辅助开发过程中，我们曾经深刻体会到传统开发模式的诸多局限。常规的对话式代码生成往往存在如下问题：生成的代码可用性不足、质量参差不齐，以至于后续大量人工返工成为常态；同时，对话式生成方案不易形成固化、可复用的工程产物，制约了AI在工程级项目中的大规模应用。数据显示，AI生成代码的采纳率普遍低于50%，而代码质量的波动也使得实际交付面临诸多风险。</p>
+<p>正因如此，我们开始思考：如果能够突破这些障碍，充分激发AI在交付过程中的潜能，那么软件开发的方式将会迎来怎样的变革？经过反复探索与实践，我们认为解决这一问题需要三大能力作支撑：</p>
+<ul>
+<li>第一是迅速分析问题，并精准识别出根本原因，从而为后续提供有效解决方案；</li>
+<li>第二是依托严谨的工程实践，通过标准流程来保障代码质量；</li>
+<li>第三也是最为关键的，即通过使用结构化提示词，让AI生成的代码具备可解释性、可追溯性和高采纳率。<br><img src="/../images/Challenge_and_Solution.png" alt="Challenge_and_Solution.png"><br>正是这三大支柱构成了我们突破传统模式、推动AI赋能开发的核心思路，也为后续实践提供了坚实的理论基础和指导方向。</li>
+</ul>
+<h2 id="试点项目探索与验证"><a href="#试点项目探索与验证" class="headerlink" title="试点项目探索与验证"></a>试点项目探索与验证</h2><p>为了验证这一方法论的可行性，我们开展了一系列试点项目，尽管具体业务细节不便透露，但整体项目任务包括了前端服务的初始化、基础设施及持续集成（CI）的搭建、前后端代码与测试的新编写，以及现有前端系统的重构。项目交付后，通过对数据的详细采集与对比分析，我们获得了非常振奋的成果。</p>
+<p>例如，在从零开始构建系统的任务中，传统开发模式需要消耗约19人天，而采用结构化提示词模式后，仅耗时7人天，且代码采纳率高达95%，这不仅大幅缩短了开发周期，也使得生产力实现近3倍的提升。而针对遗留系统的需求响应，开发时间则由原先的5人天缩短至3人天，生产效率提升约1.7倍。此外，我们还观察到，通过这种模式，代码重复率显著降低，单元测试覆盖率由65%增加至96%。这些数据充分说明，结构化提示词不仅提高了交付效率，更在实际工程中提升了代码质量和系统稳定性。<br><img src="/../images/Background_of_Project.png" alt="Background_of_Project.png"><br>数据背后的意义在于，我们成功为AI赋能软件开发找到了一条有效路径，这种路径打破了传统开发方式的局限，将原本模糊难控的生成过程转化为可管理、可复制的工程实践，为整个团队带来了崭新的开发体验和惊人的效率提升。</p>
+<p>让我们先探讨如何在软件开发领域中构建有效提示词，再逐步回顾我们所做的具体实践。</p>
+<h2 id="结构化提示词设计框架"><a href="#结构化提示词设计框架" class="headerlink" title="结构化提示词设计框架"></a>结构化提示词设计框架</h2><h3 id="如何有效构建提示词？"><a href="#如何有效构建提示词？" class="headerlink" title="如何有效构建提示词？"></a>如何有效构建提示词？</h3><p>在软件开发领域利用自然语言驱动AI生成代码过程中，一个根本性矛盾一直存在：人类思维具有天然的发散性，而AI执行指令则要求极高的结构化和精确性。传统提示词设计容易陷入两种误区：一方面，开发者可能过分依赖表面化描述，如直接要求“生成800字带小标题的营销文案”，这种方式虽然直白，但往往流于形式；另一方面，则可能陷入抽象概念的模糊描述，让AI自行揣测具体意图，从而导致输出偏离预期目标。</p>
+<p>为突破这一矛盾，我们强调思维方式的跃迁，即要从简单的特征描述（例如颜色、形状等外在属性）转向对事物本质的抽象提炼（例如功能内核与运行机制）。只有当我们首先明确定义对象的核心功能与本质特性，再辅以具体细节描述，才能为AI提供一条唯一且明确的生成路径，最大程度降低AI的幻觉。例如，在需要生成一个“白色冰箱”的场景中（假设我们并不知道冰箱这一名词概念），如果仅以“生成一个四方形白色物体，下方有四个小轮子”进行描述，可能误导AI产生与冰箱无关的对象；而若从本质出发，先定义“维持低温环境”这一核心功能，然后再补充其它特征，便能精准锁定冰箱这一概念，同时也为其它如冷库、冷链车留下一定扩展空间。正如我们所倡导的，“特征决定细节，本质决定边界”，只有先明晰本质，后注重具体细节，才能确保生成结果符合预期。<br><img src="/../images/Construct_prompts_effectively.png" alt="Construct_prompts_effectively.png"></p>
+<h3 id="组件描述法在提示词构建中的实践"><a href="#组件描述法在提示词构建中的实践" class="headerlink" title="组件描述法在提示词构建中的实践"></a>组件描述法在提示词构建中的实践</h3><p>基于上述理念，在构建提示词时我们引入了组件描述法。以后端开发为例，我们为每个组件设计了涵盖类名、方法名、异常处理等在内的多达10个标准化维度。通过这种方法，每个组件不仅能够明确界定其功能边界，也实现了逻辑上的严谨封装。需要说明的是，这里的“组件”概念与传统开发框架中的概念有所不同，它指的是构成结构化提示词的基本单元，是对功能职责和实现过程的细致拆解。<br><img src="/../images/Component_Description.png" alt="Component_Description.png"><br>组件描述法的引入，使得每个提示词单元既自成体系又相互衔接，在明确各自核心职责的同时，通过精准定义其属性和操作范围，有效避免了各组件之间的混淆和重叠，保障了整体提示词的严密性和生成代码的一致性。这样的设计不仅极大增强了系统的可维护性，也为处理复杂业务场景提供了有力支撑。</p>
+<h3 id="结构化Prompt设计整体框架"><a href="#结构化Prompt设计整体框架" class="headerlink" title="结构化Prompt设计整体框架"></a>结构化Prompt设计整体框架</h3><p>在组件定义的基础上，我们进一步构建了完整的结构化Prompt设计框架，该框架总体分为以下五个部分：</p>
+<p>需求锚定阶段要求我们准确描述业务需求，确保开发目标的精准定位；结构定义阶段则负责明确实现功能所需模块之间的依赖关系和相互作用；任务编排阶段将整体需求拆解成具体操作单元，通过逐一定义各组件来形成连续的工作流；在通用任务阶段，我们对数据校验、异常处理等高频操作进行标准化处理，以模板化的方式复用解决方案；最后，约束控制阶段为整个系统设置安全围栏，限定组件调用的范围和引用关系，防止因边界不清引发的潜在问题。</p>
+<p>在此过程中，我们始终坚持两个黄金准则：首先，本质抽象必须优先于特征描述，只有清晰定义组件的核心职责，才能避免陷入形式化穷举的困境；其次，组件应被视为逻辑单元，而非仅仅是代码片段，就如一部优秀剧本强调刻画人物内在动机，而非干涉演员细微表现。正是在这两个准则的指引下，结构化Prompt设计框架为团队构建了一套系统、严谨且高效的提示词应用体系，极大地提升了整体开发效率和代码质量。<br><img src="/../images/Structured_prompts_strategy.png" alt="Structured_prompts_strategy.png"></p>
+<h2 id="提示词工程：AI资产的治理策略"><a href="#提示词工程：AI资产的治理策略" class="headerlink" title="提示词工程：AI资产的治理策略"></a>提示词工程：AI资产的治理策略</h2><p>要确保提示词在长期开发过程中的持续有效性，仅仅构建高质量提示词是不够的，还需要建立一套完善的治理策略。我们将提示词治理分为多个层级：规则层、行业垂直方案抽象层、解决方案具体实现层以及AI执行层。各层级之间分工明确，架构师、技术负责人与开发工程师各自履行职责，共同维护提示词资产的高标准和可持续性。<br><img src="/../images/prompts_governance_policy.png" alt="prompts_governance_policy.png"><br>目前，在试点项目中，我们已经通过预定义工作流引入日志规则，将其置于规则层，确保在代码生成前通过提示词预先注入必要的安全和质量标准。这不仅使得生成代码符合日志规范，同时也为整个系统构建起一道坚固的防护屏障。随着实施的不断推进，这一治理策略将逐步完善并推广到更广泛的开发场景中，为软件工程在质量控制和流程管理上提供制度化保障。</p>
+<h2 id="项目实践实例解析"><a href="#项目实践实例解析" class="headerlink" title="项目实践实例解析"></a>项目实践实例解析</h2><p>为了更直观地展示结构化提示词的应用效果，我们以一个获取用户权限信息的API项目为例进行说明。该API不仅需支持根据用户ID、邮箱、姓名及角色进行多条件查询，还要求具备分页、排序以及对数据进行分组合并的功能。在实际开发中，我们依照需求、结构、任务、通用任务与约束控制等模块，系统地组织和编写提示词，同时在组件定义中严格遵循组件描述法和构建提示词的核心指导思想。依托这一完备的体系，我们最终实现了一个能够根据多参数动态构建查询条件，并对数据进行复杂分组与合并操作的API。</p>
+<p>统计结果显示，在后端实现API模块，团队共使用6组提示词，总行数达592行，最终生成代码1849行，涉及37个文件的新增或修改。如此覆盖复杂业务场景的实践成果，不仅充分验证了结构化提示词模式的可行性，也大大提升了交付效率和代码质量，为传统开发模式带来了全新的变革思路。<br><img src="/../images/Examples_of_project_practices.png" alt="Examples_of_project_practices.png"><br>在项目推进过程中，我们也直面了一些实际问题，并据此积累了宝贵经验。尤其对于初次接触该模式的团队而言，我们发现并不需要从零开始书写提示词，而可以从现有代码中提炼有效提示，从而逐步优化和完善提示体系，实现快速落地和迭代。</p>
+<h2 id="有效撰写提示词的技巧与实战建议"><a href="#有效撰写提示词的技巧与实战建议" class="headerlink" title="有效撰写提示词的技巧与实战建议"></a>有效撰写提示词的技巧与实战建议</h2><p>通过多次项目实践，我们总结出如下几种撰写高质量提示词的有效策略。首先，当解决方案已经存在于现有代码中时，可以利用AI自动解析代码，提取出有效提示词，并在此基础上进行优化，这种做法既节约了时间，也避免了从零开始的风险。其次，当解决方案尚存于开发者脑海时，借助可复用的结构化策略，并根据不同任务灵活调整细节，能迅速形成符合预期的提示词。对于那些暂时无解的情况，我们建议先与AI展开开放性协作探索，通过不断收敛思路后，借助结构化模板生成初步提示词，再由开发者进行必要的人工微调和确认。</p>
+<p>在实践中我们还发现，写作提示词时应特别注意避免过度抽象。对于简单场景，往往无需构建复杂的提示体系，此时采用直接的对话式编程反而更为高效。此外，提示词的撰写要做到本质与特征兼顾——既要确保功能和职责的清晰表述，又不能忽略细节描述的重要性。最关键的是，无论是为了让AI生成优秀代码，还是为了便于开发者后期审核修正，最终形成的提示词都必须具备良好的可读性和实用性，能够以清晰自然的语言传达预期意图。<br><img src="/../images/Advice_of_practice.png" alt="Advice_of_practice.png"></p>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总体而言，提示词驱动开发作为一种全新的软件开发模式，展现出前所未有的创新潜力。凭借结构化提示词的系统设计与严格治理策略，我们不仅成功激发了AI在代码生成中的潜能，还显著提升了开发效率和代码质量，为我们团队引入了全新的思考方式和工作模式。本文既在保持专业和实战深度的同时，又力求以通俗易懂、平实接地气的语言进行阐述，希望能为各位技术同仁在实践探索中提供可借鉴的经验和启发。</p>
+<p>展望未来，我们将持续关注AI技术的前沿动态，并在更为复杂的实际场景下不断完善提示词设计与治理体系。我们期待，在广大开发者不断探索和实践的推动下，人与AI的深度融合能够开启软件开发的新纪元，共同推动整个行业迈向更高效、更智能的未来。通过不断迭代与优化，相信结构化提示词必将成为工程实践中的一项核心技术，为软件开发注入源源不断的创新动力和竞争优势。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/12/11/guidelines-prompts-driven-development/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -334,79 +425,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/12/01/prompts-driven-development/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2024/12/01/prompts-driven-development/" class="post-title-link" itemprop="url">Prompts Driven Development</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2024-12-01 17:00:00" itemprop="dateCreated datePublished" datetime="2024-12-01T17:00:00+08:00">2024-12-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-12-11 17:42:57" itemprop="dateModified" datetime="2024-12-11T17:42:57+08:00">2024-12-11</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/11/15/refactoring-with-cursor-en/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -430,10 +448,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2024-11-15 19:00:00 / 修改时间：15:26:05" itemprop="dateCreated datePublished" datetime="2024-11-15T19:00:00+08:00">2024-11-15</time>
+              <time title="创建时间：2024-11-15 19:00:00" itemprop="dateCreated datePublished" datetime="2024-11-15T19:00:00+08:00">2024-11-15</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-01-09 12:48:50" itemprop="dateModified" datetime="2025-01-09T12:48:50+08:00">2025-01-09</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -1003,7 +1027,7 @@
 <div class="copyright">
   
   &copy; 
-  <span itemprop="copyrightYear">2024</span>
+  <span itemprop="copyrightYear">2025</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
