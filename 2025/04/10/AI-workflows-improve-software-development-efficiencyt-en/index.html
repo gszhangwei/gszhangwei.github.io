@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gszhangwei.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="IntroductionSince the publication of Structured Prompt-Driven Development in Practice, the feedback I’ve received highlights two core needs: lowering the methodology application threshold and providin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour">
+<meta property="og:url" content="hhttps://gszhangwei.github.io/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/index.html">
+<meta property="og:site_name" content="Willie&#39;s Blog">
+<meta property="og:description" content="IntroductionSince the publication of Structured Prompt-Driven Development in Practice, the feedback I’ve received highlights two core needs: lowering the methodology application threshold and providin">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-04-10T04:00:00.000Z">
+<meta property="article:modified_time" content="2025-04-10T04:02:05.233Z">
+<meta property="article:author" content="Wiilie Zhang">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Prompts">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="hhttps://gszhangwei.github.io/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour | Willie's Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">Willie's Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-04-10 12:00:00 / 修改时间：12:02:05" itemprop="dateCreated datePublished" datetime="2025-04-10T12:00:00+08:00">2025-04-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Technology/" itemprop="url" rel="index"><span itemprop="name">Technology</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>Since the publication of <a target="_blank" rel="noopener" href="https://central.thoughtworks.net/blogs/ls/content/136117101053029/structured-prompts-driven-development-1781b9ae-3d4b-458d-8b8b-0265fa34e1cb">Structured Prompt-Driven Development in Practice</a>, the feedback I’ve received highlights <strong>two core needs</strong>: <strong>lowering the methodology application threshold</strong> and <strong>providing directly reusable practice templates</strong>.</p>
+<p>As a practitioner who has experienced the transition from traditional development to AI-assisted programming, I deeply feel that software development is currently undergoing a dual transformation: accelerating industry iteration and an efficiency revolution triggered by generative AI. When AI-generated code acceptance rates jump from 30% to 95%, this signals a fundamental paradigm shift in development.</p>
+<p>Facing the reality that methodology is <strong>“easy to understand but difficult to implement”</strong>, could we adopt a progressive model of <strong>“use-understand-innovate”</strong> to help developers naturally master methodological essentials while achieving immediate results?</p>
+<p>In fact, the <strong>universal solution layer</strong> in the structured prompt-driven development methodology can serve as the key breakthrough - <strong>building reusable abstract solution templates</strong>.</p>
+<p>[Prompts Strategy Image Placeholder]</p>
+<p>Our practicing confirms that these templated solutions can reduce the time novices need to build effective prompts <strong>from 2 hours to 30 minutes</strong>, with prompt output quality improving by over 50%.</p>
+<p>This article introduces a battle-tested AI-enhanced software development workflow that has been applied and verified in over a hundred actual development tasks. Through a systematic 5-stage, 14-step process, we’ve observed significant efficiency improvements: development tasks that traditionally required 2 days can now be completed in under 1 hour, achieving nearly 16x speed improvement in optimal cases. This workflow integrates structured prompt engineering with software development best practices, suitable for developers at all experience levels—whether you’re new to AI-assisted development or an experienced engineer seeking efficiency breakthroughs—I hope everyone can derive substantial value from it, significantly accelerating development pace while maintaining or even improving code quality.</p>
+<h2 id="Background-and-Tool-Ecosystem"><a href="#Background-and-Tool-Ecosystem" class="headerlink" title="Background and Tool Ecosystem"></a>Background and Tool Ecosystem</h2><h3 id="Limitations-of-Traditional-Development-Processes"><a href="#Limitations-of-Traditional-Development-Processes" class="headerlink" title="Limitations of Traditional Development Processes"></a>Limitations of Traditional Development Processes</h3><p>Traditional software development processes typically include requirements analysis, design, coding, testing, and deployment. Although agile methodologies have improved iteration speed, developers still need to manually complete numerous repetitive tasks: writing boilerplate code, building test cases, handling edge conditions, etc. While necessary, these tasks consume time that could be used for innovation and solving core business problems.</p>
+<h3 id="Core-Tools-Introduction"><a href="#Core-Tools-Introduction" class="headerlink" title="Core Tools Introduction"></a>Core Tools Introduction</h3><p>My AI-assisted development workflow is primarily built on the following tools:</p>
+<ul>
+<li><strong>Cursor</strong>: AI-driven code editor supporting code generation, completion, refactoring, and intelligent dialogue</li>
+<li><strong>Jira MCP Server</strong>: For obtaining and managing business requirements</li>
+<li><strong>Aupro</strong>: Our engineering practice governance platform, including MCP end, page end, and server end, enabling technology governance teams to establish and share code delivery standards so AI code assistants can generate high-quality code. (<strong>For teams without similar platforms, lightweight alternatives can be adopted</strong>: organizing structured prompt templates in local version control systems through structured folders and clear naming conventions to achieve template management, which can still yield significant benefits)</li>
+<li><strong>Various testing frameworks</strong>: Such as JUnit 5 (Jupiter), etc., working with workflows to implement automated testing</li>
+</ul>
+<p>[AI Development Process Abstract Image Placeholder]</p>
+<h2 id="AI-Enhanced-Software-Development-Workflow-Detailed-Analysis-of-5-Stages-and-14-Steps"><a href="#AI-Enhanced-Software-Development-Workflow-Detailed-Analysis-of-5-Stages-and-14-Steps" class="headerlink" title="AI-Enhanced Software Development Workflow: Detailed Analysis of 5 Stages and 14 Steps"></a>AI-Enhanced Software Development Workflow: Detailed Analysis of 5 Stages and 14 Steps</h2><h3 id="Requirements-Analysis-and-Planning-Stage"><a href="#Requirements-Analysis-and-Planning-Stage" class="headerlink" title="Requirements Analysis and Planning Stage"></a>Requirements Analysis and Planning Stage</h3><ul>
+<li><strong>Requirements Analysis and Solution Conceptualization</strong><ul>
+<li>First, retrieve historical implementations and best practices for similar tasks to establish a knowledge base</li>
+<li>Collaborate with AI to explore technical solutions, quickly evaluating feasibility and tradeoffs of different implementation paths</li>
+<li>Clearly define specific problems AI needs to solve, setting expected outcomes and success metrics</li>
+<li>This step lays the foundation for the entire development process; clear problem definition makes subsequent AI generation more precise and efficient</li>
+</ul>
+</li>
+<li><strong>Requirements Structuring</strong><ul>
+<li>Leverage AI’s natural language processing capabilities to convert business requirements into structured user stories</li>
+<li>Ensure requirement descriptions are complete and include clear acceptance criteria and expected results</li>
+<li>This step transforms abstract business concepts into clear technical tasks, reducing requirement understanding deviations</li>
+</ul>
+</li>
+</ul>
+<h3 id="Design-and-Solution-Definition-Stage"><a href="#Design-and-Solution-Definition-Stage" class="headerlink" title="Design and Solution Definition Stage"></a>Design and Solution Definition Stage</h3><ul>
+<li><strong>Implementation Solution Design</strong><ul>
+<li>Apply pre-summarized solution templates to generate structured prompts</li>
+<li>Clearly define technical path, data structures, interface definitions, and key business logic implementation details</li>
+<li>Design staged implementation strategies for complex functionalities, breaking large tasks into manageable small modules</li>
+<li>High-quality prompts are key to obtaining high-quality code output, requiring a combination of business knowledge and technical experience</li>
+</ul>
+</li>
+<li><strong>Solution Detail Adjustment and Optimization</strong><ul>
+<li>Comprehensively evaluate quality, completeness, and technical feasibility of generated prompts</li>
+<li>Analyze whether the solution considers scalability, performance, and long-term maintenance requirements</li>
+<li>Adjust implementation strategies based on business requirements and technical constraints, anticipating potential problems</li>
+<li>This step is equivalent to architecture review in traditional development, ensuring implementation direction is correct</li>
+</ul>
+</li>
+</ul>
+<h3 id="Code-Development-and-Implementation-Stage"><a href="#Code-Development-and-Implementation-Stage" class="headerlink" title="Code Development and Implementation Stage"></a>Code Development and Implementation Stage</h3><ul>
+<li><strong>Code Generation and Initial Verification</strong><ul>
+<li>Use optimized prompts to generate implementation code, including basic architecture and core functionality</li>
+<li>Perform quick validation to check if basic functions and code structure meet expectations</li>
+<li>Evaluate whether generated code follows project coding standards and best practices</li>
+</ul>
+</li>
+<li><strong>Code Review and Prompt Fine-tuning</strong><ul>
+<li>Carefully examine code quality, performance, security, and boundary handling</li>
+<li>Identify potential “code smells” and optimization points in the code</li>
+<li>Make targeted adjustments to prompts to address discovered issues, providing clear correction guidance</li>
+<li>This is an iterative optimization process, continuously improving code quality through precise prompt adjustments</li>
+</ul>
+</li>
+<li><strong>Final Code Generation</strong><ul>
+<li>Use finalized prompts to regenerate optimized implementation code</li>
+<li>Ensure code style consistency, readability, and adherence to best practices</li>
+<li>The finalized prompts incorporate optimization experiences from previous iterations, significantly improving generated code quality</li>
+</ul>
+</li>
+<li><strong>Functionality Verification</strong><ul>
+<li>Manually verify core functionality and boundary scenarios to ensure functional completeness</li>
+<li>Perform static code analysis to check code quality metrics and potential issues</li>
+<li>Verify code compatibility and integration points with existing systems</li>
+<li>The verification process checks both functional correctness and code maintainability and performance optimization space</li>
+</ul>
+</li>
+</ul>
+<h3 id="Testing-and-Quality-Assurance-Stage"><a href="#Testing-and-Quality-Assurance-Stage" class="headerlink" title="Testing and Quality Assurance Stage"></a>Testing and Quality Assurance Stage</h3><ul>
+<li><strong>Test Prompt Generation</strong><ul>
+<li>Based on solution implementation detail prompts, combined with summarized test prompt templates, generate structured test cases</li>
+<li>Ensure tests cover normal processes, boundary conditions, and exception handling scenarios</li>
+<li>Good test design can prevent future regression issues and serve as living documentation of code functionality</li>
+</ul>
+</li>
+<li><strong>Test Planning Confirmation</strong><ul>
+<li>Review completeness and appropriateness of test scenarios to ensure comprehensive test coverage</li>
+<li>Ensure tests cover not only normal situations but also exception handling and various boundary conditions</li>
+</ul>
+</li>
+<li><strong>Test Code Generation and Execution</strong><ul>
+<li>Use test prompts to generate automated test code, ensuring test code quality</li>
+<li>Execute automated tests and collect detailed results, analyzing test coverage</li>
+<li>Verify whether tests can effectively discover potential problems and boundary situations</li>
+<li>AI-generated tests are often more comprehensive than manually written tests, covering more boundary situations and exception paths</li>
+</ul>
+</li>
+<li><strong>Problem Fixing and Iteration</strong><ul>
+<li>Categorize problem causes based on test results and establish priority fix order</li>
+<li>Make targeted fixes, distinguishing handling strategies: <strong>For uncovered boundary scenarios</strong>, modify implementation code and update corresponding prompts; <strong>For test data issues</strong>, optimize test data without changing implementation logic</li>
+<li>Repeat testing until all tests pass, ensuring code quality and stability</li>
+<li>Record experiences and discoveries during the fixing process as material for prompt template optimization</li>
+</ul>
+</li>
+</ul>
+<h3 id="Delivery-and-Knowledge-Management-Stage"><a href="#Delivery-and-Knowledge-Management-Stage" class="headerlink" title="Delivery and Knowledge Management Stage"></a>Delivery and Knowledge Management Stage</h3><ul>
+<li><strong>Integration and Submission</strong><ul>
+<li>Ensure code compatibility with existing systems, verifying integration points work properly</li>
+<li>Submit code and structured prompts solutions to facilitate team understanding of development ideas</li>
+</ul>
+</li>
+<li><strong>Knowledge Precipitation</strong><ul>
+<li>Extract effective prompt patterns and update team template library, forming reusable assets</li>
+<li>Summarize lessons learned, recording successful strategies and challenges encountered</li>
+<li>Share innovative practices and technological breakthroughs, promoting overall team capability improvement</li>
+</ul>
+</li>
+</ul>
+<h2 id="Core-Advantages-and-Potential-Challenges"><a href="#Core-Advantages-and-Potential-Challenges" class="headerlink" title="Core Advantages and Potential Challenges"></a>Core Advantages and Potential Challenges</h2><ul>
+<li><p><strong>Core Advantages:</strong></p>
+<ul>
+<li><strong>Structural Benefits</strong>: Structured prompts implement a systematic approach to code generation, creating a more organized and predictable development process while providing a stable framework for consistency.</li>
+<li><strong>Standardization Improvements</strong>: The integration of templates with AI generation techniques significantly enhances both code and test case consistency and completeness, effectively minimizing variations that typically arise from manual development.</li>
+<li><strong>Quality Assurance Framework</strong>: A comprehensive multi-level verification system—spanning from design conception through implementation to functional testing—creates a complete quality control loop that thoroughly ensures code reliability at every stage.</li>
+<li><strong>Significant Efficiency Gains</strong>: Through this optimized methodology, development efficiency achieves remarkable improvement, transforming work that traditionally required two full days into tasks completable within a single hour—representing an approximate 95% reduction in time investment.</li>
+</ul>
+</li>
+<li><p><strong>Potential Challenges:</strong></p>
+<ul>
+<li><strong>Skill Requirement</strong>: Effective prompt engineering mastery requires both technical skill depth and a persistent refinement mindset</li>
+<li><strong>Quality Standard</strong>: It is essential to ensure high-quality structured-prompt documentation and maintainable generated code</li>
+<li><strong>AI Dependency Risk</strong>: Over-reliance dependence on AI may lead to insufficient understanding of generated code</li>
+</ul>
+</li>
+</ul>
+<h2 id="Practical-Case"><a href="#Practical-Case" class="headerlink" title="Practical Case"></a>Practical Case</h2><p>Theory needs verification through practice. To better demonstrate the methodology and workflow’s actual effects, I’ve recorded a complete development example video. Welcome to watch and provide valuable suggestions.<br>[Video Placeholder]</p>
+<p>The process shown in the video is mainly summarized as follows:<br>[Sequence Diagram Placeholder]</p>
+<h2 id="Best-Practices-and-Experience-Summary"><a href="#Best-Practices-and-Experience-Summary" class="headerlink" title="Best Practices and Experience Summary"></a>Best Practices and Experience Summary</h2><p><strong>Effective prompts</strong> are the core of the entire workflow. Here are some key techniques:</p>
+<ul>
+<li><strong>Abstract first, then concrete</strong>: Start with task decomposition and framework building, rather than getting bogged down in details initially. First clearly define the abstract steps for implementing functionality and relationships between these steps, then elaborate on each abstract step according to effective prompt construction principles. This “top-down” approach ensures generated code has reasonable structure and clear layers.</li>
+<li><strong>Structured information provision</strong>: Describe solutions following structured prompt-driven development principles, clarifying code generation paths. Structured prompts not only make it easier for AI to understand development intentions but also make subsequent iterations and adjustments clearer and more controllable, laying the foundation for code quality.</li>
+<li><strong>Context association management</strong>: Include necessary association information in prompts, such as inheritance relationships between business models and call relationships between framework layers. Good context association enables AI to understand overall system architecture, generating code that conforms to established architectural styles and design philosophies, reducing later refactoring needs.</li>
+<li><strong>Prompt governance</strong>: Manage effective prompts to form a reusable template library. As projects progress, continuously accumulate and optimize prompt templates, gradually forming a prompt asset library suitable for team and project characteristics, improving long-term efficiency.</li>
+</ul>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p><strong>AI-assisted development</strong> is not just introducing efficiency tools, but <strong>a transformation of software development paradigms</strong>. Through the AI-assisted development workflow introduced in this article, developers can achieve efficient collaboration with AI, delegating repetitive work to AI while <strong>focusing</strong> on more <strong>creative</strong> and <strong>strategic</strong> tasks.</p>
+<p>Practice has proven that using this workflow, after becoming proficient, <strong>development efficiency can improve by at least 3 times</strong> while maintaining or even improving code quality. With continuous advancement of AI technology, there’s even more room for efficiency improvement. For individual developers and teams, now is the best time to embrace this transformation.</p>
+<p>Mastering AI-assisted development is not about replacing developers, but redefining how we work. The real value lies in human-machine collaboration—AI handles execution and assistance, while humans handle innovation and decision-making. Future top developers will be compound talents who both master technology itself and can effectively guide AI to complete tasks.</p>
+<h2 id="Some-Thoughts-on-the-Essence-of-Code"><a href="#Some-Thoughts-on-the-Essence-of-Code" class="headerlink" title="Some Thoughts on the Essence of Code"></a>Some Thoughts on the Essence of Code</h2><p>This transformation also prompts me to rethink the essence of code: <strong>Code itself is a symbolic expression of human intent, constantly evolving with technological development.</strong> From punched paper tapes to assembly language, to high-level languages like C++, Python, Java, etc., each technological innovation has expanded the boundaries of <strong>“what is code.”</strong> Today, as AI can precisely understand human language and intent through specific methods, <strong>natural language programming</strong> becomes a <strong>new stage</strong> in programming paradigms’ natural evolution—not replacing traditional programming but extending it.</p>
+<p>Different programming paradigms each have their value and scenarios, just as in transportation’s historical evolution, new technology doesn’t mean complete elimination of old technology. Forward-thinking developers will be inclusive—mastering traditional programming’s rigorous structure while using that experience to explore more possibilities in prompt engineering, perhaps even developing more direct human-machine interaction methods in the future. In technological change waves, understanding essential principles behind technology and maintaining an open learning attitude are far more important than adhering to specific implementation forms—<strong>Code forms will continue to iterate, while the spirit of innovation remains constant.</strong></p>
+<p>Let us actively embrace this transformation, rethink the essence of software development, and create greater value in the new era of human-machine collaboration.</p>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><p>As a practical tool for this methodology, we provide a set of battle-tested prompt templates covering API CRUD operations and accompanying test strategies (click this link to view the complete template library). These templates can not only be used directly in daily development but also serve as examples for learning structured prompt engineering.</p>
+<p>We sincerely invite all developers to innovate and expand based on their own project needs while using these basic templates, jointly promoting the continuous evolution of this methodology.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/AI/" rel="tag"># AI</a>
+              <a href="/tags/Prompts/" rel="tag"># Prompts</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="prev" title="AI-Workflow革命：2天任务仅需50分钟！">
+      <i class="fa fa-chevron-left"></i> AI-Workflow革命：2天任务仅需50分钟！
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Background-and-Tool-Ecosystem"><span class="nav-number">2.</span> <span class="nav-text">Background and Tool Ecosystem</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Limitations-of-Traditional-Development-Processes"><span class="nav-number">2.1.</span> <span class="nav-text">Limitations of Traditional Development Processes</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Core-Tools-Introduction"><span class="nav-number">2.2.</span> <span class="nav-text">Core Tools Introduction</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AI-Enhanced-Software-Development-Workflow-Detailed-Analysis-of-5-Stages-and-14-Steps"><span class="nav-number">3.</span> <span class="nav-text">AI-Enhanced Software Development Workflow: Detailed Analysis of 5 Stages and 14 Steps</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Requirements-Analysis-and-Planning-Stage"><span class="nav-number">3.1.</span> <span class="nav-text">Requirements Analysis and Planning Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Design-and-Solution-Definition-Stage"><span class="nav-number">3.2.</span> <span class="nav-text">Design and Solution Definition Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Code-Development-and-Implementation-Stage"><span class="nav-number">3.3.</span> <span class="nav-text">Code Development and Implementation Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Testing-and-Quality-Assurance-Stage"><span class="nav-number">3.4.</span> <span class="nav-text">Testing and Quality Assurance Stage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Delivery-and-Knowledge-Management-Stage"><span class="nav-number">3.5.</span> <span class="nav-text">Delivery and Knowledge Management Stage</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Core-Advantages-and-Potential-Challenges"><span class="nav-number">4.</span> <span class="nav-text">Core Advantages and Potential Challenges</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Practical-Case"><span class="nav-number">5.</span> <span class="nav-text">Practical Case</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Best-Practices-and-Experience-Summary"><span class="nav-number">6.</span> <span class="nav-text">Best Practices and Experience Summary</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Conclusion"><span class="nav-number">7.</span> <span class="nav-text">Conclusion</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Some-Thoughts-on-the-Essence-of-Code"><span class="nav-number">8.</span> <span class="nav-text">Some Thoughts on the Essence of Code</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Appendix"><span class="nav-number">9.</span> <span class="nav-text">Appendix</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Wiilie Zhang</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wiilie Zhang</span>
+</div>
+  <div class="powered-by">
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
