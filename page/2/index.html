@@ -155,6 +155,185 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/12/11/guidelines-prompts-driven-development/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/12/11/guidelines-prompts-driven-development/" class="post-title-link" itemprop="url">Guidelines of Prompts Driven Development</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2024-12-11 17:00:00 / 修改时间：17:47:01" itemprop="dateCreated datePublished" datetime="2024-12-11T17:00:00+08:00">2024-12-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>This document outlines the structure and steps necessary to implement a business function within a software application, focusing on granularity, implementation steps, and the relationships between various components in the architecture.</p>
+<h3 id="Business-Function-Overview"><a href="#Business-Function-Overview" class="headerlink" title="Business Function Overview"></a>Business Function Overview</h3><p>A business function refers to a specific operation or capability that a software application provides to fulfill business requirements. This can range from simple tasks like retrieving data to more complex operations like processing transactions.</p>
+<h4 id="Granularity"><a href="#Granularity" class="headerlink" title="Granularity"></a>Granularity</h4><ul>
+<li><strong>Minimum Granularity</strong>: One method</li>
+<li><strong>Highest Granularity</strong>: One API</li>
+</ul>
+<h3 id="Implementation-Steps"><a href="#Implementation-Steps" class="headerlink" title="Implementation Steps"></a>Implementation Steps</h3><p>The implementation of a business function involves multiple layers, each with specific responsibilities. Below are the detailed steps required for implementing this function.</p>
+<h4 id="Standard-Components"><a href="#Standard-Components" class="headerlink" title="Standard Components"></a>Standard Components</h4><ol>
+<li><p><strong>Component Structure</strong></p>
+<ul>
+<li><strong>Class Name</strong>: Describe the class name</li>
+<li><strong>Method Name</strong>: Describe the method name</li>
+<li><strong>Responsibility</strong>: Describe the responsibilities of the component</li>
+<li><strong>Request Body</strong>: Describe the request parameters (use ‘no parameters’ if there are none)</li>
+<li><strong>Return Body</strong>: Returns data of type {Return Type}</li>
+<li><strong>Endpoint</strong>: Describe the endpoint path</li>
+<li><strong>Request Method</strong>: {GET&#x2F;POST&#x2F;PUT&#x2F;DELETE}</li>
+<li><strong>Return Status Code</strong>: {HTTP status code}</li>
+<li><strong>Attribute Definition</strong>: Define attributes as needed</li>
+<li><strong>Static Members</strong>: List any static members if applicable</li>
+<li><strong>Exceptions Handling</strong>: Describe how exceptions will be handled</li>
+<li><strong>Elements</strong>: Identify any other necessary elements</li>
+</ul>
+</li>
+<li><p><strong>Regular Example</strong></p>
+<h5 id="Backend-Components"><a href="#Backend-Components" class="headerlink" title="Backend Components"></a>Backend Components</h5><ul>
+<li><p><strong>Controller</strong></p>
+<ul>
+<li>Class Name: <code>&#123;EntityName&#125;Controller</code></li>
+<li>Method Name: <code>&#123;methodName&#125;</code></li>
+<li>Endpoint: <code>/&#123;endpoint&#125;</code></li>
+<li>Request Method: {GET&#x2F;POST&#x2F;PUT&#x2F;DELETE}</li>
+<li>Request Body: {Describe the request parameters, write ‘no parameters’ if there are none}</li>
+<li>Return Body: Returns data of type {Return Type}</li>
+<li>Responsibility:<ul>
+<li>Handling HTTP requests</li>
+<li>Parameter verification</li>
+<li>Call application services</li>
+<li>Processing response</li>
+</ul>
+</li>
+<li>Return Status Code: {HTTP status code}</li>
+</ul>
+</li>
+<li><p><strong>Service</strong></p>
+<ul>
+<li>Class Name: <code>&#123;EntityName&#125;DomainService</code></li>
+<li>Method Name: <code>&#123;methodName&#125;</code></li>
+<li>Responsibility:<ul>
+<li>Implement core business logic</li>
+<li>Maintain object status</li>
+<li>Ensure business rules</li>
+</ul>
+</li>
+<li>Request Body: {Description of Request Parameters}</li>
+<li>Return Body: Returns data of type {Return Type}</li>
+</ul>
+</li>
+<li><p><strong>Repository</strong></p>
+<ul>
+<li>Class Name: <code>&#123;EntityName&#125;Repository</code></li>
+<li>Method Name: <code>&#123;methodName&#125;</code></li>
+<li>Responsibility:<ul>
+<li>Implement data persistence</li>
+<li>Implement data query</li>
+<li>Database operation encapsulation</li>
+</ul>
+</li>
+<li>Request Body: {Description of Request Parameters}</li>
+<li>Return Body: Returns data of type {Return Type}</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Frontend Frameworks</strong><br>Utilize popular frameworks such as React, Angular, or Vue for building user interfaces that interact with the backend.</p>
+</li>
+</ol>
+<h3 id="API-Implementation-Example-of-Hexagonal-architecture-No-architecture-modeling"><a href="#API-Implementation-Example-of-Hexagonal-architecture-No-architecture-modeling" class="headerlink" title="API Implementation Example of Hexagonal architecture(No architecture modeling)"></a>API Implementation Example of Hexagonal architecture(No architecture modeling)</h3><p>To implement an API that can update an entity (e.g., user information), follow these guidelines:</p>
+<ul>
+<li><p><strong>Controller Layer</strong></p>
+<ul>
+<li>Class Name: <code>&#123;EntityName&#125;Controller</code></li>
+<li>Method Name: <code>&#123;methodName&#125;</code></li>
+<li>Endpoint: <code>/&#123;endpoint&#125;</code></li>
+<li>Request Method: {GET&#x2F;POST&#x2F;PUT&#x2F;DELETE}</li>
+<li>Request Body: {Describe the request parameters, write ‘no parameters’ if there are none}</li>
+<li>Return Body: Returns data of type {Return Type}</li>
+<li>Logic: Call the corresponding method of the Application layer to obtain data.</li>
+<li>Return Status Code: {HTTP status code}</li>
+</ul>
+</li>
+<li><p><strong>Application Service Layer</strong></p>
+<ul>
+<li>Class Name: <code>&#123;EntityName&#125;ApplicationService</code></li>
+<li>Method Name: <code>&#123;methodName&#125;</code></li>
+<li>Logic: Call relevant methods of the Query layer or Domain layer.</li>
+<li>Request Body: {Description of Request Parameters}</li>
+<li>Return Body: Returns data of type {Return Type}</li>
+<li>Exception Handling Required.</li>
+</ul>
+</li>
+<li><p><strong>Query Layer</strong><br>This layer is responsible for obtaining resources.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class Name: `&#123;EntityName&#125;Query`</span><br><span class="line">Method Name: `&#123;methodName&#125;`</span><br><span class="line">Logic: Call infrastructure-related methods.</span><br><span class="line">Request Body: &#123;Description of Request Parameters&#125;</span><br><span class="line">Return Body: Returns data of type &#123;Return Type&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Domain Layer</strong><br>Implements business logic details.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class Name:`&#123;EntityName&#125;DomainService`</span><br><span class="line">Method Name:`&#123;methodName&#125;`</span><br><span class="line">Logic: Call relevant methods of the Infrastructure layer.</span><br><span class="line">Request Body:&#123;Description of Request Parameters&#125;</span><br><span class="line">Return Body:&#123;Returns data of type &#123;Return Type&#125;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Repository Layer</strong><br>Handles database interactions.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Class Name:`&#123;EntityName&#125;Repository`</span><br><span class="line">Method Name:`&#123;methodName&#125;`</span><br><span class="line">Logic: Call relevant methods of the database.</span><br><span class="line">Request Body:&#123;Description of Request Parameters&#125;</span><br><span class="line">Return Body:&#123;Returns data of type &#123;Return Type&#125;&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Testing-Strategy"><a href="#Testing-Strategy" class="headerlink" title="Testing Strategy"></a>Testing Strategy</h3><p>Generate unit tests and integration tests based on the methods defined in each layer. Use tools and frameworks appropriate for your programming environment to facilitate this process.</p>
+<h3 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h3><p>Implementing a business function requires careful planning and adherence to structured guidelines across various layers of an application. By following these guidelines, developers can ensure that their applications are robust, maintainable, and scalable.</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/11/15/refactoring-with-cursor-en/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -721,85 +900,10 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2022/08/31/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/31/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2022-08-31 12:29:30 / 修改时间：18:15:08" itemprop="dateCreated datePublished" datetime="2022-08-31T12:29:30+08:00">2022-08-31</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>Hexo quick start</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/08/31/hello-world/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left" aria-label="上一页"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/3/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
   </nav>
 
 
@@ -865,7 +969,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">11</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
