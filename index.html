@@ -186,7 +186,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-05-27 13:31:09" itemprop="dateModified" datetime="2025-05-27T13:31:09+08:00">2025-05-27</time>
+                <time title="修改时间：2025-05-27 13:32:35" itemprop="dateModified" datetime="2025-05-27T13:32:35+08:00">2025-05-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -212,18 +212,18 @@
           <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？</p>
 <p>最近一次数据项目的实践，让我有机会将PDD深度应用于BigQuery复杂SQL开发中。面对30+业务分支验证、亿级数据量快照表的挑战，传统开发方式，尤其是在没有相关复杂SQL处理经验的情况下，会显然力不从心。经过一番探索与试错，我不仅找到了PDD在数据领域的稳定应用路径，更重要的是验证了这套方法论在处理复杂业务逻辑时的实际效能。</p>
 <p>如果你也在寻找提升复杂SQL开发效率的方法，或者好奇PDD如何在数据工程中发挥作用，那么这次实践经验或许能为你提供一些有价值的参考。</p>
-<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><h3 id="技术环境"><a href="#技术环境" class="headerlink" title="技术环境"></a>技术环境</h3><ul>
+<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><h4 id="技术环境"><a href="#技术环境" class="headerlink" title="技术环境"></a>技术环境</h4><ul>
 <li><strong>数据处理</strong>：Python + BigQuery + GCP</li>
 <li><strong>核心挑战</strong>：业务场景复杂，30+业务分支 + 亿级数据量</li>
 </ul>
-<h3 id="业务目标"><a href="#业务目标" class="headerlink" title="业务目标"></a><strong>业务目标</strong></h3><p>将<strong>预测数据</strong>与<strong>实际收入数据</strong>关联对比，识别差异并补全缺失信息</p>
+<h4 id="业务目标"><a href="#业务目标" class="headerlink" title="业务目标"></a><strong>业务目标</strong></h4><p>将<strong>预测数据</strong>与<strong>实际收入数据</strong>关联对比，识别差异并补全缺失信息</p>
 <ul>
 <li><strong>数据关联</strong>：预测数据与实际收入全面对比，自动识别差异点</li>
 <li><strong>层级匹配</strong>：机会→账户→市场→区域四级递进匹配，精确标记匹配深度</li>
 <li><strong>标准统一</strong>：跨表字段口径一致性处理，消除数据孤岛</li>
 <li><strong>决策支撑</strong>：输出结构化对比数据集，直接服务业务分析</li>
 </ul>
-<h3 id="核心流程"><a href="#核心流程" class="headerlink" title="核心流程"></a><strong>核心流程</strong></h3><ul>
+<h4 id="核心流程"><a href="#核心流程" class="headerlink" title="核心流程"></a><strong>核心流程</strong></h4><ul>
 <li><strong>多条件关联</strong>：依次按机会、账户、市场和区域四级进行数据匹配，并对匹配成功与未匹配记录分别打标</li>
 <li><strong>基于快照扩展</strong>：对未匹配的行基于业务快照日期进行行扩展，保证所有时间点均有对齐的数据视图</li>
 <li><strong>业务数据补全</strong>：对ID、名称、状态等缺失字段，按照优先级从不同数据源进行补充</li>
