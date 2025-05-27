@@ -186,7 +186,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-05-27 11:57:39" itemprop="dateModified" datetime="2025-05-27T11:57:39+08:00">2025-05-27</time>
+                <time title="修改时间：2025-05-27 13:28:02" itemprop="dateModified" datetime="2025-05-27T13:28:02+08:00">2025-05-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,14 +209,20 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>最近，由于项目安排，我有机会在一个数据项目中应用Prompt Driven Development（PDD）方法论。这次实践让我能够探索并补充PDD在数据领域的应用经验。坦诚地说，过程并不一帆风顺，但通过不懈的探索，最终找到了一条在复杂SQL业务场景下稳定使用PDD的路径，并获得了一些有价值的见解。下面将详细分享这个过程，以及从中探索出的PDD在DATA领域的可行路径。</p>
-<h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><h4 id="技术栈与项目目标"><a href="#技术栈与项目目标" class="headerlink" title="技术栈与项目目标"></a>技术栈与项目目标</h4><p>我们使用Python构建ETL的框架和过程，BigQuery构建数据表，GCP作为云平台。本次任务的主要目标是使用BigQuery构建一个复杂查询，将财务的预测与实际收入数据进行全面对齐和补全，通过多层级匹配和统一标准，实现两种数据的一致比较，最终生成一份字段齐全、结构统一的对比报表，满足业务分析和决策支持需求。</p>
+          <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？</p>
+<p>最近一次数据项目的实践，让我有机会将PDD深度应用于BigQuery复杂SQL开发中。面对30+业务分支验证、亿级数据量快照表的挑战，传统开发方式，尤其是在没有相关复杂SQL处理经验的情况下，会显然力不从心。经过一番探索与试错，我不仅找到了PDD在数据领域的稳定应用路径，更重要的是验证了这套方法论在处理复杂业务逻辑时的实际效能。</p>
+<p>如果你也在寻找提升复杂SQL开发效率的方法，或者好奇PDD如何在数据工程中发挥作用，那么这次实践经验或许能为你提供一些有价值的参考。</p>
+<h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><h3 id="技术环境"><a href="#技术环境" class="headerlink" title="技术环境"></a>技术环境</h3><ul>
+<li><strong>数据处理</strong>：Python + BigQuery + GCP</li>
+<li><strong>核心挑战</strong>：业务场景复杂，30+业务分支 + 亿级数据量</li>
+</ul>
 <p><strong>业务目标</strong></p>
+<p>将<strong>预测数据</strong>与<strong>实际收入数据</strong>关联对比，识别差异并补全缺失信息</p>
 <ul>
-<li>将<strong>预测数据</strong>与<strong>实际收入数据</strong>关联对比，识别差异并补全缺失信息</li>
-<li>按照机会、账户、市场和区域四个层级打标匹配结果，明确匹配深度</li>
-<li>标准化关键字段(如合同类型、区域名称)，确保跨表数据口径一致</li>
-<li>输出可直接支撑销售、财务和管理层分析的结构化对比数据集</li>
+<li><strong>数据关联</strong>：预测数据与实际收入全面对比，自动识别差异点</li>
+<li><strong>层级匹配</strong>：机会→账户→市场→区域四级递进匹配，精确标记匹配深度</li>
+<li><strong>标准统一</strong>：跨表字段口径一致性处理，消除数据孤岛</li>
+<li><strong>决策支撑</strong>：输出结构化对比数据集，直接服务业务分析</li>
 </ul>
 <p><strong>核心流程</strong></p>
 <ul>
@@ -226,45 +232,69 @@
 <li><strong>字段标准化</strong>：统一区域缩写为全称，转换特定合同类型，并补充额外标记字段</li>
 <li><strong>汇总去重</strong>：合并所有中间结果，按关键维度分组去重，输出最终对比报表</li>
 </ul>
-<p>需要说明的是，这个业务的补值以及数据扩充逻辑包含<strong>30+个业务分支需要验证</strong>，<strong>快照表达到亿级数据量</strong>，属于复杂的SQL需求。</p>
-<h3 id="实现的整体过程"><a href="#实现的整体过程" class="headerlink" title="实现的整体过程"></a>实现的整体过程</h3><h4 id="第一阶段：从零开始的AI辅助SQL开发"><a href="#第一阶段：从零开始的AI辅助SQL开发" class="headerlink" title="第一阶段：从零开始的AI辅助SQL开发"></a>第一阶段：从零开始的AI辅助SQL开发</h4><ol>
-<li><strong>业务理解</strong>：作为一个已经2年未完成过复杂SQL需求的开发者，面对复杂数据场景时，AI帮助我快速验证了业务需求中的数据逻辑，厘清业务和技术思路。</li>
-<li><strong>SQL技术方案生成</strong>：<ul>
-<li>初期完全依赖AI生成，但由于业务逻辑极其复杂，几乎不可能一次性构思完整方案</li>
-<li>通过理解AI生成代码的思路，逐步形成了粗略的技术框架：<strong>预处理数据→扩展数据→补充数据→整理输出</strong></li>
-<li>每个高层任务下隐藏着众多细节，例如如何Join表、如何处理匹配与未匹配数据等</li>
-<li>经过多次调整，AI最终生成了1157行的SQL，但放入BigQuery后出现大量报错</li>
-<li>修复报错后发现逻辑仍有问题，于是想到使用AI生成测试数据集进行验证</li>
+<h2 id="实现的整体过程"><a href="#实现的整体过程" class="headerlink" title="实现的整体过程"></a>实现的整体过程</h2><h3 id="第一阶段：AI协作下的探索与突破"><a href="#第一阶段：AI协作下的探索与突破" class="headerlink" title="第一阶段：AI协作下的探索与突破"></a>第一阶段：AI协作下的探索与突破</h3><p><strong>现实挑战</strong></p>
+<p>作为一个两年未曾接触复杂SQL开发的工程师，面对这样的业务场景，坦诚地说，我的第一反应是”从何下手”？幸运的是，AI成为了我最得力的助手。</p>
+<ol>
+<li><strong>业务理解的快速突破</strong>：AI帮助我快速解构了看似复杂的业务需求<ul>
+<li>将抽象的财务对齐需求转化为具体的数据操作步骤</li>
+<li>厘清了多层级匹配的核心逻辑</li>
+<li>明确了数据流向：<strong>预处理 → 扩展 → 补充 → 输出</strong></li>
+</ul>
+</li>
+<li><strong>技术方案的迭代探索</strong>：初期的完全依赖AI生成策略，但很快遭遇现实挑战<ul>
+<li><strong>复杂度挑战</strong>：业务逻辑的复杂程度远超AI的一次性理解能力</li>
+<li><strong>SQL代码理解困难</strong>：需要通过理解AI生成代码的思路，逐步理解整体思路，比较耗时</li>
+<li><strong>细节爆炸</strong>：每个高层任务背后隐藏着无数技术细节（表关联、匹配策略、异常处理等）</li>
+</ul>
+</li>
+<li><strong>第一次完整尝试</strong>：经过多轮迭代，AI生成了一个1157行的”巨型SQL”<ul>
+<li>初版SQL结果：<ul>
+<li><img src="/../images/sql_result_v1.png" alt="sql_result_v1.png"></li>
+</ul>
+</li>
+<li>初版Prompt：<ul>
+<li><img src="/../images/sql_related_prompt_v1.png" alt="sql_related_prompt_v1.png"></li>
+</ul>
+</li>
+<li>结果：BigQuery中大量语法错误</li>
+<li>修复后：逻辑验证仍然失败</li>
 </ul>
 </li>
 </ol>
-<p>虽然SQL生成效果不理想，但这一阶段的最大收获是建立了”<strong>编写提示词→生成SQL→基于提示词生成测试数据→验证</strong>“的完整流程，为后续工作奠定了基础。</p>
-<p><img src="/../images/sql_related_prompt_v1.png" alt="sql_related_prompt_v1.png"><br><img src="/../images/sql_result_v1.png" alt="sql_result_v1.png"></p>
-<h4 id="第二阶段：理解业务本质，重构解决方案"><a href="#第二阶段：理解业务本质，重构解决方案" class="headerlink" title="第二阶段：理解业务本质，重构解决方案"></a>第二阶段：理解业务本质，重构解决方案</h4><p>完全理解业务逻辑后，我重新审视了这个复杂需求：</p>
+<p><strong>意外的核心收获</strong>：虽然SQL生成效果不如预期，但这一阶段最宝贵的成果是建立了一套完整的AI辅助验证流程：</p>
+<p><code>编写结构化提示词 → 生成SQL代码 → 基于提示词生成测试数据 → 逻辑验证</code></p>
+<p>这个流程的确立，为后续的PDD方法论应用奠定了坚实基础。正是在这个”失败”的实验中，我意识到：真正的价值不在于AI能否一次性解决所有问题，而在于如何与AI建立高效的协作模式。</p>
+<h3 id="第二阶段：理解业务本质，重构解决方案"><a href="#第二阶段：理解业务本质，重构解决方案" class="headerlink" title="第二阶段：理解业务本质，重构解决方案"></a>第二阶段：理解业务本质，重构解决方案</h3><h4 id="从复杂回归简单"><a href="#从复杂回归简单" class="headerlink" title="从复杂回归简单"></a><strong>从复杂回归简单</strong></h4><p>经过第一阶段的”弯路”，我开始重新审视这个看似复杂的需求。突然间，一个关键洞察浮现：<strong>这本质上就是两张表的数据对比问题</strong>！一旦抓住这个核心，整个解决思路瞬间清晰起来。</p>
+<h4 id="PDD方法论的真正发力"><a href="#PDD方法论的真正发力" class="headerlink" title="PDD方法论的真正发力"></a><strong>PDD方法论的真正发力</strong></h4><p>基于对业务本质的理解，我开始系统性地重构解决方案：</p>
 <ol>
-<li><strong>把握本质</strong>：认识到这个需求本质上是将两张表的数据经处理后进行对比，理解了这一点后，结合第一阶段的经验，对问题进行了系统性拆解。</li>
-<li><strong>结构化实现</strong>：<ul>
-<li>遵循”<strong>本质决定边界，特征决定细节</strong>“的原则，将大任务分解为相对简单的单元<ul>
-<li><img src="/../images/sql_related_prompt_v2_1.png" alt="sql_related_prompt_v1_1.png"><img src="/../images/sql_related_prompt_v2_2.png" alt="sql_related_prompt_v1_2.png"></li>
+<li><p><strong>任务分解策略</strong></p>
+<p> 遵循”<strong>本质决定边界，特征决定细节</strong>“的原则，将庞大的SQL需求拆解为相对独立的功能单元，专注解决一个明确问题：</p>
+<ul>
+<li>利用PDD方法论，将实现逻辑转化为结构化提示词</li>
+<li>任务简化带来的直接效果：<strong>AI幻觉大幅减少，代码生成准确率显著提升</strong></li>
 </ul>
+<p> <img src="/../images/sql_related_prompt_v2_1.png" alt="sql_related_prompt_v1_1.png"><img src="/../images/sql_related_prompt_v2_2.png" alt="sql_related_prompt_v1_2.png"></p>
 </li>
-<li>每个单元只专注一件事，通过PDD方法论将每个实现任务用提示词呈现</li>
-<li>因为任务简化，单元内做的事情相对单一，AI的幻觉大幅减少，提示词完成后SQL能较准确生成</li>
-<li>得益于第一阶段建立的验证流程，可以快速验证每个任务的实现</li>
-</ul>
-</li>
-<li><strong>成果验证</strong>：<ul>
-<li>最终生成435行SQL，思路清晰流畅，自己也能轻易理解</li>
-<li>在BigQuery上基本一次运行成功，没有额外语法错误</li>
-<li>完成了大部分逻辑分支的验证测试</li>
-</ul>
+<li><p>快速验证闭环</p>
+<p> 得益于第一阶段建立的验证流程，每个单元都能快速完成准确性验证。<strong>重构成果对比</strong>如下：</p>
+<p> <img src="/../images/comparison_of_reconstruction_effects.png" alt="comparison_of_reconstruction_effects.png"></p>
 </li>
 </ol>
-<p>然而，当使用真实数据（亿级数量级）验证时，SQL在5分钟内无法完成运行，中间结果达到268+GB，显然需要进一步优化。</p>
-<p><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></p>
-<h4 id="第三阶段：性能优化"><a href="#第三阶段：性能优化" class="headerlink" title="第三阶段：性能优化"></a>第三阶段：性能优化</h4><p>面对性能瓶颈，采取了系统性的优化策略：</p>
+<p>然而，当切换到线上环境真实的亿级数据验证时，新的挑战出现了，<strong>性能瓶颈</strong>：</p>
+<ul>
+<li><strong>执行时间</strong>：超过5分钟无法完成</li>
+<li><strong>中间结果</strong>：膨胀至268+GB<ul>
+<li><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></li>
+</ul>
+</li>
+<li><strong>下一步方向</strong>：SQL性能优化成为新的攻坚重点</li>
+</ul>
+<h3 id="第三阶段：性能优化"><a href="#第三阶段：性能优化" class="headerlink" title="第三阶段：性能优化"></a>第三阶段：性能优化</h3><p>面对性能瓶颈，采取了系统性的优化策略：</p>
 <ol>
-<li><p><strong>问题诊断与根因分析</strong>：通过向团队中数据领域的资深专家请教，深入分析后发现核心问题所在：AI生成SQL时未充分考虑线上数据规模（已达亿级别），导致对大表执行了多次复杂的Join操作，严重影响查询性能。</p>
+<li><p><strong>问题诊断与根因分析</strong>：通过向团队中数据领域的资深专家请教，深入分析后发现核心问题所在：</p>
+<ul>
+<li><strong>核心问题</strong>：AI生成SQL时未充分考虑线上数据规模（已达亿级别），导致对大表执行了多次复杂的Join操作，严重影响查询性能。</li>
+</ul>
 </li>
 <li><p><strong>制定优化策略</strong>：基于问题根因，我们确定了四个关键优化方向：</p>
 <ul>
@@ -274,12 +304,12 @@
 <li><strong>分步查询优化</strong>：将复杂查询拆分为多个步骤，仅选取必要字段，最大化减少数据传输量</li>
 </ul>
 </li>
-<li><p><strong>提示词精细化改造</strong>：针对性能瓶颈部分，我们对相关提示词进行了深度重构：</p>
+<li><p><strong>提示词精细化改造</strong>：针对性能瓶颈部分，我对相关提示词进行了深度重构：</p>
 <ul>
 <li><strong>定位优化目标</strong>：精准识别需要优化的SQL片段及其对应提示词</li>
 <li><strong>复杂问题分解</strong>：按照既定优化方向，将复杂查询逐步拆解为独立的提示词组件</li>
 <li><strong>逐一验证优化</strong>：为每个提示词组件单独生成SQL并进行性能验证，确保复杂JOIN完全拆解到位</li>
-<li><strong>任务拆分展示</strong>：优化后的Prompt效果如下图所示：<ul>
+<li><strong>任务拆分展示</strong>：优化后的Prompt部分效果如下图所示：<ul>
 <li><img src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
 </ul>
 </li>
@@ -291,8 +321,8 @@
 <p>性能提升幅度超过800%，数据处理效率显著提升。</p>
 <p><img src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
 <p>在这一个过程中，当确定优化方向后，补值逻辑其实是需要重写的，但是通过阶段一和阶段二的探索后，在Data领域稳定生成期望SQL的模式已经建立了，所以，即使重新写也没关系，这个过程非常快速的完成了。后续还有进行分之逻辑修复的处理，本质上步骤类似，就不在这里进行展示了。</p>
-<h3 id="结构化提示驱动开发-PDD-在数据领域的应用方法论"><a href="#结构化提示驱动开发-PDD-在数据领域的应用方法论" class="headerlink" title="结构化提示驱动开发(PDD)在数据领域的应用方法论"></a>结构化提示驱动开发(PDD)在数据领域的应用方法论</h3><p>基于项目实践，总结PDD在数据领域特别是SQL开发中的应用方法论，为类似场景提供参考。</p>
-<h4 id="PDD在SQL开发中的核心应用"><a href="#PDD在SQL开发中的核心应用" class="headerlink" title="PDD在SQL开发中的核心应用"></a>PDD在SQL开发中的核心应用</h4><p><strong>场景分类与策略</strong></p>
+<h2 id="结构化提示驱动开发-PDD-在数据领域的应用方法论"><a href="#结构化提示驱动开发-PDD-在数据领域的应用方法论" class="headerlink" title="结构化提示驱动开发(PDD)在数据领域的应用方法论"></a>结构化提示驱动开发(PDD)在数据领域的应用方法论</h2><p>基于项目实践，总结PDD在数据领域特别是SQL开发中的应用方法论，为类似场景提供参考。</p>
+<h3 id="PDD在SQL开发中的核心应用"><a href="#PDD在SQL开发中的核心应用" class="headerlink" title="PDD在SQL开发中的核心应用"></a>PDD在SQL开发中的核心应用</h3><p><strong>场景分类与策略</strong></p>
 <ul>
 <li><strong>简单场景</strong>：基础查询（无需预处理数据，数据量较小等需求）可直接生成，无需过多调整</li>
 <li><strong>复杂场景</strong>：需要结构化验证和迭代优化<ul>
@@ -302,14 +332,14 @@
 </ul>
 </li>
 </ul>
-<h4 id="实践流程"><a href="#实践流程" class="headerlink" title="实践流程"></a>实践流程</h4><ul>
+<h3 id="实践流程"><a href="#实践流程" class="headerlink" title="实践流程"></a>实践流程</h3><ul>
 <li><strong>人类输入</strong>：结构化提示（按照PDD方法论中的七个部分编写）</li>
 <li><strong>AI输出</strong>：初版SQL代码</li>
 <li><strong>验证阶段</strong>：对照DOD检查功能正确性与性能</li>
 <li><strong>迭代优化</strong>：根据问题调整提示词（如澄清模糊逻辑）</li>
 <li><strong>性能调优</strong>：结合AI建议优化（如JOIN策略、数据预处理策略等）</li>
 </ul>
-<h4 id="实施建议与最佳实践"><a href="#实施建议与最佳实践" class="headerlink" title="实施建议与最佳实践"></a>实施建议与最佳实践</h4><ol>
+<h3 id="实施建议与最佳实践"><a href="#实施建议与最佳实践" class="headerlink" title="实施建议与最佳实践"></a>实施建议与最佳实践</h3><ol>
 <li><strong>在正式进行prompt的编写之前，明确业务需求</strong><ul>
 <li>使用文档或其他非技术性的合适方式，与业务人员达成一致</li>
 <li>定义清楚DOD，避免开发过程中频繁变更需求（非常重要，尤其是在SQL场景下，能提高验证阶段性目标的效率）</li>
@@ -344,7 +374,7 @@
 </ul>
 </li>
 </ol>
-<h4 id="复杂场景下的人员能力要求"><a href="#复杂场景下的人员能力要求" class="headerlink" title="复杂场景下的人员能力要求"></a>复杂场景下的人员能力要求</h4><p><strong>核心技能</strong></p>
+<h3 id="复杂场景下的人员能力要求"><a href="#复杂场景下的人员能力要求" class="headerlink" title="复杂场景下的人员能力要求"></a>复杂场景下的人员能力要求</h3><p><strong>核心技能</strong></p>
 <ul>
 <li><strong>PDD理论掌握</strong>：识别并消除AI幻觉，如修正不合理的JOIN逻辑</li>
 <li><strong>需求分析能力</strong>：将模糊需求转化为精准技术规范，定位数据源，设计模块化方案等</li>
@@ -358,7 +388,7 @@
 <li><strong>验证态度</strong>：保持乐观迭代心态，严格基于DOD和人工复查验证结果</li>
 </ul>
 <p>这套方法论强调结构化思维、迭代优化和严格验证，通过合理的人机协作，能够实现高质量的SQL开发。</p>
-<h3 id="总结与未来展望"><a href="#总结与未来展望" class="headerlink" title="总结与未来展望"></a>总结与未来展望</h3><p>通过这次PDD在数据领域的深度实践，我收获了以下五个关键洞见：</p>
+<h2 id="总结与未来展望"><a href="#总结与未来展望" class="headerlink" title="总结与未来展望"></a>总结与未来展望</h2><p>通过这次PDD在数据领域的深度实践，我收获了以下五个关键洞见：</p>
 <ol>
 <li><strong>目标先行，路径自明</strong>：明确的完成标准(DOD)如同灯塔，为整个开发过程指引方向，避免在复杂问题中迷失。</li>
 <li><strong>方法论的适应性验证</strong>：即便面对全新的技术领域，坚持PDD核心原则依然能够破解难题。每一次新场景的成功应用，都是对方法论适用性的有力证明。</li>
