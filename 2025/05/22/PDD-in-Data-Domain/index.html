@@ -32,10 +32,11 @@
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_related_prompt_v2_1.png">
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_related_prompt_v2_2.png">
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/SQL_processing_result.png">
+<meta property="og:image" content="hhttps://gszhangwei.github.io/images/performance_enhanced_result.png">
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_processing_result_final.png">
 <meta property="og:image" content="hhttps://gszhangwei.github.io/images/cognitive_improve_process_by_using_AI.png">
 <meta property="article:published_time" content="2025-05-22T11:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-23T04:52:55.099Z">
+<meta property="article:modified_time" content="2025-05-27T03:57:39.664Z">
 <meta property="article:author" content="Wiilie Zhang">
 <meta property="article:tag" content="AI">
 <meta property="article:tag" content="Prompts">
@@ -200,7 +201,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-05-23 12:52:55" itemprop="dateModified" datetime="2025-05-23T12:52:55+08:00">2025-05-23</time>
+                <time title="修改时间：2025-05-27 11:57:39" itemprop="dateModified" datetime="2025-05-27T11:57:39+08:00">2025-05-27</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -276,67 +277,69 @@
 </ol>
 <p>然而，当使用真实数据（亿级数量级）验证时，SQL在5分钟内无法完成运行，中间结果达到268+GB，显然需要进一步优化。</p>
 <p><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></p>
-<h4 id="第三阶段：性能优化"><a href="#第三阶段：性能优化" class="headerlink" title="第三阶段：性能优化"></a>第三阶段：性能优化</h4><p>面对性能问题，我采取了以下步骤：</p>
+<h4 id="第三阶段：性能优化"><a href="#第三阶段：性能优化" class="headerlink" title="第三阶段：性能优化"></a>第三阶段：性能优化</h4><p>面对性能瓶颈，采取了系统性的优化策略：</p>
 <ol>
-<li><strong>根因分析</strong>：请教团队中数据领域经验丰富的同事，发现主要问题是在使用AI生成SQL时忽略了数据量级（线上数据达到亿级），直接对大表进行多次Join操作。</li>
-<li><strong>优化方向</strong>：<ul>
-<li>大表尽量只Join一次，一次获取所有需要的结果</li>
-<li>与大表Join前先过滤数据，减小驱动表尺寸</li>
-<li>优化Join类型，根据需要合理使用Inner Join和Left Join</li>
-<li>分步获取需要的值，减少连续Join，只选取必要字段，减少传输数据量</li>
+<li><p><strong>问题诊断与根因分析</strong>：通过向团队中数据领域的资深专家请教，深入分析后发现核心问题所在：AI生成SQL时未充分考虑线上数据规模（已达亿级别），导致对大表执行了多次复杂的Join操作，严重影响查询性能。</p>
+</li>
+<li><p><strong>制定优化策略</strong>：基于问题根因，我们确定了四个关键优化方向：</p>
+<ul>
+<li><strong>减少Join频次</strong>：大表尽量只进行一次Join操作，一次性获取所有必需数据</li>
+<li><strong>前置数据过滤</strong>：在与大表Join之前先进行数据筛选，有效缩小驱动表规模</li>
+<li><strong>精准Join类型选择</strong>：根据业务需求合理选择Inner Join或Left Join</li>
+<li><strong>分步查询优化</strong>：将复杂查询拆分为多个步骤，仅选取必要字段，最大化减少数据传输量</li>
 </ul>
 </li>
-<li><strong>效果显著</strong>：<ul>
-<li>从”5分钟无结果，涉及到的数据几百GB”</li>
-<li>优化到”37秒完成，最终结果仅3.7GB”</li>
+<li><p><strong>提示词精细化改造</strong>：针对性能瓶颈部分，我们对相关提示词进行了深度重构：</p>
+<ul>
+<li><strong>定位优化目标</strong>：精准识别需要优化的SQL片段及其对应提示词</li>
+<li><strong>复杂问题分解</strong>：按照既定优化方向，将复杂查询逐步拆解为独立的提示词组件</li>
+<li><strong>逐一验证优化</strong>：为每个提示词组件单独生成SQL并进行性能验证，确保复杂JOIN完全拆解到位</li>
+<li><strong>任务拆分展示</strong>：优化后的Prompt效果如下图所示：<ul>
+<li><img src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
+</ul>
+</li>
+<li><strong>优化前</strong>：查询超时5分钟无结果，涉及数据量高达数百GB</li>
+<li><strong>优化后</strong>：查询仅需37秒完成，最终结果数据量仅为3.7GB</li>
 </ul>
 </li>
 </ol>
+<p>性能提升幅度超过800%，数据处理效率显著提升。</p>
 <p><img src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
-<p>在这一个过程中，当确定优化方向后，补值逻辑其实是需要重写的，但是通过步骤一和步骤二的探索后，在Data领域稳定生成期望sql的模式已经建立了，所以，即使重新写也没关系，这个过程非常快速的完成了。后续还有进行分之逻辑修复的处理，本质上步骤类似，就不在这里进行展示了。</p>
-<h3 id="结构化提示驱动开发-PDD-在数据领域的应用方法论"><a href="#结构化提示驱动开发-PDD-在数据领域的应用方法论" class="headerlink" title="结构化提示驱动开发(PDD)在数据领域的应用方法论"></a>结构化提示驱动开发(PDD)在数据领域的应用方法论</h3><p>通过这次项目实践，我总结了PDD在数据领域特别是SQL开发中的应用方法论，希望能为类似场景下的开发提供参考。</p>
-<h4 id="PDD在SQL开发中的核心结论"><a href="#PDD在SQL开发中的核心结论" class="headerlink" title="PDD在SQL开发中的核心结论"></a>PDD在SQL开发中的核心结论</h4><p><strong>场景适用性</strong></p>
+<p>在这一个过程中，当确定优化方向后，补值逻辑其实是需要重写的，但是通过阶段一和阶段二的探索后，在Data领域稳定生成期望SQL的模式已经建立了，所以，即使重新写也没关系，这个过程非常快速的完成了。后续还有进行分之逻辑修复的处理，本质上步骤类似，就不在这里进行展示了。</p>
+<h3 id="结构化提示驱动开发-PDD-在数据领域的应用方法论"><a href="#结构化提示驱动开发-PDD-在数据领域的应用方法论" class="headerlink" title="结构化提示驱动开发(PDD)在数据领域的应用方法论"></a>结构化提示驱动开发(PDD)在数据领域的应用方法论</h3><p>基于项目实践，总结PDD在数据领域特别是SQL开发中的应用方法论，为类似场景提供参考。</p>
+<h4 id="PDD在SQL开发中的核心应用"><a href="#PDD在SQL开发中的核心应用" class="headerlink" title="PDD在SQL开发中的核心应用"></a>PDD在SQL开发中的核心应用</h4><p><strong>场景分类与策略</strong></p>
 <ul>
-<li><strong>简单场景</strong>：<ul>
-<li>PDD可直接生成SQL脚本，无需过多调整</li>
-<li>适用于基础查询（过滤、聚合等）</li>
-</ul>
-</li>
-<li><strong>复杂场景</strong>：<ul>
-<li>需通过结构化验证和迭代优化实现</li>
-<li><strong>关键步骤</strong>：<ul>
-<li><strong>定义完成标准（DOD）</strong>：提前明确验收标准（如输出格式、性能指标），作为初版SQL的验证基准</li>
+<li><strong>简单场景</strong>：基础查询（无需预处理数据，数据量较小等需求）可直接生成，无需过多调整</li>
+<li><strong>复杂场景</strong>：需要结构化验证和迭代优化<ul>
+<li>**完成标准定义(DOD)**：预先明确验收标准（如输出格式、性能指标），作为初版SQL的验证基准</li>
 <li><strong>迭代优化</strong>：根据DOD识别问题（逻辑错误、边缘场景），逐步调整提示词，生成新SQL直至通过所有测试用例</li>
 <li><strong>性能调优</strong>：优先小步重构（如根据中间表逐步调整优化），避免大规模重写，降低风险并保持可读性</li>
 </ul>
 </li>
 </ul>
-</li>
-</ul>
-<h4 id="PDD在Data领域的-High-Level-实践流程"><a href="#PDD在Data领域的-High-Level-实践流程" class="headerlink" title="PDD在Data领域的 High Level 实践流程"></a>PDD在Data领域的 High Level 实践流程</h4><ul>
-<li><strong>人类输入</strong>：结构化提示（业务逻辑、数据模型、约束条件等）</li>
-<li><strong>AI输出</strong>：初版SQL</li>
-<li><strong>验证</strong>：对照DOD检查功能正确性与性能</li>
-<li><strong>优化</strong>：根据问题调整提示词（如澄清模糊逻辑）</li>
-<li><strong>调优</strong>：结合AI建议优化（如索引策略、执行计划分析）</li>
+<h4 id="实践流程"><a href="#实践流程" class="headerlink" title="实践流程"></a>实践流程</h4><ul>
+<li><strong>人类输入</strong>：结构化提示（按照PDD方法论中的七个部分编写）</li>
+<li><strong>AI输出</strong>：初版SQL代码</li>
+<li><strong>验证阶段</strong>：对照DOD检查功能正确性与性能</li>
+<li><strong>迭代优化</strong>：根据问题调整提示词（如澄清模糊逻辑）</li>
+<li><strong>性能调优</strong>：结合AI建议优化（如JOIN策略、数据预处理策略等）</li>
 </ul>
 <h4 id="实施建议与最佳实践"><a href="#实施建议与最佳实践" class="headerlink" title="实施建议与最佳实践"></a>实施建议与最佳实践</h4><ol>
 <li><strong>在正式进行prompt的编写之前，明确业务需求</strong><ul>
 <li>使用文档或其他非技术性的合适方式，与业务人员达成一致</li>
-<li>定义清楚DOD，避免边做边确认需求（非常重要，尤其是在SQL场景下，能提高验证阶段性目标的效率）</li>
-<li>当需求明确后，可以更有效地避免边做边确认需求的情况</li>
-<li>如遇edge case，回顾业务梳理文档，将其添加到结构化prompt的相应任务中</li>
+<li>定义清楚DOD，避免开发过程中频繁变更需求（非常重要，尤其是在SQL场景下，能提高验证阶段性目标的效率）</li>
+<li>建立业务梳理文档，便于处理边缘场景。如遇edge case，回顾业务梳理文档，将其添加到结构化prompt的相应任务中</li>
 </ul>
 </li>
 <li><strong>基于业务需求文档确定技术解决方案框架</strong><ul>
-<li><strong>实现方案清晰时</strong>：<ul>
+<li><strong>实现方案明确时</strong>：<ul>
 <li>定义实现需求的抽象步骤</li>
 <li>根据抽象步骤，细化每个任务</li>
-<li>可一个任务一个任务地调试，而不必一次性全部生成</li>
+<li>一个任务一个任务地调试，不必一次性全部生成</li>
 <li>当第一个任务稳定后，使用相同模式编写其余任务的提示词</li>
 </ul>
 </li>
-<li><strong>实现方案不清晰时</strong>：<ul>
+<li><strong>实现方案不明确时</strong>：<ul>
 <li>基于梳理好的数据查询逻辑与AI沟通，获取可行的抽象步骤</li>
 <li>结合个人理解确定最终实现方案的抽象步骤</li>
 <li>基于实现方案清晰的步骤，使用结构化提示词生成SQL代码</li>
@@ -344,66 +347,42 @@
 </li>
 </ul>
 </li>
-<li><strong>初版提示词生成与细节补充</strong><ul>
-<li>首次生成的SQL可能有很多不尽人意之处，需要耐心调整</li>
-<li>遇到生成不符合期望的SQL时，找到对应的任务提示词区域，添加更详细的细节说明</li>
-<li>可结合专业推理型模型，获取SQL优化建议或实现方案的改进</li>
+<li><strong>迭代优化</strong><ul>
+<li>针对不符合期望的SQL，定位相应提示词区域并补充细节</li>
+<li>结合专业推理型模型，获取SQL优化建议或实现方案的改进</li>
+<li>更新prompt记录与AI达成的一致内容，便于复用</li>
 </ul>
 </li>
 <li><strong>总体策略</strong><ul>
+<li>若对技术栈实现细节不清楚：先用自然语言描述逻辑和框架，让AI基于prompt生成SQL，调试定版后再总结更新回prompt</li>
 <li>若对实现细节非常清楚：可直接手写SQL，完成后用AI按照PDD方法论组织提示词的模式，总结实现方案更新到prompt中</li>
-<li>若对技术栈实现细节不清楚：先用自然语言描述逻辑和框架，让AI基于prompt生成，调试定版后再总结更新回prompt</li>
-<li>更新prompt的目的是记录与AI达成一致的内容，便于今后遇到相似场景时直接复用，减少探索成本</li>
 </ul>
 </li>
 </ol>
-<h4 id="复杂场景下的人员能力要求"><a href="#复杂场景下的人员能力要求" class="headerlink" title="复杂场景下的人员能力要求"></a>复杂场景下的人员能力要求</h4><p><strong>核心能力</strong></p>
+<h4 id="复杂场景下的人员能力要求"><a href="#复杂场景下的人员能力要求" class="headerlink" title="复杂场景下的人员能力要求"></a>复杂场景下的人员能力要求</h4><p><strong>核心技能</strong></p>
 <ul>
-<li><strong>熟练掌握PDD理论</strong>：<ul>
-<li><strong>关键技能</strong>：识别并消除AI幻觉</li>
-<li><strong>示例</strong>：修正不符合业务规则的JOIN逻辑</li>
+<li><strong>PDD理论掌握</strong>：识别并消除AI幻觉，如修正不合理的JOIN逻辑</li>
+<li><strong>需求分析能力</strong>：将模糊需求转化为精准技术规范，定位数据源，设计模块化方案等</li>
+<li><strong>结构化管理</strong>：组织上下文信息，将非结构化需求结构化，基于PDD理论编写高质量提示词</li>
 </ul>
-</li>
-<li><strong>问题分析与需求结构化能力</strong>：<ul>
-<li><strong>业务理解</strong>：将模糊需求转化为精准技术规范</li>
-<li><strong>信息溯源</strong>：定位数据源（如数据字典、领域专家）</li>
-<li><strong>方案设计</strong>：模块化实现计划（如拆分复杂逻辑为中间表）</li>
+<p><strong>AI认知能力</strong></p>
+<ul>
+<li><strong>优势识别</strong>：快速原型设计、模式识别</li>
+<li><strong>劣势认知</strong>：边缘场景处理、上下文歧义解决</li>
+<li><strong>工具选择</strong>：技术任务用垂直领域模型，通用任务用通用AI</li>
+<li><strong>验证态度</strong>：保持乐观迭代心态，严格基于DOD和人工复查验证结果</li>
 </ul>
-</li>
-<li><strong>结构化信息管理能力</strong>：<ul>
-<li><strong>上下文组织</strong>：将非结构化需求结构化</li>
-<li><strong>提示词工程</strong>：基于PDD理论编写结构化提示词</li>
-</ul>
-</li>
-<li><strong>AI认知能力</strong>：<ul>
-<li><strong>优劣判断</strong>：<ul>
-<li><strong>优势</strong>：快速原型设计、模式识别</li>
-<li><strong>劣势</strong>：处理边缘场景、上下文歧义</li>
-</ul>
-</li>
-<li><strong>工具选择</strong>：<ul>
-<li>技术任务使用垂直领域AI（如代码生成专用模型）</li>
-<li>通用AI用于头脑风暴或文档生成</li>
-</ul>
-</li>
-<li><strong>批判性验证</strong>：<ul>
-<li><strong>乐观</strong>：相信通过迭代可达成目标</li>
-<li><strong>谨慎</strong>：严格基于DOD和人工复查验证结果</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="总结与未来展望"><a href="#总结与未来展望" class="headerlink" title="总结与未来展望"></a>总结与未来展望</h3><p>这次PDD在数据领域的应用实践让我获得了以下关键洞见：</p>
+<p>这套方法论强调结构化思维、迭代优化和严格验证，通过合理的人机协作，能够实现高质量的SQL开发。</p>
+<h3 id="总结与未来展望"><a href="#总结与未来展望" class="headerlink" title="总结与未来展望"></a>总结与未来展望</h3><p>通过这次PDD在数据领域的深度实践，我收获了以下五个关键洞见：</p>
 <ol>
-<li><strong>明确定义完成标准(DOD)非常重要</strong>：清晰的目标指引整个开发过程。</li>
-<li><strong>熟练运用PDD原则应对新场景</strong>：即使在未探索的领域，坚持PDD的指导原则，最终都能找到解决方案，同时积累该场景的PDD应用经验。</li>
-<li><strong>持续探索与解决问题的态度</strong>：遇到问题时具体分析，逐步攻破，而非轻易放弃；设定时间限制，及时寻求适当帮助。</li>
-<li><strong>PDD效能提升需要积累</strong>：在新领域首次探索时，不要过分期待AI带来即时效率提升，只有走通流程、固化模式后，通过不断积累和训练，<strong>效能</strong>（与效率要区分开）才会显著提高。</li>
-<li><strong>可持续能力提升</strong>：在AIFSD(AI-First Software Development)模式下，我们追求的不仅是短期效率提升，更注重通过持续积累实现个人能力的全面增长。当我们不断实践统一方法论时，经验积累与认知提升相辅相成，从而增强解决问题的综合能力。这种个人能力的持续提升，将使我们与AI的协作越发高效和互补，形成良性循环。</li>
+<li><strong>目标先行，路径自明</strong>：明确的完成标准(DOD)如同灯塔，为整个开发过程指引方向，避免在复杂问题中迷失。</li>
+<li><strong>方法论的适应性验证</strong>：即便面对全新的技术领域，坚持PDD核心原则依然能够破解难题。每一次新场景的成功应用，都是对方法论适用性的有力证明。</li>
+<li><strong>问题驱动的持续探索</strong>：面对挑战时，具体分析、逐步突破的策略远比轻易放弃更有价值。合理设定时间界限，适时寻求帮助，让探索更加高效。</li>
+<li><strong>效能提升的积累效应</strong>：在新领域的首次尝试中，不必期待AI带来立竿见影的效率提升。真正的效能飞跃源于流程的固化、模式的沉淀和经验的不断积累。</li>
+<li><strong>能力增长的正向循环</strong>：AIFSD模式下，我们追求的不仅是当下的效率优化，更是通过持续实践实现能力的螺旋式上升。统一方法论的反复应用让经验积累与认知提升相互促进，最终形成人机协作的良性生态。</li>
 </ol>
 <p><img src="/../images/cognitive_improve_process_by_using_AI.png" alt="cognitive_improve_process_by_using_AI.png"></p>
-<p>通过这次实践，验证了PDD方法论在数据领域特别是复杂SQL场景下的适用性，并提炼出了一套在Data领域写复杂SQL的可重复使用的可行性路径（<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/structured-prompts-driven-development/blob/main/data/en/DATA-PROCESSING-TEMPLATE-EN.md">点击查看模板</a>）。随着更多项目实践和经验积累，相信PDD方法论还将不断完善，为软件开发领域带来更高的效率和质量提升。</p>
+<p>通过这次实践，验证了PDD方法论在数据领域特别是复杂SQL场景下的适用性，并提炼出了一套在Data领域写复杂SQL的可重复使用的可行性路径（<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/structured-prompts-driven-development/blob/main/data/en/DATA-PROCESSING-TEMPLATE-EN.md">点击查看模板</a>）。展望未来，随着更多实际项目的锤炼和方法论的持续迭代，PDD必将为软件开发领域带来更深层次的效率革命和质量跃升。<strong>每一次实践都是一次认知的进化，每一次积累都是一次自我的超越。</strong></p>
 
     </div>
 
@@ -485,7 +464,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%9B%AE%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text">技术栈与项目目标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%95%B4%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">实现的整体过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84AI%E8%BE%85%E5%8A%A9SQL%E5%BC%80%E5%8F%91"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段：从零开始的AI辅助SQL开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%90%86%E8%A7%A3%E4%B8%9A%E5%8A%A1%E6%9C%AC%E8%B4%A8%EF%BC%8C%E9%87%8D%E6%9E%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段：理解业务本质，重构解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.3.</span> <span class="nav-text">第三阶段：性能优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-PDD-%E5%9C%A8%E6%95%B0%E6%8D%AE%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结构化提示驱动开发(PDD)在数据领域的应用方法论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PDD%E5%9C%A8SQL%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E6%A0%B8%E5%BF%83%E7%BB%93%E8%AE%BA"><span class="nav-number">4.1.</span> <span class="nav-text">PDD在SQL开发中的核心结论</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PDD%E5%9C%A8Data%E9%A2%86%E5%9F%9F%E7%9A%84-High-Level-%E5%AE%9E%E8%B7%B5%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">PDD在Data领域的 High Level 实践流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E5%BB%BA%E8%AE%AE%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">4.3.</span> <span class="nav-text">实施建议与最佳实践</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E4%BA%BA%E5%91%98%E8%83%BD%E5%8A%9B%E8%A6%81%E6%B1%82"><span class="nav-number">4.4.</span> <span class="nav-text">复杂场景下的人员能力要求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="nav-number">5.</span> <span class="nav-text">总结与未来展望</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88%E4%B8%8E%E9%A1%B9%E7%9B%AE%E7%9B%AE%E6%A0%87"><span class="nav-number">2.1.</span> <span class="nav-text">技术栈与项目目标</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%95%B4%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">实现的整体过程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84AI%E8%BE%85%E5%8A%A9SQL%E5%BC%80%E5%8F%91"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段：从零开始的AI辅助SQL开发</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%90%86%E8%A7%A3%E4%B8%9A%E5%8A%A1%E6%9C%AC%E8%B4%A8%EF%BC%8C%E9%87%8D%E6%9E%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段：理解业务本质，重构解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.3.</span> <span class="nav-text">第三阶段：性能优化</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-PDD-%E5%9C%A8%E6%95%B0%E6%8D%AE%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结构化提示驱动开发(PDD)在数据领域的应用方法论</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PDD%E5%9C%A8SQL%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BA%94%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">PDD在SQL开发中的核心应用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">实践流程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E5%BB%BA%E8%AE%AE%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">4.3.</span> <span class="nav-text">实施建议与最佳实践</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E4%BA%BA%E5%91%98%E8%83%BD%E5%8A%9B%E8%A6%81%E6%B1%82"><span class="nav-number">4.4.</span> <span class="nav-text">复杂场景下的人员能力要求</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="nav-number">5.</span> <span class="nav-text">总结与未来展望</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
