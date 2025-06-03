@@ -155,6 +155,125 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/02/27/prompt-driven-development-en/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/27/prompt-driven-development-en/" class="post-title-link" itemprop="url">Structured prompts driven development</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-27 17:00:00" itemprop="dateCreated datePublished" datetime="2025-02-27T17:00:00+08:00">2025-02-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-03-03 12:07:28" itemprop="dateModified" datetime="2025-03-03T12:07:28+08:00">2025-03-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Tech/" itemprop="url" rel="index"><span itemprop="name">Tech</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>Recently, I took part in an external livestream hosted by our company in China, where I presented on the topic of ‘Structured Prompt-Driven Development Practice. I am now recording this experience as a blog post to share some of our team’s practices and reflections on prompt-driven development. As large language models continue to mature, we are increasingly realizing that efficiently leveraging structured prompts to guide AI in generating high-quality code is key to improving both software development efficiency and quality. This article, centered on <strong>Structured Prompt-Driven Development</strong>, comprehensively analyzes how prompts can be applied in software development—from design philosophy and practical implementation to governance strategies—supporting our discussion with data and practical examples.</p>
+<h2 id="Unlocking-Solutions-Overcoming-Key-Challenges"><a href="#Unlocking-Solutions-Overcoming-Key-Challenges" class="headerlink" title="Unlocking Solutions: Overcoming Key Challenges"></a>Unlocking Solutions: Overcoming Key Challenges</h2><p>In the early stages of AI-assisted development, we experienced firsthand the many limitations of conventional development models. The typical conversational code generation approach often suffers from several issues: the generated code frequently lacks usability and exhibits uneven quality, leading to extensive manual rework; moreover, conversational generation methods do not readily produce fixed, reusable engineering deliverables, which limits the large-scale application of AI in enterprise-level projects. Data shows that the adoption rate of AI-generated code is generally below 50%, and the fluctuations in code quality pose significant risks for actual delivery.</p>
+<p>This led us to ponder: if we could overcome these obstacles and fully harness the potential of AI during the delivery process, how might software development transform? After extensive exploration and practical trials, we determined that addressing these challenges requires three core capabilities:</p>
+<ul>
+<li>The ability to quickly analyze problems and accurately identify root causes, thereby providing effective subsequent solutions.</li>
+<li>A reliance on rigorous engineering practices that ensure code quality through standardized processes.</li>
+<li>Most critically, employing structured prompts that enable AI to generate code which is interpretable, traceable, and highly adoptable.</li>
+</ul>
+<p>Challenge_and_Solution.png</p>
+<p>These three pillars form the core of our breakthrough from traditional methodologies and drive our AI-empowered development approach, providing a solid theoretical foundation and clear guidance for our subsequent practices.</p>
+<h2 id="Pilot-Project-Exploration-and-Validation"><a href="#Pilot-Project-Exploration-and-Validation" class="headerlink" title="Pilot Project Exploration and Validation"></a>Pilot Project Exploration and Validation</h2><p>To validate the feasibility of our methodology, we conducted a series of pilot projects. Although specific business details cannot be disclosed, the overall project tasks included initializing new frontend services, setting up infrastructure and continuous integration (CI), writing new backend and frontend code and tests, and refactoring existing frontend systems. After project delivery, detailed data collection and comparative analysis yielded remarkably encouraging results.</p>
+<p>For instance, in a system built from scratch, the traditional development model required approximately 19 man-days, whereas the structured prompt-driven approach took only 7 man-days—with a code adoption rate as high as 95%. This not only reduced the development cycle dramatically but also nearly tripled productivity. Similarly, for legacy system requirements, development time was reduced from 5 to 3 man-days, representing about a 1.7-times improvement in efficiency. Additionally, we observed a significant reduction in code duplication and an increase in unit test coverage from 65% to 96%. These results clearly demonstrate that structured prompts not only improve delivery efficiency but also enhance code quality and overall system stability.</p>
+<p>Background_of_Project.png</p>
+<p>The significance of these results is that we have successfully discovered an effective path to harness AI for software development. This approach breaks through the limitations of traditional methods by transforming the inherently ambiguous generation process into a manageable, replicable engineering practice—bringing our team a brand-new development experience along with astonishing efficiency gains.</p>
+<p>Let’s first explore how to construct effective prompts in the realm of software development, and then review our specific practices.</p>
+<h2 id="Structured-Prompt-Design-Framework"><a href="#Structured-Prompt-Design-Framework" class="headerlink" title="Structured Prompt Design Framework"></a>Structured Prompt Design Framework</h2><h3 id="How-to-Construct-Effective-Prompts"><a href="#How-to-Construct-Effective-Prompts" class="headerlink" title="How to Construct Effective Prompts?"></a>How to Construct Effective Prompts?</h3><p>In software development, using natural language to drive AI code generation presents a fundamental contradiction: human thinking is inherently divergent, while AI requires highly structured and precise instructions. Traditional prompt design can fall into two pitfalls. On one hand, developers might overly rely on superficial descriptions—such as simply asking “Generate an 800-word marketing copy with subheadings.” Although straightforward, this approach often turns out to be formulaic. On the other hand, overly abstract descriptions leave too much room for interpretation, causing AI to stray from the intended target.</p>
+<p>To overcome this contradiction, we emphasize a shift in thinking—from merely describing features (like color or shape) to abstracting the essence of an object (its core functionality and operational mechanism). Only by first clearly defining an object’s core function and essential characteristics, and then supplementing that with specific details, can we provide AI with a unique, unambiguous generation path that minimizes “hallucinations.” For example, consider a scenario where we need to generate a “white refrigerator” (assuming we are not familiar with the abstract concept of a refrigerator). If we only describe it as “a square white object with four small wheels at the bottom,” AI might produce something unrelated to a refrigerator. However, if we begin by defining its essential function as “maintaining a low-temperature environment” and then add additional feature details, we can accurately target the concept of a refrigerator while still leaving room for related ideas such as cold storage or refrigerated trucks. As we advocate, “features determine details, while essence defines boundaries.” Only by clearly articulating the essence first and then supplementing with specifics can we ensure that the generated outcome aligns with our expectations.</p>
+<p>Construct_prompts_effectively.png</p>
+<h3 id="Application-of-the-Component-Description-Method-in-Prompt-Construction"><a href="#Application-of-the-Component-Description-Method-in-Prompt-Construction" class="headerlink" title="Application of the Component Description Method in Prompt Construction"></a>Application of the Component Description Method in Prompt Construction</h3><p>Based on the above philosophy, we introduced the component description method into our prompt construction. Taking backend development as an example, we designed up to 10 standardized dimensions for each component, covering aspects such as class names, method names, and exception handling. This method does not simply replicate the conventional framework concept; rather, the “components” here represent the basic units of a structured prompt that break down both functional responsibilities and the implementation process in detail.</p>
+<p>Component_Description.png</p>
+<p>The introduction of the component description method ensures that each prompt element is both self-contained and seamlessly integrated with others. By clearly defining its core responsibility and precisely specifying attributes and operational scope, we effectively avoid confusion and overlap between components, thereby safeguarding the integrity of the overall prompt and ensuring consistency in the generated code. This design not only significantly enhances maintainability but also provides robust support for tackling complex business scenarios.</p>
+<h3 id="Overall-Framework-for-Structured-Prompt-Design"><a href="#Overall-Framework-for-Structured-Prompt-Design" class="headerlink" title="Overall Framework for Structured Prompt Design"></a>Overall Framework for Structured Prompt Design</h3><p>Building on the component definitions, we further established a comprehensive framework for structured prompt design, divided into the following five parts:</p>
+<ul>
+<li><strong>Requirement Anchoring:</strong> Accurately describing business requirements to ensure precise development targets.</li>
+<li><strong>Structural Definition:</strong> Clarifying the dependencies and interactions among the modules required to implement functionality.</li>
+<li><strong>Task Scheduling:</strong> Breaking down overall requirements into specific operational units and systematically defining each component to form a coherent workflow.</li>
+<li><strong>Common Tasks:</strong> Standardizing high-frequency operations—such as data validation and exception handling—using template-driven solutions.</li>
+<li><strong>Constraint Control:</strong> Setting up safety boundaries for the entire system by limiting the scope of component calls and references to prevent issues arising from unclear boundaries.</li>
+</ul>
+<p>Throughout this process, we adhere to two golden principles: first, the abstraction of the essence must take precedence over mere feature descriptions—only by clearly defining a component’s core responsibilities can we avoid superficial enumeration. Second, components should be regarded as logical units rather than merely fragments of code; similar to an excellent screenplay that emphasizes a character’s internal motivations rather than dictating every detail of an actor’s performance. Guided by these principles, the framework for structured prompt design has enabled our team to develop a systematic, rigorous, and highly efficient prompting system, thereby greatly enhancing overall development efficiency and code quality.</p>
+<p>Structured_prompts_strategy.png</p>
+<h2 id="Prompt-Engineering-Governance-Strategy-for-AI-Assets"><a href="#Prompt-Engineering-Governance-Strategy-for-AI-Assets" class="headerlink" title="Prompt Engineering: Governance Strategy for AI Assets"></a>Prompt Engineering: Governance Strategy for AI Assets</h2><p>Ensuring that prompts remain effective throughout the development process requires more than just crafting high-quality prompts—it necessitates a comprehensive governance strategy. We have divided prompt governance into multiple layers: the rule layer, the industry-specific abstract solution layer, the specific solution implementation layer, and the AI execution layer. Responsibilities are clearly delineated across these layers, with architects, technical leads, and developers each playing their part to maintain high standards and sustainability of our prompt assets.</p>
+<p>prompts_governance_policy.png</p>
+<p>In our pilot projects, we have already integrated logging rules into a predefined workflow, placing them at the rule layer to ensure that, prior to code generation, the necessary safety and quality standards are embedded via prompts. This approach not only ensures that the generated code adheres to logging standards but also builds a robust safety barrier for the entire system. As implementation continues, this governance strategy will be further refined and extended to a broader range of development scenarios, providing structured assurance for quality control and process management in software engineering.</p>
+<h2 id="Analysis-of-a-Practical-Project-Example"><a href="#Analysis-of-a-Practical-Project-Example" class="headerlink" title="Analysis of a Practical Project Example"></a>Analysis of a Practical Project Example</h2><p>To illustrate the effectiveness of structured prompts more intuitively, let’s consider an API project for retrieving user permission information. This API is designed not only to support multi-criteria queries based on user ID, email, name, and role, but also to handle pagination, sorting, and the grouping and merging of data. In practice, we systematically organized and written the prompts according to the modules—requirements, structure, tasks, common tasks, and constraint controls. In the component definitions, we strictly adhered to the component description method and the core guiding principles of prompt construction. With this comprehensive framework, we successfully implemented an API that dynamically constructs query conditions based on multiple parameters and handles complex data grouping and merging.</p>
+<p>Statistical results indicate that for the backend API module, the team employed 6 sets of prompts totaling 592 lines, which resulted in 1849 lines of generated code and modifications or creations of 37 files. Such a comprehensive practice covering complex business scenarios not only validates the feasibility of the structured prompt model but also significantly enhances delivery efficiency and code quality, heralding a revolutionary approach to traditional development methods.</p>
+<p>Examples_of_project_practices.png</p>
+<p>During the project, we also encountered real-world challenges and gathered valuable experiences. For teams new to this model, we found that there is no need to write prompts entirely from scratch—effective prompts can be extracted from existing code, thereby enabling rapid implementation and iterative refinement of the prompt system.</p>
+<h2 id="Tips-and-Practical-Advice-for-Writing-Effective-Prompts"><a href="#Tips-and-Practical-Advice-for-Writing-Effective-Prompts" class="headerlink" title="Tips and Practical Advice for Writing Effective Prompts"></a>Tips and Practical Advice for Writing Effective Prompts</h2><p>Based on multiple projects, we have developed several strategies for writing high-quality prompts. First, when a solution already exists in current code, AI can be used to automatically parse and extract effective prompts, which can then be further refined. This approach not only saves time but also avoids the risks of starting from scratch. Second, when a solution is still in a developer’s mind, leveraging a reusable structured strategy and adjusting details according to the task at hand can quickly produce prompts that meet expectations. For those situations where the solution is not immediately clear, we recommend engaging in an open collaborative exploration with AI, gradually converging on ideas before using a structured template to generate initial prompts, followed by necessary manual refinement.</p>
+<p>Our practical experience has also shown that it is crucial to avoid excessive abstraction when writing prompts. For simpler scenarios, there is often no need to develop an overly complex prompting system; direct conversational coding can be more efficient. Moreover, prompt writing should strike a balance between articulating the essence and detailing features—ensuring clarity in functionality and responsibilities without neglecting essential details. Ultimately, whether the aim is to generate excellent code via AI or to streamline subsequent review and modifications by developers, the final prompts must be both highly readable and practical, conveying the intended idea in clear, natural language.</p>
+<p>Advice_of_practice.png</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>In summary, prompt-driven development represents a novel software development model with unprecedented innovative potential. With the systematic design of structured prompts and rigorous governance strategies, we have successfully harnessed AI’s potential for code generation while significantly enhancing development efficiency and code quality. This approach has introduced a fundamentally new mode of thinking and working within our team.</p>
+<p>Looking ahead, we will continue to monitor cutting-edge AI technologies and further refine our prompt design and governance strategies in even more complex scenarios. We anticipate that, propelled by ongoing exploration and practice by developers, the deep integration of human and AI efforts will usher in a new era in software development—driving the entire industry toward a more efficient and intelligent future. Through continuous iteration and optimization, we are confident that structured prompts will become a core technology in engineering practice, injecting endless innovative energy and competitive advantages into software development.</p>
+<h2 id="Appendix"><a href="#Appendix" class="headerlink" title="Appendix"></a>Appendix</h2><p>After this article was published externally, discussions ensued around the saying “features determine details, while essence defines boundaries” I noticed that there are varying interpretations regarding the basic definitions of “features” and “essence.” Therefore, I have included their fundamental definitions here to harmonize our understanding and help clarify the deeper meaning behind the statement.</p>
+<p><strong>Features:</strong><br>Refers to the observable and describable specific attributes of a problem or requirement, including input&#x2F;output formats, constraints, interaction scenarios, technical parameters, and other explicit elements.<br><em>Core characteristics:</em> Quantifiable, verifiable, and concrete (readily observable).</p>
+<p><strong>Essence:</strong><br>Refers to the fundamental conflict or core objective underlying a problem, which serves as the foundational logic determining the effectiveness of a solution.<br><em>Core characteristics:</em> Abstract, directional, and non-negotiable (the decisive factor that defines the solution).</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/12/11/guidelines-prompts-driven-development/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -827,79 +946,6 @@
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2022/08/31/article-title/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2022/08/31/article-title/" class="post-title-link" itemprop="url">当我们点开一个网站，电脑是怎么知道该去哪个网站？</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2022-08-31 12:36:38" itemprop="dateCreated datePublished" datetime="2022-08-31T12:36:38+08:00">2022-08-31</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-09-26 23:34:13" itemprop="dateModified" datetime="2024-09-26T23:34:13+08:00">2024-09-26</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -969,7 +1015,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">11</span>
+          <span class="site-state-item-count">12</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -982,7 +1028,7 @@
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
