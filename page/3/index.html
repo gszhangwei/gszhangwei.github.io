@@ -155,6 +155,206 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2024/09/26/AI_explore_Cursor/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/09/26/AI_explore_Cursor/" class="post-title-link" itemprop="url">AI工具探索：震惊🤯，使用Cursor仅用半天就完成了AI工具的实现</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2024-09-26 19:42:26" itemprop="dateCreated datePublished" datetime="2024-09-26T19:42:26+08:00">2024-09-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-11-13 12:05:28" itemprop="dateModified" datetime="2024-11-13T12:05:28+08:00">2024-11-13</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/AI/" itemprop="url" rel="index"><span itemprop="name">AI</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>前段时间，我看到了一篇博客介绍Cursor的，使得Cursor再次进入了我的视野。最近我有一个构建AI工具的想法，但由于对AI编程相关技术栈的局限，暂时搁置。因此，我重新安装了Cursor进行尝试，发现它已经进化成真正意义上的AI编程助手，于是决定利用Cursor实现之前的构想。</p>
+<h2 id="需求来源"><a href="#需求来源" class="headerlink" title="需求来源"></a>需求来源</h2><p>相信BAU是所有团队都在处理的事情。对我而言，这些任务往往是“不想做，但又不得不做”的烦恼。尤其是当你已经总结出SOP后，每次处理时都感觉自己只是一个无情的BAU处理机器，繁琐而乏味。在这种情况下，我想，是否可以每次只需执行最简单的命令，就能自动执行我期望的动作？而Python脚本正是一个很好的解决方案。因此，我列出了所有需要完成的任务，并通过Python脚本实现了这些功能。</p>
+<p>通过这一过程，我成功实现了一键执行期望动作。下次再遇到相同的任务时，只需运行这个脚本，就能省去寻找资源和逐个文件分配权限的时间，效率瞬间从15分钟提升至1分钟。然而，这一解决方案仍然存在角色限制，仅限于技术性角色使用。那么，如何让非技术性角色也能使用这个解决方案呢？</p>
+<p>这个问题一直萦绕在我的脑中，直到我想到最近学习的LLM（大型语言模型）编程。灵光一现，我意识到可以让非技术性角色通过自然语言描述，然后由大模型解析这些自然语言并翻译成需要执行的脚本，再进行自动执行。</p>
+<h2 id="调研"><a href="#调研" class="headerlink" title="调研"></a>调研</h2><p>说干就干，晚上下班后，我开始寻找合适的大模型。我的期望是：</p>
+<ul>
+<li>能在本地运行（方便调试）</li>
+<li>我的机器能够支持（有一台常规配置的MacOS M1 16G物理机）</li>
+<li>参数足够以进行文本到行为的转换</li>
+</ul>
+<p>最终，Ollama的Llama3.1 8B模型引起了我的注意。该模型可以直接在本地运行，而我2020年的M1 MacBook Pro恰好符合其要求，并且在自然语言处理方面表现出色。官方是这么描述的：<img src="/../images/llama3.1_8_B_description.png" alt="llama3.1_8_B_description"></p>
+<h2 id="分析与任务规划"><a href="#分析与任务规划" class="headerlink" title="分析与任务规划"></a>分析与任务规划</h2><p>有了想法和大模型后，剩下的就是考虑如何实现。经过两周晚上的LLM编程入门课程学习，我了解到了Langchain这个框架，以及如何使用。有了Langchain，实现这一需求变得轻而易举。大致步骤如下：</p>
+<ul>
+<li>在本地使用Ollama运行Llama3.1 8B模型。</li>
+<li>构建脚本并放入合适的包中。</li>
+<li>使用Langchain构建链，并对方法及Prompt进行封装。</li>
+<li>调用封装好的方法进行自然语言分析，选择并执行需要的脚本。</li>
+</ul>
+<p>还有个问题在于，如何让大模型知道有哪些可执行脚本及其作用。针对这一问题，有多种选择，比如：</p>
+<ul>
+<li>使用提示模板</li>
+<li>使用分类器</li>
+<li>使用上下文管理</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>优点</th>
+<th>缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>提示模板</strong></td>
+<td>简单易用：设计和实现相对简单，用户只需提供自然语言输入。</td>
+<td>局限性：可能无法涵盖所有可能的输入，导致复杂请求无法处理。</td>
+</tr>
+<tr>
+<td></td>
+<td>灵活性高：可以根据不同的需求快速调整模板。</td>
+<td>维护成本：随着需求变化，模板需要不断更新和维护。</td>
+</tr>
+<tr>
+<td></td>
+<td>可读性强：用户易于理解提示内容，便于培训和上手。</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>分类器</strong></td>
+<td>自动化程度高：能够自动识别和分类输入，适合处理大量数据。</td>
+<td>复杂性：需要大量的训练数据和时间来构建和优化分类器。</td>
+</tr>
+<tr>
+<td></td>
+<td>适应性强：可以通过训练模型提高分类精度。</td>
+<td>不确定性：分类结果可能不准确，导致错误的脚本被调用。</td>
+</tr>
+<tr>
+<td><strong>上下文管理</strong></td>
+<td>状态跟踪：能够在多个交互中保持上下文。</td>
+<td>实现复杂：需要设计复杂的状态管理机制。</td>
+</tr>
+<tr>
+<td></td>
+<td>智能响应：根据上下文信息提供更精准的响应。</td>
+<td>资源消耗：维护上下文信息可能消耗更多计算资源和内存。</td>
+</tr>
+</tbody></table>
+<p>经过权衡优缺点、实现复杂度与当前需求，我决定采用提示模板作为解决方案。</p>
+<p>万事俱备，“东风” - Cursor，也来了，直接开整。</p>
+<h2 id="实现步骤（Pair-with-Cursor）"><a href="#实现步骤（Pair-with-Cursor）" class="headerlink" title="实现步骤（Pair with Cursor）"></a>实现步骤（Pair with Cursor）</h2><h3 id="任务1-给定多个Python脚本，使用Ollama和大模型llama3-1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。"><a href="#任务1-给定多个Python脚本，使用Ollama和大模型llama3-1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。" class="headerlink" title="任务1: 给定多个Python脚本，使用Ollama和大模型llama3.1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。"></a><strong>任务1: 给定多个Python脚本，使用Ollama和大模型llama3.1，根据输入的一段话分析出需要执行哪个Python脚本，并执行。</strong></h3><p><strong>execute_script_with_ollama.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">from</span> langchain_community.llms <span class="keyword">import</span> Ollama</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_script</span>(<span class="params">script_name</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = subprocess.run([<span class="string">&#x27;python&#x27;</span>, script_name], capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>)</span><br><span class="line">        <span class="built_in">print</span>(result.stdout)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Error executing script <span class="subst">&#123;script_name&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">analyze_and_execute</span>(<span class="params">input_text</span>):</span><br><span class="line">    llm = Ollama(model=<span class="string">&quot;llama3.1&quot;</span>)</span><br><span class="line">    prompt = <span class="string">f&quot;根据以下输入选择一个Python脚本并执行：\n\n<span class="subst">&#123;input_text&#125;</span>\n\n可选脚本：\n1. assign_access_for_dataset.py\n2. generate_random_num_from_1_100.py\n3. sum_1_100.py\n\n请返回要执行的脚本文件名。&quot;</span></span><br><span class="line">    response = llm(prompt)</span><br><span class="line">    </span><br><span class="line">    script_name = response.strip()</span><br><span class="line">    <span class="keyword">if</span> script_name <span class="keyword">in</span> [<span class="string">&#x27;assign_access_for_dataset.py&#x27;</span>, <span class="string">&#x27;generate_random_num_from_1_100.py&#x27;</span>, <span class="string">&#x27;sum_1_100.py&#x27;</span>]:</span><br><span class="line">        execute_script(<span class="string">f&#x27;src/python_scripts/<span class="subst">&#123;script_name&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;No matching script found or invalid response.&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    user_input = <span class="built_in">input</span>(<span class="string">&quot;请输入一段话: &quot;</span>)</span><br><span class="line">    analyze_and_execute(user_input)</span><br></pre></td></tr></table></figure>
+
+<h3 id="任务2-将Prompt进行封装，使得提示更容易扩展，并放到新的文件中。"><a href="#任务2-将Prompt进行封装，使得提示更容易扩展，并放到新的文件中。" class="headerlink" title="任务2: 将Prompt进行封装，使得提示更容易扩展，并放到新的文件中。"></a>任务2: 将Prompt进行封装，使得提示更容易扩展，并放到新的文件中。</h3><p><strong>prompt_generator.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">PromptGenerator</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, scripts</span>):</span><br><span class="line">        self.scripts = scripts</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generate_prompt</span>(<span class="params">self, input_text</span>):</span><br><span class="line">        script_list = <span class="string">&quot;\n&quot;</span>.join([<span class="string">f&quot;<span class="subst">&#123;i+<span class="number">1</span>&#125;</span>. <span class="subst">&#123;script&#125;</span>&quot;</span> <span class="keyword">for</span> i, script <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.scripts)])</span><br><span class="line">        prompt = <span class="string">f&quot;根据以下输入选择一个Python脚本并执行：\n\n<span class="subst">&#123;input_text&#125;</span>\n\n可选脚本：\n<span class="subst">&#123;script_list&#125;</span>\n\n请返回要执行的脚本文件名。&quot;</span></span><br><span class="line">        <span class="keyword">return</span> prompt</span><br></pre></td></tr></table></figure>
+<p><strong>execute_script_with_ollama.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">from</span> langchain_community.llms <span class="keyword">import</span> Ollama</span><br><span class="line"><span class="keyword">from</span> prompt_generator <span class="keyword">import</span> PromptGenerator</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_script</span>(<span class="params">script_name</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = subprocess.run([<span class="string">&#x27;python&#x27;</span>, script_name], capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>)</span><br><span class="line">        <span class="built_in">print</span>(result.stdout)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Error executing script <span class="subst">&#123;script_name&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">analyze_and_execute</span>(<span class="params">input_text</span>):</span><br><span class="line">    scripts = [</span><br><span class="line">        <span class="string">&#x27;assign_access_for_dataset.py&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;generate_random_num_from_1_100.py&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;sum_1_100.py&#x27;</span></span><br><span class="line">    ]</span><br><span class="line">    </span><br><span class="line">    prompt_generator = PromptGenerator(scripts)</span><br><span class="line">    llm = Ollama(model=<span class="string">&quot;llama3.1&quot;</span>)</span><br><span class="line">    prompt = prompt_generator.generate_prompt(input_text)</span><br><span class="line">    response = llm(prompt)</span><br><span class="line">    </span><br><span class="line">    script_name = response.strip()</span><br><span class="line">    <span class="keyword">if</span> script_name <span class="keyword">in</span> scripts:</span><br><span class="line">        execute_script(<span class="string">f&#x27;src/python_scripts/<span class="subst">&#123;script_name&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;No matching script found or invalid response.&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    user_input = <span class="built_in">input</span>(<span class="string">&quot;请输入一段话: &quot;</span>)</span><br><span class="line">    analyze_and_execute(user_input)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h3 id="任务3-在配置文件中维护脚本列表，以便管理多种类型的PromptGenerator。尝试使用工厂模式。"><a href="#任务3-在配置文件中维护脚本列表，以便管理多种类型的PromptGenerator。尝试使用工厂模式。" class="headerlink" title="任务3: 在配置文件中维护脚本列表，以便管理多种类型的PromptGenerator。尝试使用工厂模式。"></a>任务3: 在配置文件中维护脚本列表，以便管理多种类型的PromptGenerator。尝试使用工厂模式。</h3><p><strong>config.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#配置文件，用于维护脚本列表</span></span><br><span class="line">SCRIPTS = [</span><br><span class="line">    <span class="string">&#x27;assign_access_for_dataset.py&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;generate_random_num_from_1_100.py&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;sum_1_100.py&#x27;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<p><strong>prompt_generator.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> config <span class="keyword">import</span> SCRIPTS</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">PromptGenerator</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self</span>):</span><br><span class="line">        self.scripts = SCRIPTS</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generate_prompt</span>(<span class="params">self, input_text</span>):</span><br><span class="line">        script_list = <span class="string">&quot;\n&quot;</span>.join([<span class="string">f&quot;<span class="subst">&#123;i+<span class="number">1</span>&#125;</span>. <span class="subst">&#123;script&#125;</span>&quot;</span> <span class="keyword">for</span> i, script <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.scripts)])</span><br><span class="line">        prompt = <span class="string">f&quot;根据以下输入选择一个Python脚本并执行：\n\n<span class="subst">&#123;input_text&#125;</span>\n\n可选脚本：\n<span class="subst">&#123;script_list&#125;</span>\n\n请返回要执行的脚本文件名。&quot;</span></span><br><span class="line">        <span class="keyword">return</span> prompt</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">AdvancedPromptGenerator</span>(<span class="title class_ inherited__">PromptGenerator</span>):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">generate_prompt</span>(<span class="params">self, input_text</span>):</span><br><span class="line">        script_list = <span class="string">&quot;\n&quot;</span>.join([<span class="string">f&quot;<span class="subst">&#123;i+<span class="number">1</span>&#125;</span>. <span class="subst">&#123;script&#125;</span>&quot;</span> <span class="keyword">for</span> i, script <span class="keyword">in</span> <span class="built_in">enumerate</span>(self.scripts)])</span><br><span class="line">        prompt = <span class="string">f&quot;高级模式：根据以下输入选择一个Python脚本并执行：\n\n<span class="subst">&#123;input_text&#125;</span>\n\n可选脚本：\n<span class="subst">&#123;script_list&#125;</span>\n\n请返回要执行的脚本文件名。&quot;</span></span><br><span class="line">        <span class="keyword">return</span> prompt</span><br></pre></td></tr></table></figure>
+<p><strong>execute_script_with_ollama.py</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="keyword">from</span> langchain_community.llms <span class="keyword">import</span> Ollama</span><br><span class="line"><span class="keyword">from</span> prompt_generator_factory <span class="keyword">import</span> PromptGeneratorFactory</span><br><span class="line"><span class="keyword">from</span> config <span class="keyword">import</span> SCRIPTS</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">execute_script</span>(<span class="params">script_name</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        result = subprocess.run([<span class="string">&#x27;python&#x27;</span>, script_name], capture_output=<span class="literal">True</span>, text=<span class="literal">True</span>)</span><br><span class="line">        <span class="built_in">print</span>(result.stdout)</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;Error executing script <span class="subst">&#123;script_name&#125;</span>: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">analyze_and_execute</span>(<span class="params">input_text, generator_type=<span class="string">&quot;default&quot;</span></span>):</span><br><span class="line">    prompt_generator = PromptGeneratorFactory.get_prompt_generator(generator_type)</span><br><span class="line">    llm = Ollama(model=<span class="string">&quot;llama3.1&quot;</span>)</span><br><span class="line">    prompt = prompt_generator.generate_prompt(input_text)</span><br><span class="line">    response = llm(prompt)</span><br><span class="line">    </span><br><span class="line">    script_name = response.strip()</span><br><span class="line">    <span class="keyword">if</span> script_name <span class="keyword">in</span> SCRIPTS:</span><br><span class="line">        execute_script(<span class="string">f&#x27;src/python_scripts/<span class="subst">&#123;script_name&#125;</span>&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;No matching script found or invalid response.&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    user_input = <span class="built_in">input</span>(<span class="string">&quot;请输入一段话: &quot;</span>)</span><br><span class="line">    generator_type = <span class="built_in">input</span>(<span class="string">&quot;请输入生成器类型（default或advanced）: &quot;</span>)</span><br><span class="line">    analyze_and_execute(user_input, generator_type)</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，基本上就可以运行了。我还进行了多轮任务，包括让它帮助优化、重构、生成前端页面等，但不一一列举了。有兴趣的人可以下载<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/task_assistant/tree/main"><strong>完整代码库</strong></a>进行体验。</p>
+<h2 id="成果展示"><a href="#成果展示" class="headerlink" title="成果展示"></a>成果展示</h2><p>我准备了两类脚本任务进行测试：常规类和任务分配类。期望的结果是能够根据输入的自然语言，正确分析应该使用哪个提示生成器，并使用该提示模板构建Prompt，让大模型根据Prompt做出正确的脚本选择，并执行。</p>
+<ul>
+<li>常规类<ul>
+<li>生成1到100之间的随机数</li>
+<li>计算1到100的和</li>
+<li>获取当前日期和时间</li>
+</ul>
+</li>
+<li>任务分配类<ul>
+<li>为数据集分配访问权限</li>
+<li>为Dashboard分配访问权限</li>
+</ul>
+</li>
+</ul>
+<h3 id="场景一：让助手给我执行获取当天日期的脚本"><a href="#场景一：让助手给我执行获取当天日期的脚本" class="headerlink" title="场景一：让助手给我执行获取当天日期的脚本"></a>场景一：让助手给我执行获取当天日期的脚本</h3><p>前端执行：<br><img src="/../images/frontend_result_1.png" alt="frontend_result_1.png"><br>后端输出结果：<br><img src="/../images/Backend_result_1.png" alt="Backend_result_1.png"></p>
+<h3 id="场景二：让助手给我执行-Dataset-权限分配的脚本"><a href="#场景二：让助手给我执行-Dataset-权限分配的脚本" class="headerlink" title="场景二：让助手给我执行 Dataset 权限分配的脚本"></a>场景二：让助手给我执行 Dataset 权限分配的脚本</h3><p>前端执行：<br><img src="/../images/Frontend_result_2.png" alt="Frontend_result_2.png"><br>后端输出结果：<br><img src="/../images/Backend_result_2.png" alt="Backend_result_2.png"><br>结果符合预期，AC通过。凭借微薄的AI编程基础，使用Cursor成功的开发了AI工具，并成功实现了阶段性目标！🎉</p>
+<h2 id="相关环境"><a href="#相关环境" class="headerlink" title="相关环境"></a>相关环境</h2><ul>
+<li>Python 3.10</li>
+<li><a target="_blank" rel="noopener" href="https://ollama.com/">Ollama</a></li>
+<li><a target="_blank" rel="noopener" href="https://ollama.com/library/llama3.1">Llama 3.1 8B</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cursor.com/">Cursor</a>试用版本，2周试用期</li>
+<li>Cursor大模型使用情况：claude-3.5-sonnet与gpt-4o切换使用</li>
+<li>AI编程的预备知识可以通过<a target="_blank" rel="noopener" href="https://thoughtworks.udemy.com/course/llm-app-dev/learn/lecture/43397076#overview">LLM编程入门课程</a>来学习。即使是零基础的学习者也能理解课程内容，从中掌握一些基本的AI编程概念和框架，但要深入了解仍需自行探索。</li>
+</ul>
+<h2 id="Cursor的体验感受"><a href="#Cursor的体验感受" class="headerlink" title="Cursor的体验感受"></a>Cursor的体验感受</h2><ul>
+<li><strong>易用性</strong>：整个过程，没写一行代码，扮演“嘴强王者”，让Cursor成为你的码仔，它能无怨无求的按照要求写出代码。通过自然语言输入，用户可以轻松生成代码或执行复杂任务，这种无缝集成大大降低了技术门槛。</li>
+<li><strong>高效的代码生成</strong>：生成的代码通常处于可用状态，只需进行少量修改即可满足具体需求。</li>
+<li><strong>智能化的上下文理解</strong>：Cursor升级了模型后，支持超长上下文(200k)，使得它能够理解项目背景、代码结构及编码风格。这种能力不仅提升了生成代码的相关性和准确性，还使得模型能够根据历史交互进行智能响应，提供更为精准的建议和解决方案。能按照生成的既有风格进行演进。</li>
+<li><strong>知识储备与效能提升</strong>：你的技术知识储备越丰富，那么Cursor帮你提升的效率会越高。比如，如果方法论知识丰富，它能帮忙快速的提升代码的可读性、可维护性和扩展性，在重构方面表现尤为突出。</li>
+</ul>
+<p>当然现在的边界情况是简单产品，其实进入到深水区后，依然会遇到很多卡点，不过没关系，迈出的这一步很重要。</p>
+<h2 id="最后的最后"><a href="#最后的最后" class="headerlink" title="最后的最后"></a>最后的最后</h2><h3 id="附上一些使用Cursor的技巧"><a href="#附上一些使用Cursor的技巧" class="headerlink" title="附上一些使用Cursor的技巧"></a>附上一些使用Cursor的技巧</h3><ul>
+<li><strong>表述需求时的注意事项</strong>：在表述需求时，务必做到明确而谨慎。清晰的需求能够帮助 Cursor 精确理解并执行，而不必要的信息可能会增加实现的复杂性。例如，当我错误地提到使用Ollama3.1时，实际上在编写代码时，Cursor是将Ollama3.1作为模型引用的，但正确的模型应该是Llama3.1。同时，过度简化需求可能会导致 Cursor 自由发挥，产生不必要的偏差。例如，我最开始并没有提到使用大模型来满足需求，只是简单描述了需求。在最初的代码版本中，就并未采用大模型框架来实现。</li>
+<li><strong>README.md 文档的重要性</strong>：让 Cursor 从项目一开始就写 README.md 文档，记录清楚产品功能、实现技术栈等，并且让它在完成关键节点后及时更新。</li>
+<li><strong>中间版本的救命工具</strong>：用 Git 做版本管理，在关键成功节点提交时写好说明内容，给自己复原的机会。否则，等一段时间后，你想要回退到某一节点的时候，那个节点就已经找不到了。</li>
+<li><strong>使用 Composer 和 Chat 功能的建议</strong>：使用 Composer 和 Chat 功能时，尽量多 @codebase，否则 Cursor 常有幻觉，不知道项目内容是什么。</li>
+<li><strong>文档链接的整合</strong>：常用的文档链接可以加入 Docs 中，比如你习惯使用的 AI API 调用文档，方便在使用时随时 @。（太好用了）</li>
+<li><strong>隐私选项</strong>：如果用于项目，请记得勾上<a target="_blank" rel="noopener" href="https://www.cursor.com/privacy">Privacy Mode</a>，这个选项能够保证你的代码不被第三方或者Cursor官方保存。（明面上是这么说的）</li>
+</ul>
+<p>到此，我们的讨论就告一段落了。感谢大家的阅读和关注!</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2022/08/31/article-title/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -368,7 +568,7 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
