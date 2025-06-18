@@ -155,6 +155,255 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/06/18/PDD-practice-in-the-field-of-data/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Wiilie Zhang">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Willie's Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/06/18/PDD-practice-in-the-field-of-data/" class="post-title-link" itemprop="url">Structured prompt driven development, practiced in the field of data</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-06-18 19:00:00 / 修改时间：09:52:24" itemprop="dateCreated datePublished" datetime="2025-06-18T19:00:00+08:00">2025-06-18</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>What sparks emerge when the Structured Prompt Driven Development (PDD) methodology meets complex data processing scenarios?</p>
+<p>A recent data project practice gave me the opportunity to systematically apply the PDD methodology to complex SQL development in BigQuery. Facing the dual challenges of 30+ business branch validation logic and billion-scale snapshot table performance optimization, traditional development approaches, especially without relevant complex SQL processing experience, would prove inadequate. After exploration and trial-and-error, I found a stable application path for PDD in the data domain, and more importantly, validated the practical effectiveness of this methodology in handling complex business logic.</p>
+<p>If you’re also seeking methods to improve complex SQL development efficiency, or curious about how PDD works in data engineering projects, this practical experience may provide valuable reference for you.</p>
+<h2 id="Project-Background"><a href="#Project-Background" class="headerlink" title="Project Background"></a>Project Background</h2><p><strong>Technical Environment</strong></p>
+<ul>
+<li><strong>Data Processing</strong>: Python + BigQuery + GCP</li>
+<li><strong>Core Challenges</strong>: Complex business scenarios, 30+ business branches + billion-scale data volume</li>
+</ul>
+<p><strong>Business Objectives</strong><br>Associate and compare predicted data with actual revenue data, identify discrepancies and complete missing information</p>
+<ul>
+<li><strong>Data Association</strong>: Comprehensive comparison between predicted and actual revenue data, automatic identification of difference points</li>
+<li><strong>Hierarchical Matching</strong>: Four-level progressive matching of Opportunity→Account→Market→Region, precise marking of matching depth</li>
+<li><strong>Standard Unification</strong>: Cross-table field caliber consistency processing, eliminating data silos</li>
+<li><strong>Decision Support</strong>: Output structured comparison datasets directly serving business analysis</li>
+</ul>
+<p><strong>Core Process</strong></p>
+<ul>
+<li><strong>Multi-condition Association</strong>: Sequentially match data at four levels (opportunity, account, market, and region), separately marking successful matches and unmatched records</li>
+<li><strong>Snapshot-based Extension</strong>: Expand unmatched rows based on business snapshot dates to ensure aligned data views for all time points</li>
+<li><strong>Business Data Completion</strong>: Complete missing fields (ID, name, status, etc.) from different data sources according to priority</li>
+<li><strong>Field Standardization:</strong>: Unify regional abbreviations to full names, convert specific contract types, and supplement additional marking fields</li>
+<li><strong>Aggregation and Deduplication</strong>: Merge all intermediate results, group and deduplicate by key dimensions, output final comparison report</li>
+</ul>
+<h2 id="Implementation-Process"><a href="#Implementation-Process" class="headerlink" title="Implementation Process"></a>Implementation Process</h2><h3 id="Phase-One-Exploration-and-Breakthrough-with-AI-Collaboration"><a href="#Phase-One-Exploration-and-Breakthrough-with-AI-Collaboration" class="headerlink" title="Phase One: Exploration and Breakthrough with AI Collaboration"></a>Phase One: Exploration and Breakthrough with AI Collaboration</h3><p><strong>Reality Challenges</strong></p>
+<p>As an engineer who hadn’t touched complex SQL development for two years, facing such business scenarios, honestly, my first reaction was “where to start?” Fortunately, AI became my most capable assistant.</p>
+<ol>
+<li><strong>Rapid Breakthrough in Business Understanding</strong>: AI helped me quickly deconstruct seemingly complex business requirements<ul>
+<li>Transformed abstract financial alignment requirements into specific data operation steps</li>
+<li>Clarified the core logic of multi-level matching</li>
+<li>Defined the data processing framework: <strong>Preprocessing → Extension → Completion → Output</strong></li>
+</ul>
+</li>
+<li><strong>Iterative Exploration of Technical Solutions</strong>: Initially relied entirely on AI generation, but quickly encountered reality challenges<ul>
+<li><strong>Complexity Challenge</strong>: The business logic complexity far exceeded AI’s one-time understanding capability</li>
+<li><strong>SQL Code Understanding Difficulty</strong>: Required understanding AI-generated code thinking to gradually grasp overall approach, quite time-consuming</li>
+<li><strong>Detail Explosion</strong>: Each abstract task hid countless technical details (table associations, matching strategies, exception handling, etc.)</li>
+</ul>
+</li>
+<li><strong>First Complete Attempt</strong>: After multiple rounds of prompt iterations, AI generated a “giant SQL” of 1,157 lines<ul>
+<li><strong>Result</strong>: Massive syntax errors in BigQuery </li>
+<li><strong>After fixes</strong>: Business logic validation failed</li>
+</ul>
+</li>
+</ol>
+<p><img src="/../images/sql_result_v1_en.png" alt="sql_result_v1_en.png"></p>
+<p><img src="/../images/sql_related_prompt_v1_en.png" alt="sql_related_prompt_v1_en.png"></p>
+<p><strong>Key Takeaway</strong>: Although SQL generation didn’t meet expectations, the most valuable outcome of this phase was establishing a complete AI-assisted verification process:</p>
+<p><code>Write structured prompts → Generate SQL code → Generate test datasets based on prompts → Complete logic verification</code></p>
+<p>This process establishment laid a solid foundation for subsequent PDD methodology application. Although this experiment ended in “failure,” it gave me new insights into complex task decomposition: AI’s true value lies not in solving all problems at once, but in building efficient human-machine collaboration modes.</p>
+<h3 id="Phase-Two-Understanding-Business-Essence-Reconstructing-Solutions"><a href="#Phase-Two-Understanding-Business-Essence-Reconstructing-Solutions" class="headerlink" title="Phase Two: Understanding Business Essence, Reconstructing Solutions"></a>Phase Two: Understanding Business Essence, Reconstructing Solutions</h3><p><strong>From Complex Back to Simple</strong></p>
+<p>After the “detours” of the first phase, I began re-examining this seemingly complex requirement. Suddenly, a key insight emerged: this is essentially a data comparison problem between two tables! Once grasping this core, the entire solution approach became instantly clear, and fear of the unknown gradually dissipated.</p>
+<p><strong>True Power of PDD Methodology</strong><br>Based on understanding the business essence, I began systematically reconstructing the solution:</p>
+<ol>
+<li><p><strong>Task Decomposition Strategy</strong></p>
+<p>Following the principle of “<strong>essence determines boundaries, features determine details</strong>,” decomposed complex SQL requirements into relatively independent functional units, making each unit focus on solving a clear problem—this is a more effective AI collaboration mode</p>
+<ul>
+<li>Using PDD methodology, transformed implementation logic into structured prompts</li>
+<li>Direct effect of task simplification: <strong>AI hallucinations significantly reduced, code generation accuracy substantially improved</strong></li>
+</ul>
+<p><img src="/../images/sql_related_prompt_v2_1_en.png" alt="sql_related_prompt_v2_1_en.png"><img src="/../images/sql_related_prompt_v2_2_en.png" alt="sql_related_prompt_v2_2_en.png"></p>
+</li>
+<li><p>Rapid Verification Loop</p>
+<p>Benefit by the verification process established in phase one, each unit could quickly complete accuracy verification. The reconstruction results comparison:</p>
+<p><img src="/../images/comparison_of_reconstruction_effects_en.png" alt="comparison_of_reconstruction_effects_en.png"></p>
+</li>
+</ol>
+<p>However, when switching to online environment with real billion-scale data validation, new challenges emerged, <strong>Performance Bottleneck</strong></p>
+<ul>
+<li><strong>Execution Time</strong>: Unable to complete in over 5 minutes</li>
+<li><strong>Intermediate Results</strong>: Expanded to 268+GB<ul>
+<li><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></li>
+</ul>
+</li>
+<li><strong>Next Direction</strong>: SQL performance optimization became the new key focus</li>
+</ul>
+<h3 id="Phase-Three-Performance-Optimization"><a href="#Phase-Three-Performance-Optimization" class="headerlink" title="Phase Three: Performance Optimization"></a>Phase Three: Performance Optimization</h3><p>Facing performance bottlenecks, I adopted a systematic optimization strategy:</p>
+<ol>
+<li><p><strong>Problem Diagnosis and Root Cause Analysis</strong>:Through consultation with senior experts in the data domain within the team, deep analysis revealed the core problem</p>
+<ul>
+<li><strong>Core Issue</strong>: AI-generated SQL didn’t fully consider online data scale (already at billion level), performing multiple complex Join operations on large tables, seriously affecting query performance.</li>
+</ul>
+</li>
+<li><p><strong>Optimization Strategy Formulation</strong>: Based on problem root causes, we determined four key optimization directions</p>
+<ul>
+<li><strong>Reduce Join Frequency:</strong>: Large tables should perform Join operations only once, obtaining all necessary data at once</li>
+<li><strong>Front-end Data Filtering</strong>: Filter data before joining with large tables, effectively reducing driving table scale</li>
+<li><strong>Precise Join Type Selection</strong>: Reasonably choose Inner Join or Left Join based on business requirements</li>
+<li><strong>Step-by-step Query Optimization</strong>: Split complex queries into multiple steps, selecting only necessary fields, maximizing reduction of data transmission</li>
+</ul>
+</li>
+<li><p><strong>Prompt Fine-tuning</strong>: For performance bottleneck parts, I conducted deep reconstruction of related prompts</p>
+<ul>
+<li><strong>Locate Optimization Targets</strong>: Precisely identify SQL fragments requiring optimization and their corresponding prompts</li>
+<li><strong>Complex Problem Decomposition</strong>: According to established optimization directions, gradually decompose complex queries into independent prompt components</li>
+<li><strong>Individual Verification Optimization</strong>: Generate SQL separately for each prompt component and conduct performance verification, ensuring complete decomposition of complex JOINs</li>
+<li><strong>Task Decomposition Display</strong>: Optimized Prompt partial effects shown below:<br><img src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
+<li><strong>Before Optimization</strong>: SQL code execution timeout, no results in 5 minutes, involving data volume up to 268GB</li>
+<li><strong>After Optimization</strong>: SQL code execution completed in only 37 seconds, final result data volume only 3.7GB</li>
+</ul>
+</li>
+</ol>
+<p>Performance improvement exceeded 800%, data processing efficiency significantly enhanced.</p>
+<p><img src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
+<p>In this process, when optimization direction was determined, the completion logic actually needed rewriting, but through phases one and two exploration, the stable generation mode for expected SQL in the Data domain was established, so even rewriting was fine—this process was completed very quickly. Subsequent branch logic fixes were also handled, essentially similar steps, so won’t be demonstrated here.</p>
+<h2 id="Structured-Prompt-Driven-Development-PDD-Application-Methodology-in-Data-Domain"><a href="#Structured-Prompt-Driven-Development-PDD-Application-Methodology-in-Data-Domain" class="headerlink" title="Structured Prompt Driven Development (PDD) Application Methodology in Data Domain"></a>Structured Prompt Driven Development (PDD) Application Methodology in Data Domain</h2><p>Based on this project practice, I summarized the PDD application methodology in data domain, particularly SQL development, providing reference for similar scenarios.</p>
+<h3 id="Core-Applications-of-PDD-in-SQL-Development"><a href="#Core-Applications-of-PDD-in-SQL-Development" class="headerlink" title="Core Applications of PDD in SQL Development"></a>Core Applications of PDD in SQL Development</h3><p><strong>Scenario Classification and Strategy</strong></p>
+<ul>
+<li><strong>Simple Scenarios</strong>: Basic queries (no need for data preprocessing, small data volume requirements) can be directly generated without much adjustment</li>
+<li><strong>Complex Scenarios</strong>: Require structured verification and iterative optimization<ul>
+<li><strong>Definition of Done (DOD)</strong>: Pre-define acceptance criteria (such as output format, performance indicators) as validation baseline for initial SQL</li>
+<li><strong>Iterative Optimization</strong>: Identify problems according to DOD (logic errors, edge cases), gradually adjust prompts, generate new SQL until passing all test cases</li>
+<li><strong>Performance Tuning</strong>: Prioritize small-step refactoring (such as gradual optimization adjustments based on intermediate tables), avoid large-scale rewrites, reduce risks and maintain readability</li>
+</ul>
+</li>
+</ul>
+<h3 id="Overall-Practice-Process"><a href="#Overall-Practice-Process" class="headerlink" title="Overall Practice Process"></a>Overall Practice Process</h3><ul>
+<li><strong>Human Input</strong>: Structured prompts(written according to <a target="_blank" rel="noopener" href="https://central.thoughtworks.net/blogs/ls/content/4612643020956565/structured-prompt-driven-development-workflow-transforming-software-development-from-2-days-to-1-hour-4f860bc0-64b6-4bee-b807-dc6f6ae6ffe0">PDD methodology</a>)</li>
+<li><strong>AI Output</strong>: Initial SQL code</li>
+<li><strong>Verification Phase</strong>: Check functional correctness against DOD</li>
+<li><strong>Iterative Optimization</strong>: Adjust prompts based on problems (such as clarifying ambiguous logic)</li>
+<li><strong>Performance Tuning</strong>: Combine AI suggestions for optimization (such as JOIN strategies, data preprocessing strategies, etc.)</li>
+</ul>
+<h3 id="Implementation-Recommendations-and-Best-Practices"><a href="#Implementation-Recommendations-and-Best-Practices" class="headerlink" title="Implementation Recommendations and Best Practices"></a>Implementation Recommendations and Best Practices</h3><ol>
+<li><strong>Clarifying Business Requirements Before Formal Prompt Writing</strong><ul>
+<li>Use documentation or other appropriate non-technical methods to reach consensus with business personnel</li>
+<li>Clearly define the Definition of Done (DOD) to avoid frequent requirement changes during development (extremely important, especially in SQL scenarios, as it improves the efficiency of validating phased objectives)</li>
+<li>Establish business analysis documentation to facilitate handling edge cases. When encountering edge cases, review the business analysis documentation and add them to the corresponding tasks in structured prompts</li>
+</ul>
+</li>
+<li><strong>Determining Technical Solution Framework Based on Business Requirements</strong><ul>
+<li><strong>When implementation plan is unclear</strong>:<ul>
+<li>Communicate with AI based on organized data processing logic to obtain feasible abstract steps</li>
+<li>Combine personal understanding to determine the final abstract steps of the implementation approach</li>
+<li>Use structured prompts to generate SQL code based on the steps when the implementation approach becomes clear</li>
+</ul>
+</li>
+<li><strong>When Implementation Approach is Clear</strong>:<ul>
+<li>Define abstract steps for implementation requirements</li>
+<li>Refine each task according to the abstract steps</li>
+<li>Debug one task at a time; there’s no need to generate everything at once</li>
+<li>After the first task is stabilized, use the same pattern to write prompts for the remaining tasks</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Iterative Optimization</strong><ul>
+<li>For SQL that doesn’t meet expectations, locate the corresponding prompt area and supplement details</li>
+<li>Combine professional reasoning models to obtain SQL optimization suggestions or implementation approach improvements</li>
+<li>Update prompt records with content agreed upon with AI for future reuse</li>
+</ul>
+</li>
+<li><strong>Overall Strategy</strong><ul>
+<li>If unfamiliar with technical stack implementation details: First describe logic and framework in natural language, let AI generate SQL based on prompts, debug and finalize, then summarize and update back to the prompt file</li>
+<li>If very familiar with implementation details: Can first write structured prompts and gradually generate SQL code; alternatively, directly hand-write SQL, then use AI to organize prompts according to PDD methodology patterns, summarizing the implementation approach and updating it to the prompt</li>
+</ul>
+</li>
+</ol>
+<h3 id="Personnel-Capability-Requirements-in-Complex-Scenarios"><a href="#Personnel-Capability-Requirements-in-Complex-Scenarios" class="headerlink" title="Personnel Capability Requirements in Complex Scenarios"></a>Personnel Capability Requirements in Complex Scenarios</h3><p><strong>Core Skills</strong></p>
+<ul>
+<li><strong>PDD Theory Mastery</strong>: Identify and eliminate AI hallucinations, such as correcting unreasonable JOIN logic, disabling subqueries, etc.</li>
+<li><strong>Requirements Analysis and Solution Design Capability</strong>: Transform vague requirements into precise technical specifications, accurately locate data sources, and build modular solutions</li>
+<li><strong>Structured Management</strong>: Transform unstructured requirements into structured expressions by organizing contextual information, and build high-quality prompts based on PDD theory</li>
+</ul>
+<p><strong>AI Cognitive Ability</strong></p>
+<ul>
+<li><strong>Advantage Recognition</strong>: Rapid prototyping, pattern recognition</li>
+<li><strong>Disadvantage Awareness</strong>: Edge case handling, contextual ambiguity resolution</li>
+<li><strong>Tool Selection</strong>: Use domain-specific models for technical tasks, general AI for general tasks</li>
+<li><strong>Verification Attitude</strong>: Maintain an optimistic iterative mindset, strictly verify results based on DOD and manual review</li>
+</ul>
+<h2 id="Summary-and-Future-Outlook"><a href="#Summary-and-Future-Outlook" class="headerlink" title="Summary and Future Outlook"></a>Summary and Future Outlook</h2><p>Through this in-depth practice of PDD in the data domain, I have gained the following five key insights:</p>
+<ol>
+<li><strong>Goal-Oriented Path Planning</strong>: Clear Definition of Done (DOD) helps provide relatively clear directional guidance for the development process, reducing the possibility of getting lost when facing complex problems. Reasonably set goal frameworks can usually improve problem-solving efficiency.</li>
+<li><strong>Methodological Adaptability Exploration</strong>: When facing entirely new technical domains, PDD core principles demonstrate certain applicability and migration potential. Through attempts and validation in different scenarios, we can gradually accumulate understanding of the methodology’s boundary conditions and applicable scope.</li>
+<li><strong>Problem-Driven Progressive Breakthrough</strong>: When facing technical challenges or AI hallucination problems, divide-and-conquer, step-by-step strategies are far more effective than direct abandonment. Continuous exploration within set time frames and seeking professional support at key nodes can significantly improve problem-solving success rates.</li>
+<li><strong>Cumulative Effect of Efficiency Improvement</strong>: In the initial exploration of new technical fields, AI tools may not immediately bring significant efficiency improvements. Substantial efficiency enhancement usually requires experiencing process optimization, experience pattern precipitation, and continuous practice accumulation.</li>
+<li><strong>Positive Cycle of Personal Capability Growth</strong>: Under the AI First Software Delivery (AIFSD) model, we pursue not only current efficiency optimization but also achieving spiral personal capability improvement through continuous practice, ultimately bringing sustainable efficiency enhancement. Repeated application of unified methodology allows experience accumulation and cognitive improvement to mutually promote each other, ultimately forming a benign human-AI collaboration ecosystem.</li>
+</ol>
+<p><img src="/../images/cognitive_improve_process_by_using_AI_en.png" alt="cognitive_improve_process_by_using_AI_en.png"></p>
+<p>Through this practice, we have preliminarily explored the application possibilities of PDD methodology in complex SQL scenarios in the data domain and summarized a feasible path for handling complex SQL in the Data field (click to read the original text to view structured prompt templates). This provides a practical foundation for reference in subsequent similar scenario work.</p>
+<p>Looking to the future, with application in more actual projects and continuous optimization of the methodology, PDD has the potential to bring certain degrees of improvement in software development efficiency and quality. Through continuous practical reflection and experience accumulation, we expect to gradually improve the applicable boundaries and operational details of this methodology.</p>
+<p>Finally, thank you for reading!</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/06/09/AI-assisted-software-delivery-full-process-maturity-model-white-paper-en/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -543,261 +792,6 @@
 <p><strong>变革要素：</strong> <strong>战略定力与长期投入</strong>是向L5演进的必要条件。因为L5的实现周期可能较长且回报不确定，管理层需有远见和耐心，持续投入资金和资源。<strong>全员再定位</strong>也是巨大挑战：随着AI接管大部分工作，员工角色需要彻底转型，企业文化需重新塑造（从“人如何做好”转为“人如何让AI做好”）。这涉及大量培训、心理建设和组织变革管理。<strong>外部生态协调</strong>亦不可忽视：当企业内部达到了高度AI自主，还需处理与客户、监管机构的关系——确保输出的软件和决策被外部利益相关者接受和信任。这可能需要行业标准的建立和推动。</p>
 <p><strong>关键成功因素：</strong> <strong>技术突破与创新</strong>是首要因素，没有卓越的AI技术能力就无法实现L5。企业应吸引顶尖AI人才，鼓励内部创新，并积极专利和保密以巩固领先优势。<strong>风险管理</strong>仍然重要：在追求全自主的同时，要有机制防范AI系统失控或重大失误的灾难性风险（例如建立AI伦理审查委员会，仿真极端场景测试AI反应）。<strong>渐进里程碑</strong>的设置能帮助团队在长征路上保持动力——将L5远景拆解为可实现的阶段性目标，一步步实现，如先实现“无人参与夜间构建发布”、再实现“无人参与小版本更新”等。每达成一步都庆祝和宣传，巩固信心和士气。最后，<strong>务实与灵活</strong>的态度必不可少：虽然L5是终极目标，但管理者应始终审视现实收益，在投入和产出间保持平衡，不盲目追求炫目的全面自治而忽略实际业务价值。成功的L5应当是水到渠成、顺势而为的结果，而非脱离商业逻辑的空中楼阁。</p>
 <h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>人工智能正加速重塑软件交付的方式，从辅助编码的小工具一路发展到全流程自动化的“超级大脑”愿景。本文提出的L0–L5成熟度模型，为企业描绘了一条逐步进化的路线图：从以人为主导、规范驱动的传统模式，演进到人机协同共创，最终展望以机器为主导的软件工程新范式。通过对各级别的深入阐述和案例剖析，我们可以看到，每提升一个等级，都是技术能力、流程机制和人员技能的协调跃升。企业应结合自身现状，利用成熟度自评工具找准位置，明确差距，以分阶段的策略稳步迈向更高的AI赋能水平。需要强调的是，成熟度建设是<strong>长期的组织能力建设</strong>，不能一蹴而就也不应盲目攀比。正确的做法是以业务价值为导向，在提升效率和控制风险之间取得平衡。管理层的远见、对变革的毅力和全员的共同努力，将决定这一转型的成败。展望未来，当下的探索和努力将奠定企业在“AI+软件交付”时代的竞争优势。希望本白皮书提供的模型和方法论能为企业决策者提供有益参考，助力大家在AI驱动的软件工程变革中抢占先机，释放更大的创新潜能和商业价值。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/06/03/PDD-practice-in-the-field-of-data/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2025/06/03/PDD-practice-in-the-field-of-data/" class="post-title-link" itemprop="url">Structured prompt driven development, practiced in the field of data</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-06-03 19:00:00" itemprop="dateCreated datePublished" datetime="2025-06-03T19:00:00+08:00">2025-06-03</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-06-18 09:50:07" itemprop="dateModified" datetime="2025-06-18T09:50:07+08:00">2025-06-18</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>What sparks emerge when the Structured Prompt Driven Development (PDD) methodology meets complex data processing scenarios?</p>
-<p>A recent data project practice gave me the opportunity to systematically apply the PDD methodology to complex SQL development in BigQuery. Facing the dual challenges of 30+ business branch validation logic and billion-scale snapshot table performance optimization, traditional development approaches, especially without relevant complex SQL processing experience, would prove inadequate. After exploration and trial-and-error, I found a stable application path for PDD in the data domain, and more importantly, validated the practical effectiveness of this methodology in handling complex business logic.</p>
-<p>If you’re also seeking methods to improve complex SQL development efficiency, or curious about how PDD works in data engineering projects, this practical experience may provide valuable reference for you.</p>
-<h2 id="Project-Background"><a href="#Project-Background" class="headerlink" title="Project Background"></a>Project Background</h2><p><strong>Technical Environment</strong></p>
-<ul>
-<li><strong>Data Processing</strong>: Python + BigQuery + GCP</li>
-<li><strong>Core Challenges</strong>: Complex business scenarios, 30+ business branches + billion-scale data volume</li>
-</ul>
-<p><strong>Business Objectives</strong><br>Associate and compare predicted data with actual revenue data, identify discrepancies and complete missing information</p>
-<ul>
-<li><strong>Data Association</strong>: Comprehensive comparison between predicted and actual revenue data, automatic identification of difference points</li>
-<li><strong>Hierarchical Matching</strong>: Four-level progressive matching of Opportunity→Account→Market→Region, precise marking of matching depth</li>
-<li><strong>Standard Unification</strong>: Cross-table field caliber consistency processing, eliminating data silos</li>
-<li><strong>Decision Support</strong>: Output structured comparison datasets directly serving business analysis</li>
-</ul>
-<p><strong>Core Process</strong></p>
-<ul>
-<li><strong>Multi-condition Association</strong>: Sequentially match data at four levels (opportunity, account, market, and region), separately marking successful matches and unmatched records</li>
-<li><strong>Snapshot-based Extension</strong>: Expand unmatched rows based on business snapshot dates to ensure aligned data views for all time points</li>
-<li><strong>Business Data Completion</strong>: Complete missing fields (ID, name, status, etc.) from different data sources according to priority</li>
-<li><strong>Field Standardization:</strong>: Unify regional abbreviations to full names, convert specific contract types, and supplement additional marking fields</li>
-<li><strong>Aggregation and Deduplication</strong>: Merge all intermediate results, group and deduplicate by key dimensions, output final comparison report</li>
-</ul>
-<h2 id="Implementation-Process"><a href="#Implementation-Process" class="headerlink" title="Implementation Process"></a>Implementation Process</h2><h3 id="Phase-One-Exploration-and-Breakthrough-with-AI-Collaboration"><a href="#Phase-One-Exploration-and-Breakthrough-with-AI-Collaboration" class="headerlink" title="Phase One: Exploration and Breakthrough with AI Collaboration"></a>Phase One: Exploration and Breakthrough with AI Collaboration</h3><p><strong>Reality Challenges</strong></p>
-<p>As an engineer who hadn’t touched complex SQL development for two years, facing such business scenarios, honestly, my first reaction was “where to start?” Fortunately, AI became my most capable assistant.</p>
-<ol>
-<li><strong>Rapid Breakthrough in Business Understanding</strong>: AI helped me quickly deconstruct seemingly complex business requirements<ul>
-<li>Transformed abstract financial alignment requirements into specific data operation steps</li>
-<li>Clarified the core logic of multi-level matching</li>
-<li>Defined the data processing framework: <strong>Preprocessing → Extension → Completion → Output</strong></li>
-</ul>
-</li>
-<li><strong>Iterative Exploration of Technical Solutions</strong>: Initially relied entirely on AI generation, but quickly encountered reality challenges<ul>
-<li><strong>Complexity Challenge</strong>: The business logic complexity far exceeded AI’s one-time understanding capability</li>
-<li><strong>SQL Code Understanding Difficulty</strong>: Required understanding AI-generated code thinking to gradually grasp overall approach, quite time-consuming</li>
-<li><strong>Detail Explosion</strong>: Each abstract task hid countless technical details (table associations, matching strategies, exception handling, etc.)</li>
-</ul>
-</li>
-<li><strong>First Complete Attempt</strong>: After multiple rounds of prompt iterations, AI generated a “giant SQL” of 1,157 lines<ul>
-<li><strong>Result</strong>: Massive syntax errors in BigQuery </li>
-<li><strong>After fixes</strong>: Business logic validation failed</li>
-</ul>
-</li>
-</ol>
-<p><img src="/../images/sql_result_v1_en.png" alt="sql_result_v1_en.png"></p>
-<p><img src="/../images/sql_related_prompt_v1_en.png" alt="sql_related_prompt_v1_en.png"></p>
-<p><strong>Key Takeaway</strong>: Although SQL generation didn’t meet expectations, the most valuable outcome of this phase was establishing a complete AI-assisted verification process:</p>
-<p><code>Write structured prompts → Generate SQL code → Generate test datasets based on prompts → Complete logic verification</code></p>
-<p>This process establishment laid a solid foundation for subsequent PDD methodology application. Although this experiment ended in “failure,” it gave me new insights into complex task decomposition: AI’s true value lies not in solving all problems at once, but in building efficient human-machine collaboration modes.</p>
-<h3 id="Phase-Two-Understanding-Business-Essence-Reconstructing-Solutions"><a href="#Phase-Two-Understanding-Business-Essence-Reconstructing-Solutions" class="headerlink" title="Phase Two: Understanding Business Essence, Reconstructing Solutions"></a>Phase Two: Understanding Business Essence, Reconstructing Solutions</h3><p><strong>From Complex Back to Simple</strong></p>
-<p>After the “detours” of the first phase, I began re-examining this seemingly complex requirement. Suddenly, a key insight emerged: this is essentially a data comparison problem between two tables! Once grasping this core, the entire solution approach became instantly clear, and fear of the unknown gradually dissipated.</p>
-<p><strong>True Power of PDD Methodology</strong><br>Based on understanding the business essence, I began systematically reconstructing the solution:</p>
-<ol>
-<li><p><strong>Task Decomposition Strategy</strong></p>
-<p>Following the principle of “<strong>essence determines boundaries, features determine details</strong>,” decomposed complex SQL requirements into relatively independent functional units, making each unit focus on solving a clear problem—this is a more effective AI collaboration mode</p>
-<ul>
-<li>Using PDD methodology, transformed implementation logic into structured prompts</li>
-<li>Direct effect of task simplification: <strong>AI hallucinations significantly reduced, code generation accuracy substantially improved</strong></li>
-</ul>
-<p><img src="/../images/sql_related_prompt_v2_1_en.png" alt="sql_related_prompt_v2_1_en.png"><img src="/../images/sql_related_prompt_v2_2_en.png" alt="sql_related_prompt_v2_2_en.png"></p>
-</li>
-<li><p>Rapid Verification Loop</p>
-<p>Benefit by the verification process established in phase one, each unit could quickly complete accuracy verification. The reconstruction results comparison:</p>
-<p><img src="/../images/comparison_of_reconstruction_effects_en.png" alt="comparison_of_reconstruction_effects_en.png"></p>
-</li>
-</ol>
-<p>However, when switching to online environment with real billion-scale data validation, new challenges emerged, <strong>Performance Bottleneck</strong></p>
-<ul>
-<li><strong>Execution Time</strong>: Unable to complete in over 5 minutes</li>
-<li><strong>Intermediate Results</strong>: Expanded to 268+GB<ul>
-<li><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></li>
-</ul>
-</li>
-<li><strong>Next Direction</strong>: SQL performance optimization became the new key focus</li>
-</ul>
-<h3 id="Phase-Three-Performance-Optimization"><a href="#Phase-Three-Performance-Optimization" class="headerlink" title="Phase Three: Performance Optimization"></a>Phase Three: Performance Optimization</h3><p>Facing performance bottlenecks, I adopted a systematic optimization strategy:</p>
-<ol>
-<li><p><strong>Problem Diagnosis and Root Cause Analysis</strong>:Through consultation with senior experts in the data domain within the team, deep analysis revealed the core problem</p>
-<ul>
-<li><strong>Core Issue</strong>: AI-generated SQL didn’t fully consider online data scale (already at billion level), performing multiple complex Join operations on large tables, seriously affecting query performance.</li>
-</ul>
-</li>
-<li><p><strong>Optimization Strategy Formulation</strong>: Based on problem root causes, we determined four key optimization directions</p>
-<ul>
-<li><strong>Reduce Join Frequency:</strong>: Large tables should perform Join operations only once, obtaining all necessary data at once</li>
-<li><strong>Front-end Data Filtering</strong>: Filter data before joining with large tables, effectively reducing driving table scale</li>
-<li><strong>Precise Join Type Selection</strong>: Reasonably choose Inner Join or Left Join based on business requirements</li>
-<li><strong>Step-by-step Query Optimization</strong>: Split complex queries into multiple steps, selecting only necessary fields, maximizing reduction of data transmission</li>
-</ul>
-</li>
-<li><p><strong>Prompt Fine-tuning</strong>: For performance bottleneck parts, I conducted deep reconstruction of related prompts</p>
-<ul>
-<li><strong>Locate Optimization Targets</strong>: Precisely identify SQL fragments requiring optimization and their corresponding prompts</li>
-<li><strong>Complex Problem Decomposition</strong>: According to established optimization directions, gradually decompose complex queries into independent prompt components</li>
-<li><strong>Individual Verification Optimization</strong>: Generate SQL separately for each prompt component and conduct performance verification, ensuring complete decomposition of complex JOINs</li>
-<li><strong>Task Decomposition Display</strong>: Optimized Prompt partial effects shown below:<br><img src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
-<li><strong>Before Optimization</strong>: SQL code execution timeout, no results in 5 minutes, involving data volume up to 268GB</li>
-<li><strong>After Optimization</strong>: SQL code execution completed in only 37 seconds, final result data volume only 3.7GB</li>
-</ul>
-</li>
-</ol>
-<p>Performance improvement exceeded 800%, data processing efficiency significantly enhanced.</p>
-<p><img src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
-<p>In this process, when optimization direction was determined, the completion logic actually needed rewriting, but through phases one and two exploration, the stable generation mode for expected SQL in the Data domain was established, so even rewriting was fine—this process was completed very quickly. Subsequent branch logic fixes were also handled, essentially similar steps, so won’t be demonstrated here.</p>
-<h2 id="Structured-Prompt-Driven-Development-PDD-Application-Methodology-in-Data-Domain"><a href="#Structured-Prompt-Driven-Development-PDD-Application-Methodology-in-Data-Domain" class="headerlink" title="Structured Prompt Driven Development (PDD) Application Methodology in Data Domain"></a>Structured Prompt Driven Development (PDD) Application Methodology in Data Domain</h2><p>Based on this project practice, I summarized the PDD application methodology in data domain, particularly SQL development, providing reference for similar scenarios.</p>
-<h3 id="Core-Applications-of-PDD-in-SQL-Development"><a href="#Core-Applications-of-PDD-in-SQL-Development" class="headerlink" title="Core Applications of PDD in SQL Development"></a>Core Applications of PDD in SQL Development</h3><p><strong>Scenario Classification and Strategy</strong></p>
-<ul>
-<li><strong>Simple Scenarios</strong>: Basic queries (no need for data preprocessing, small data volume requirements) can be directly generated without much adjustment</li>
-<li><strong>Complex Scenarios</strong>: Require structured verification and iterative optimization<ul>
-<li><strong>Definition of Done (DOD)</strong>: Pre-define acceptance criteria (such as output format, performance indicators) as validation baseline for initial SQL</li>
-<li><strong>Iterative Optimization</strong>: Identify problems according to DOD (logic errors, edge cases), gradually adjust prompts, generate new SQL until passing all test cases</li>
-<li><strong>Performance Tuning</strong>: Prioritize small-step refactoring (such as gradual optimization adjustments based on intermediate tables), avoid large-scale rewrites, reduce risks and maintain readability</li>
-</ul>
-</li>
-</ul>
-<h3 id="Overall-Practice-Process"><a href="#Overall-Practice-Process" class="headerlink" title="Overall Practice Process"></a>Overall Practice Process</h3><ul>
-<li><strong>Human Input</strong>: Structured prompts(written according to <a target="_blank" rel="noopener" href="https://central.thoughtworks.net/blogs/ls/content/4612643020956565/structured-prompt-driven-development-workflow-transforming-software-development-from-2-days-to-1-hour-4f860bc0-64b6-4bee-b807-dc6f6ae6ffe0">PDD methodology</a>)</li>
-<li><strong>AI Output</strong>: Initial SQL code</li>
-<li><strong>Verification Phase</strong>: Check functional correctness against DOD</li>
-<li><strong>Iterative Optimization</strong>: Adjust prompts based on problems (such as clarifying ambiguous logic)</li>
-<li><strong>Performance Tuning</strong>: Combine AI suggestions for optimization (such as JOIN strategies, data preprocessing strategies, etc.)</li>
-</ul>
-<h3 id="Implementation-Recommendations-and-Best-Practices"><a href="#Implementation-Recommendations-and-Best-Practices" class="headerlink" title="Implementation Recommendations and Best Practices"></a>Implementation Recommendations and Best Practices</h3><ol>
-<li><strong>Clarifying Business Requirements Before Formal Prompt Writing</strong><ul>
-<li>Use documentation or other appropriate non-technical methods to reach consensus with business personnel</li>
-<li>Clearly define the Definition of Done (DOD) to avoid frequent requirement changes during development (extremely important, especially in SQL scenarios, as it improves the efficiency of validating phased objectives)</li>
-<li>Establish business analysis documentation to facilitate handling edge cases. When encountering edge cases, review the business analysis documentation and add them to the corresponding tasks in structured prompts</li>
-</ul>
-</li>
-<li><strong>Determining Technical Solution Framework Based on Business Requirements</strong><ul>
-<li><strong>When implementation plan is unclear</strong>:<ul>
-<li>Communicate with AI based on organized data processing logic to obtain feasible abstract steps</li>
-<li>Combine personal understanding to determine the final abstract steps of the implementation approach</li>
-<li>Use structured prompts to generate SQL code based on the steps when the implementation approach becomes clear</li>
-</ul>
-</li>
-<li><strong>When Implementation Approach is Clear</strong>:<ul>
-<li>Define abstract steps for implementation requirements</li>
-<li>Refine each task according to the abstract steps</li>
-<li>Debug one task at a time; there’s no need to generate everything at once</li>
-<li>After the first task is stabilized, use the same pattern to write prompts for the remaining tasks</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><strong>Iterative Optimization</strong><ul>
-<li>For SQL that doesn’t meet expectations, locate the corresponding prompt area and supplement details</li>
-<li>Combine professional reasoning models to obtain SQL optimization suggestions or implementation approach improvements</li>
-<li>Update prompt records with content agreed upon with AI for future reuse</li>
-</ul>
-</li>
-<li><strong>Overall Strategy</strong><ul>
-<li>If unfamiliar with technical stack implementation details: First describe logic and framework in natural language, let AI generate SQL based on prompts, debug and finalize, then summarize and update back to the prompt file</li>
-<li>If very familiar with implementation details: Can first write structured prompts and gradually generate SQL code; alternatively, directly hand-write SQL, then use AI to organize prompts according to PDD methodology patterns, summarizing the implementation approach and updating it to the prompt</li>
-</ul>
-</li>
-</ol>
-<h3 id="Personnel-Capability-Requirements-in-Complex-Scenarios"><a href="#Personnel-Capability-Requirements-in-Complex-Scenarios" class="headerlink" title="Personnel Capability Requirements in Complex Scenarios"></a>Personnel Capability Requirements in Complex Scenarios</h3><p><strong>Core Skills</strong></p>
-<ul>
-<li><strong>PDD Theory Mastery</strong>: Identify and eliminate AI hallucinations, such as correcting unreasonable JOIN logic, disabling subqueries, etc.</li>
-<li><strong>Requirements Analysis and Solution Design Capability</strong>: Transform vague requirements into precise technical specifications, accurately locate data sources, and build modular solutions</li>
-<li><strong>Structured Management</strong>: Transform unstructured requirements into structured expressions by organizing contextual information, and build high-quality prompts based on PDD theory</li>
-</ul>
-<p><strong>AI Cognitive Ability</strong></p>
-<ul>
-<li><strong>Advantage Recognition</strong>: Rapid prototyping, pattern recognition</li>
-<li><strong>Disadvantage Awareness</strong>: Edge case handling, contextual ambiguity resolution</li>
-<li><strong>Tool Selection</strong>: Use domain-specific models for technical tasks, general AI for general tasks</li>
-<li><strong>Verification Attitude</strong>: Maintain an optimistic iterative mindset, strictly verify results based on DOD and manual review</li>
-</ul>
-<h2 id="Summary-and-Future-Outlook"><a href="#Summary-and-Future-Outlook" class="headerlink" title="Summary and Future Outlook"></a>Summary and Future Outlook</h2><p>Through this in-depth practice of PDD in the data domain, I have gained the following five key insights:</p>
-<ol>
-<li><strong>Goal-Oriented Path Planning</strong>: Clear Definition of Done (DOD) helps provide relatively clear directional guidance for the development process, reducing the possibility of getting lost when facing complex problems. Reasonably set goal frameworks can usually improve problem-solving efficiency.</li>
-<li><strong>Methodological Adaptability Exploration</strong>: When facing entirely new technical domains, PDD core principles demonstrate certain applicability and migration potential. Through attempts and validation in different scenarios, we can gradually accumulate understanding of the methodology’s boundary conditions and applicable scope.</li>
-<li><strong>Problem-Driven Progressive Breakthrough</strong>: When facing technical challenges or AI hallucination problems, divide-and-conquer, step-by-step strategies are far more effective than direct abandonment. Continuous exploration within set time frames and seeking professional support at key nodes can significantly improve problem-solving success rates.</li>
-<li><strong>Cumulative Effect of Efficiency Improvement</strong>: In the initial exploration of new technical fields, AI tools may not immediately bring significant efficiency improvements. Substantial efficiency enhancement usually requires experiencing process optimization, experience pattern precipitation, and continuous practice accumulation.</li>
-<li><strong>Positive Cycle of Personal Capability Growth</strong>: Under the AI First Software Delivery (AIFSD) model, we pursue not only current efficiency optimization but also achieving spiral personal capability improvement through continuous practice, ultimately bringing sustainable efficiency enhancement. Repeated application of unified methodology allows experience accumulation and cognitive improvement to mutually promote each other, ultimately forming a benign human-AI collaboration ecosystem.</li>
-</ol>
-<p><img src="/../images/cognitive_improve_process_by_using_AI_en.png" alt="cognitive_improve_process_by_using_AI_en.png"></p>
-<p>Through this practice, we have preliminarily explored the application possibilities of PDD methodology in complex SQL scenarios in the data domain and summarized a feasible path for handling complex SQL in the Data field (click to read the original text to view structured prompt templates). This provides a practical foundation for reference in subsequent similar scenario work.</p>
-<p>Looking to the future, with application in more actual projects and continuous optimization of the methodology, PDD has the potential to bring certain degrees of improvement in software development efficiency and quality. Through continuous practical reflection and experience accumulation, we expect to gradually improve the applicable boundaries and operational details of this methodology.</p>
-<p>Finally, thank you for reading!</p>
 
       
     </div>
