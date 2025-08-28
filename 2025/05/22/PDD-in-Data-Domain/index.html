@@ -1,231 +1,4 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"gszhangwei.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
-
-  <meta name="description" content="引言当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？ 最近一次数据项目的实践，让我有机会将PDD深度应用于BigQuery复杂SQL开发中。面对30+业务分支验证、亿级数据量快照表的挑战，传统开发方式，尤其是在没有相关复杂SQL处理经验的情况下，会显得力不从心。经过一番探索与试错，我不仅找到了PDD在数据领域的稳定应用路">
-<meta property="og:type" content="article">
-<meta property="og:title" content="PDD在DATA领域的应用实践">
-<meta property="og:url" content="hhttps://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/index.html">
-<meta property="og:site_name" content="Willie&#39;s Blog">
-<meta property="og:description" content="引言当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？ 最近一次数据项目的实践，让我有机会将PDD深度应用于BigQuery复杂SQL开发中。面对30+业务分支验证、亿级数据量快照表的挑战，传统开发方式，尤其是在没有相关复杂SQL处理经验的情况下，会显得力不从心。经过一番探索与试错，我不仅找到了PDD在数据领域的稳定应用路">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_result_v1.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_related_prompt_v1.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_related_prompt_v2_1.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_related_prompt_v2_2.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/comparison_of_reconstruction_effects.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/SQL_processing_result.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/performance_enhanced_result.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/sql_processing_result_final.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/cognitive_improve_process_by_using_AI.png">
-<meta property="article:published_time" content="2025-05-22T11:00:00.000Z">
-<meta property="article:modified_time" content="2025-05-27T07:41:32.563Z">
-<meta property="article:author" content="Wiilie Zhang">
-<meta property="article:tag" content="AI">
-<meta property="article:tag" content="Prompts">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="hhttps://gszhangwei.github.io/images/sql_result_v1.png">
-
-<link rel="canonical" href="hhttps://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
-
-  <title>PDD在DATA领域的应用实践 | Willie's Blog</title>
-  
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Willie's Blog</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-  </ul>
-</nav>
-
-
-
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          PDD在DATA领域的应用实践
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-05-22 19:00:00" itemprop="dateCreated datePublished" datetime="2025-05-22T19:00:00+08:00">2025-05-22</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-05-27 15:41:32" itemprop="dateModified" datetime="2025-05-27T15:41:32+08:00">2025-05-27</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？</p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"/><meta name="theme-color" content="#222"/><meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/><meta name="renderer" content="webkit"/><link rel="icon" type="image/ico" sizes="32x32" href="/assets/favicon.ico"/><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/><link rel="alternate" href="/rss.xml" title="Willie's Blog" type="application/rss+xml"><link rel="alternate" href="/atom.xml" title="Willie's Blog" type="application/atom+xml"><link rel="alternate" type="application/json" title="Willie's Blog" href="https://gszhangwei.github.io/feed.json"/><link rel="preconnect" href="https://s4.zstatic.net"/><link rel="preconnect" href="https://at.alicdn.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CFredericka%20the%20Great:400,400italic,700,700italic%7CNoto%20Serif%20JP:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CInconsolata:400,400italic,700,700italic&display=swap&subset=latin,latin-ext" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="modulepreload" href="/js/siteInit.js"></link><link rel="modulepreload" href="/js/nyx-player-JFTCVABQ.js"></link><link rel="modulepreload" href="/js/copy-tex-KPZ64GCQ.js"></link><link rel="modulepreload" href="/js/post-6LLEVWGV.js"></link><link rel="modulepreload" href="/js/chunk-W6DPBPDY.js"></link><link rel="modulepreload" href="/js/index.esm-B5QALZBA.js"></link><link rel="modulepreload" href="/js/chunk-D4ZSMMI3.js"></link><link rel="modulepreload" href="/js/chunk-O3IWFEXF.js"></link><link rel="stylesheet" href="/css/siteInit.css" media="none" onload="this.media&#x3D;&#39;all&#39;"></link><link rel="preload" href="https://source.unsplash.com/1920x1080/?mountain,forest" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?abstract,geometric" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?ocean,water" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?space,stars" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?sky,clouds" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?city,architecture" as="image" fetchpriority="high"><meta name="keywords" content="AI,"/><link rel="canonical" href="https://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/"><link rel="stylesheet" href="/css/post.css?v=0.5.4"><link rel="stylesheet" href="/css/mermaid.css?v=0.5.4"><!-- 临时处理--><link rel="stylesheet" media="none" onload="this.media='all'" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css"><title>PDD在DATA领域的应用实践</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="pagefind_mount"></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">PDD在DATA领域的应用实践</h1><div class="meta"><span class="item" title="创建时间：2025-05-22 19:00:00"><span class="icon"><i class="ic i-calendar"></i></span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2025-05-22T19:00:00+08:00">2025-05-22</time></span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i></span><span class="text">本文字数</span><span>6.1k</span><span class="text">字</span></span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i></span><span class="text">阅读时长</span><span>6 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span><span class="line"></span><span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">testName</a></li></ul><ul class="right" id="rightNav"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div class="pjax" id="imgs"><ul><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?mountain,forest&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?abstract,geometric&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?ocean,water&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?space,stars&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?sky,clouds&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?city,architecture&quot;);"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"></use><use xlink:href="#gentle-wave" x="48" y="3"></use><use xlink:href="#gentle-wave" x="48" y="5"></use><use xlink:href="#gentle-wave" x="48" y="7"></use></g></svg></div><main><div class="inner"><div class="pjax" id="main"><div class="article wrap"><div class="breadcrumb" itemListElement itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i><span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope="itemscope" itemtype="https://schema.org/ListItem"><a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="item" rel="index" title="分类于技术"><span itemprop="name">技术<meta itemprop="position" content="0"/></span></a></span></div><article class="post block" itemscope="itemscope" itemtype="http://schema.org/Article" data-pagefind-body="data-pagefind-body" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/"/><span hidden="hidden" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><meta itemprop="image" content="/assets/avatar.jpg"/><meta itemprop="name" content="Wiilie Zhang"/><meta itemprop="description" content=", "/></span><span hidden="hidden" itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization"><meta itemprop="name" content="Willie's Blog"/></span><div class="body md" itemprop="articleBody"><h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>当Structured Prompt Driven Development（PDD）方法论遇上复杂数据场景，会擦出怎样的火花？</p>
 <p>最近一次数据项目的实践，让我有机会将PDD深度应用于BigQuery复杂SQL开发中。面对30+业务分支验证、亿级数据量快照表的挑战，传统开发方式，尤其是在没有相关复杂SQL处理经验的情况下，会显得力不从心。经过一番探索与试错，我不仅找到了PDD在数据领域的稳定应用路径，更重要的是验证了这套方法论在处理复杂业务逻辑时的实际效能。</p>
 <p>如果你也在寻找提升复杂SQL开发效率的方法，或者好奇PDD如何在数据工程项目中发挥作用，那么这次实践经验或许能为你提供一些有价值的参考。</p>
 <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p><strong>技术环境</strong></p>
@@ -265,11 +38,11 @@
 </li>
 <li><strong>第一次完整尝试</strong>：经过多轮迭代，AI生成了一个1157行的”巨型SQL”<ul>
 <li>初版SQL结果：<ul>
-<li><img src="/../images/sql_result_v1.png" alt="sql_result_v1.png"></li>
+<li><img loading="lazy" src="/../images/sql_result_v1.png" alt="sql_result_v1.png"></li>
 </ul>
 </li>
 <li>初版Prompt：<ul>
-<li><img src="/../images/sql_related_prompt_v1.png" alt="sql_related_prompt_v1.png"></li>
+<li><img loading="lazy" src="/../images/sql_related_prompt_v1.png" alt="sql_related_prompt_v1.png"></li>
 </ul>
 </li>
 <li>结果：BigQuery中大量语法错误</li>
@@ -290,18 +63,18 @@
 <li>利用PDD方法论，将实现逻辑转化为结构化提示词</li>
 <li>任务简化带来的直接效果：<strong>AI幻觉大幅减少，代码生成准确率显著提升</strong></li>
 </ul>
-<p> <img src="/../images/sql_related_prompt_v2_1.png" alt="sql_related_prompt_v1_1.png"><img src="/../images/sql_related_prompt_v2_2.png" alt="sql_related_prompt_v1_2.png"></p>
+<p> <img loading="lazy" src="/../images/sql_related_prompt_v2_1.png" alt="sql_related_prompt_v1_1.png"><img loading="lazy" src="/../images/sql_related_prompt_v2_2.png" alt="sql_related_prompt_v1_2.png"></p>
 </li>
 <li><p>快速验证闭环</p>
 <p> 得益于第一阶段建立的验证流程，每个单元都能快速完成准确性验证。<strong>重构成果对比</strong>如下：</p>
-<p> <img src="/../images/comparison_of_reconstruction_effects.png" alt="comparison_of_reconstruction_effects.png"></p>
+<p> <img loading="lazy" src="/../images/comparison_of_reconstruction_effects.png" alt="comparison_of_reconstruction_effects.png"></p>
 </li>
 </ol>
 <p>然而，当切换到线上环境真实的亿级数据验证时，新的挑战出现了，<strong>性能瓶颈</strong>：</p>
 <ul>
 <li><strong>执行时间</strong>：超过5分钟无法完成</li>
 <li><strong>中间结果</strong>：膨胀至268+GB<ul>
-<li><img src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></li>
+<li><img loading="lazy" src="/../images/SQL_processing_result.png" alt="SQL_processing_result.png"></li>
 </ul>
 </li>
 <li><strong>下一步方向</strong>：SQL性能优化成为新的攻坚重点</li>
@@ -327,7 +100,7 @@
 <li><strong>复杂问题分解</strong>：按照既定优化方向，将复杂查询逐步拆解为独立的提示词组件</li>
 <li><strong>逐一验证优化</strong>：为每个提示词组件单独生成SQL并进行性能验证，确保复杂JOIN完全拆解到位</li>
 <li><strong>任务拆分展示</strong>：优化后的Prompt部分效果如下图所示：<ul>
-<li><img src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
+<li><img loading="lazy" src="/../images/performance_enhanced_result.png" alt="performance_enhanced_result.png"></li>
 </ul>
 </li>
 <li><strong>优化前</strong>：查询超时5分钟无结果，涉及数据量高达数百GB</li>
@@ -336,7 +109,7 @@
 </li>
 </ol>
 <p>性能提升幅度超过800%，数据处理效率显著提升。</p>
-<p><img src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
+<p><img loading="lazy" src="/../images/sql_processing_result_final.png" alt="sql_processing_result_final.png"></p>
 <p>在这一个过程中，当确定优化方向后，补值逻辑其实是需要重写的，但是通过阶段一和阶段二的探索后，在Data领域稳定生成期望SQL的模式已经建立了，所以，即使重新写也没关系，这个过程非常快速的完成了。后续还有进行分之逻辑修复的处理，本质上步骤类似，就不在这里进行展示了。</p>
 <h2 id="结构化提示驱动开发-PDD-在数据领域的应用方法论"><a href="#结构化提示驱动开发-PDD-在数据领域的应用方法论" class="headerlink" title="结构化提示驱动开发(PDD)在数据领域的应用方法论"></a>结构化提示驱动开发(PDD)在数据领域的应用方法论</h2><p>基于项目实践，总结PDD在数据领域特别是SQL开发中的应用方法论，为类似场景提供参考。</p>
 <h3 id="PDD在SQL开发中的核心应用"><a href="#PDD在SQL开发中的核心应用" class="headerlink" title="PDD在SQL开发中的核心应用"></a>PDD在SQL开发中的核心应用</h3><p><strong>场景分类与策略</strong></p>
@@ -413,206 +186,37 @@
 <li><strong>效能提升的积累效应</strong>：在新技术领域的初期探索中，AI工具可能无法立即带来显著的效率提升。效能的实质性改善通常需要经历流程优化、经验模式沉淀和持续实践的积累过程。</li>
 <li><strong>个人能力增长的正向循环</strong>：AIFSD模式下，我们追求的不仅是当下的效率优化，更是通过持续实践实现个人能力的螺旋式上升，最终带来可持续性的效能提升。统一方法论的反复应用让经验积累与认知提升相互促进，最终形成人机协作的良性生态。</li>
 </ol>
-<p><img src="/../images/cognitive_improve_process_by_using_AI.png" alt="cognitive_improve_process_by_using_AI.png"></p>
+<p><img loading="lazy" src="/../images/cognitive_improve_process_by_using_AI.png" alt="cognitive_improve_process_by_using_AI.png"></p>
 <p>通过这次实践，我们初步探索了PDD方法论在数据领域复杂SQL场景下的应用可能性，并总结出了一套在Data领域处理复杂SQL的可行路径（<a target="_blank" rel="noopener" href="https://github.com/gszhangwei/structured-prompts-driven-development/blob/main/data/en/DATA-PROCESSING-TEMPLATE-EN.md">点击查看模板</a>）。这为后续类似场景的工作提供了可参考的实践基础。</p>
 <p>展望未来，随着在更多实际项目中的应用和方法论的持续优化，PDD有潜力在软件开发效率和质量方面带来一定程度的改善。通过不断的实践反思和经验积累，我们期望能够逐步完善这一方法论的适用边界和操作细节。</p>
-
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/AI/" rel="tag"># AI</a>
-              <a href="/tags/Prompts/" rel="tag"># Prompts</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/" rel="prev" title="Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour">
-      <i class="fa fa-chevron-left"></i> Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/" rel="next" title="AI辅助软件交付全流程成熟度模型白皮书">
-      AI辅助软件交付全流程成熟度模型白皮书 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
+<div class="tags"><a href="/tags/AI/" rel="tag"><i class="ic i-tag"></i>AI</a><a href="/tags/Prompts/" rel="tag"><i class="ic i-tag"></i>Prompts</a></div></div><footer><div class="meta"><span class="item"><span class="icon"><i class="ic i-calendar-check"></i></span><span class="text">更新于 </span><time title="修改时间：2025-05-27 15:41:32" itemprop="dateModified" datetime="2025-05-27T15:41:32+08:00">2025-05-27</time></span></div><div class="reward"><button><i class="ic i-heartbeat"></i>赞赏</button><p>请我喝[茶]~(￣▽￣)~*</p><div id="qr"><div><img loading="lazy" src="/assets/wechatpay.png" alt="Wiilie Zhang 微信支付"/><p>微信支付</p></div><div><img loading="lazy" src="/assets/alipay.png" alt="Wiilie Zhang 支付宝"/><p>支付宝</p></div></div></div><div id="copyright"><ul><li class="author"><strong>本文作者：</strong>Wiilie Zhang<i class="ic i-at"><em>@</em></i>Willie's Blog</li><li class="link"><strong>本文链接：</strong><a href="https://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/" title="PDD在DATA领域的应用实践">https://gszhangwei.github.io/2025/05/22/PDD-in-Data-Domain/</a></li><li class="license"><strong>版权声明：</strong>本站所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/" rel="prev" itemprop="url" data-background-image="https:&#x2F;&#x2F;source.unsplash.com&#x2F;1920x1080&#x2F;?ocean,water" title="Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i>Technology</span><h3>Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour</h3></a></div><div class="item right"><a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/" rel="next" itemprop="url" data-background-image="https:&#x2F;&#x2F;source.unsplash.com&#x2F;1920x1080&#x2F;?mountain,forest" title="AI辅助软件交付全流程成熟度模型白皮书"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i>技术</span><h3>AI辅助软件交付全流程成熟度模型白皮书</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">项目背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%95%B4%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">实现的整体过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9AAI%E5%8D%8F%E4%BD%9C%E4%B8%8B%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B8%8E%E7%AA%81%E7%A0%B4"><span class="toc-number">3.1.</span> <span class="toc-text">第一阶段：AI协作下的探索与突破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%90%86%E8%A7%A3%E4%B8%9A%E5%8A%A1%E6%9C%AC%E8%B4%A8%EF%BC%8C%E9%87%8D%E6%9E%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">3.2.</span> <span class="toc-text">第二阶段：理解业务本质，重构解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">3.3.</span> <span class="toc-text">第三阶段：性能优化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-PDD-%E5%9C%A8%E6%95%B0%E6%8D%AE%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-number">4.</span> <span class="toc-text">结构化提示驱动开发(PDD)在数据领域的应用方法论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PDD%E5%9C%A8SQL%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BA%94%E7%94%A8"><span class="toc-number">4.1.</span> <span class="toc-text">PDD在SQL开发中的核心应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E8%B7%B5%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">实践流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E6%96%BD%E5%BB%BA%E8%AE%AE%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="toc-number">4.3.</span> <span class="toc-text">实施建议与最佳实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%8D%E6%9D%82%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E4%BA%BA%E5%91%98%E8%83%BD%E5%8A%9B%E8%A6%81%E6%B1%82"><span class="toc-number">4.4.</span> <span class="toc-text">复杂场景下的人员能力要求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="toc-number">5.</span> <span class="toc-text">总结与未来展望</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li ><a href="/2022/08/31/hello-world/" rel="bookmark" title="Hello World">Hello World</a></li><li ><a href="/2022/08/31/article-title/" rel="bookmark" title="当我们点开一个网站，电脑是怎么知道该去哪个网站？">当我们点开一个网站，电脑是怎么知道该去哪个网站？</a></li><li ><a href="/2024/12/11/guidelines-prompts-driven-development/" rel="bookmark" title="Guidelines of Prompts Driven Development">Guidelines of Prompts Driven Development</a></li><li ><a href="/2025/02/27/prompts-driven-development/" rel="bookmark" title="结构化提示词驱动开发实践">结构化提示词驱动开发实践</a></li><li ><a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="bookmark" title="AI-Workflow革命：2天任务仅需50分钟！">AI-Workflow革命：2天任务仅需50分钟！</a></li><li  class="active"><a href="/2025/05/22/PDD-in-Data-Domain/" rel="bookmark" title="PDD在DATA领域的应用实践">PDD在DATA领域的应用实践</a></li><li ><a href="/2025/06/03/AI-assisted-development-of-new-qualitative-productivity-methodology/" rel="bookmark" title="AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology">AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology</a></li><li ><a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/" rel="bookmark" title="AI辅助软件交付全流程成熟度模型白皮书">AI辅助软件交付全流程成熟度模型白皮书</a></li><li ><a href="/2025/06/09/AI-assisted-software-delivery-full-process-maturity-model-white-paper-en/" rel="bookmark" title="AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5">AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5</a></li><li ><a href="/2025/06/18/PDD-practice-in-the-field-of-data/" rel="bookmark" title="Structured prompt driven development, practiced in the field of data">Structured prompt driven development, practiced in the field of data</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><img class="image" loading="lazy" decoding="async" itemprop="image" alt="Wiilie Zhang" src="/assets/avatar.jpg"/><p class="name" itemprop="name">Wiilie Zhang</p><div class="description" itemprop="description"></div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">15</span><span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">4</span><span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">7</span><span class="name">标签</span></a></div></nav><div class="social"><a target="_blank" rel="noopener" href="https://github.com/yourname" class="item github" title="https:&#x2F;&#x2F;github.com&#x2F;yourname"><i class="ic i-github"></i></a></div><div class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li></div></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div><div id="player"></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/">AI辅助软件交付全流程成熟度模型白皮书</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2022/08/31/hello-world/">Hello World</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/05/22/PDD-in-Data-Domain/">PDD在DATA领域的应用实践</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2024/12/11/guidelines-prompts-driven-development/">Guidelines of Prompts Driven Development</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/09/AI-assisted-software-delivery-full-process-maturity-model-white-paper-en/">AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/AI/" title="分类于AI">AI</a></div><span><a href="/2024/11/04/refactoring-with-cursor/">参考ReAct框架构建Prompt，使用Cursor高效对代码进行重构</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/AI/" title="分类于AI">AI</a></div><span><a href="/2024/11/15/refactoring-with-cursor-en/">Building Prompts Using the ReAct Framework for Efficient Code Refactoring with Cursor</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/AI/" title="分类于AI">AI</a></div><span><a href="/2024/09/26/AI_explore_Cursor/">AI工具探索：震惊🤯，使用Cursor仅用半天就完成了AI工具的实现</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2022/08/31/article-title/">当我们点开一个网站，电脑是怎么知道该去哪个网站？</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/03/AI-assisted-development-of-new-qualitative-productivity-methodology/">AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology</a></span></li></ul></div><div class="rpost pjax"><h2>最新评论</h2></div></div><div class="status"><div class="copyright">&copy; 2022 -<span itemprop="copyrightYear">2025</span><span class="with-love"><i class="ic i-sakura rotate"></i></span><span class="author" itemprop="copyrightHolder">Wiilie Zhang @ testName</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i></span><span title="站点总字数">207k 字</span><span class="post-meta-divider"> | </span><span class="post-meta-item-icon"><i class="ic i-coffee"></i></span><span title="站点阅读时长">3:08</span></div><div class="powered-by">基于 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme.<a target="_blank" rel="noopener" href="https://github.com/theme-shoka-x/hexo-theme-shokaX/">ShokaX</a></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL = {
+    ispost: true,
+    path: `2025/05/22/PDD-in-Data-Domain/`,
+    favicon: {
+        show: `（●´3｀●）やれやれだぜ`,
+        hide: `(´Д｀)大変だ！`
+    },
+    search: {
+        placeholder: "文章搜索",
+        empty: "关于 「 ${query} 」，什么也没搜到",
+        stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    nocopy: "false",
+    copyright: `复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。`,
+    copy_tex: false,
+    katex: false,
+    mermaid: false,
+    audio: undefined,
+    nocopy: false,
+    outime: true,
+    template: `<div class="note warning"><p><span class="label warning">文章时效性提示</span><br>这是一篇发布于 {{publish}} 天前，最后一次更新在 {{updated}} 天前的文章，部分信息可能已经发生改变，请注意甄别。</p></div>`,
+    quiz: {
+        choice: `单选题`,
+        multiple: `多选题`,
+        true_false: `判断题`,
+        essay: `问答题`,
+        gap_fill: `填空题`,
+        mistake: `错题备注`
     }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%95%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="nav-number">2.</span> <span class="nav-text">项目背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E7%9A%84%E6%95%B4%E4%BD%93%E8%BF%87%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">实现的整体过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%EF%BC%9AAI%E5%8D%8F%E4%BD%9C%E4%B8%8B%E7%9A%84%E6%8E%A2%E7%B4%A2%E4%B8%8E%E7%AA%81%E7%A0%B4"><span class="nav-number">3.1.</span> <span class="nav-text">第一阶段：AI协作下的探索与突破</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E9%98%B6%E6%AE%B5%EF%BC%9A%E7%90%86%E8%A7%A3%E4%B8%9A%E5%8A%A1%E6%9C%AC%E8%B4%A8%EF%BC%8C%E9%87%8D%E6%9E%84%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="nav-number">3.2.</span> <span class="nav-text">第二阶段：理解业务本质，重构解决方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E9%98%B6%E6%AE%B5%EF%BC%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">3.3.</span> <span class="nav-text">第三阶段：性能优化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E9%A9%B1%E5%8A%A8%E5%BC%80%E5%8F%91-PDD-%E5%9C%A8%E6%95%B0%E6%8D%AE%E9%A2%86%E5%9F%9F%E7%9A%84%E5%BA%94%E7%94%A8%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="nav-number">4.</span> <span class="nav-text">结构化提示驱动开发(PDD)在数据领域的应用方法论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#PDD%E5%9C%A8SQL%E5%BC%80%E5%8F%91%E4%B8%AD%E7%9A%84%E6%A0%B8%E5%BF%83%E5%BA%94%E7%94%A8"><span class="nav-number">4.1.</span> <span class="nav-text">PDD在SQL开发中的核心应用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E8%B7%B5%E6%B5%81%E7%A8%8B"><span class="nav-number">4.2.</span> <span class="nav-text">实践流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9E%E6%96%BD%E5%BB%BA%E8%AE%AE%E4%B8%8E%E6%9C%80%E4%BD%B3%E5%AE%9E%E8%B7%B5"><span class="nav-number">4.3.</span> <span class="nav-text">实施建议与最佳实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%8D%E6%9D%82%E5%9C%BA%E6%99%AF%E4%B8%8B%E7%9A%84%E4%BA%BA%E5%91%98%E8%83%BD%E5%8A%9B%E8%A6%81%E6%B1%82"><span class="nav-number">4.4.</span> <span class="nav-text">复杂场景下的人员能力要求</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B1%95%E6%9C%9B"><span class="nav-number">5.</span> <span class="nav-text">总结与未来展望</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">Wiilie Zhang</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">14</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Wiilie Zhang</span>
-</div>
-  <div class="powered-by">
-  </div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-</body>
-</html>
+};
+</script><script src="/js/siteInit.js?v=0.5.4" type="module" fetchpriority="high" defer></script></body></html>

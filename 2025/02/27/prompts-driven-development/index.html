@@ -1,451 +1,56 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 6.3.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <link rel="mask-icon" href="/images/logo.svg" color="#222">
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"gszhangwei.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":true},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
-  </script>
-
-  <meta name="description" content="上周六参加了公司组织的关于AI实践的对外直播，我分享的内容是《结构化提示词驱动开发实践》。现在将其记录成一篇博客，在此与大家分享我们团队在提示词驱动开发领域的一些实践与思考。随着大语言模型的不断成熟，我们逐步认识到，如何高效运用结构化提示词，引导AI生成高质量代码，已成为提升软件开发效率与质量的关键所在。本文将围绕“结构化提示词驱动开发”这一主题，从设计理念、实践路径到治理策略，全面解析提示词在软">
-<meta property="og:type" content="article">
-<meta property="og:title" content="结构化提示词驱动开发实践">
-<meta property="og:url" content="hhttps://gszhangwei.github.io/2025/02/27/prompts-driven-development/index.html">
-<meta property="og:site_name" content="Willie&#39;s Blog">
-<meta property="og:description" content="上周六参加了公司组织的关于AI实践的对外直播，我分享的内容是《结构化提示词驱动开发实践》。现在将其记录成一篇博客，在此与大家分享我们团队在提示词驱动开发领域的一些实践与思考。随着大语言模型的不断成熟，我们逐步认识到，如何高效运用结构化提示词，引导AI生成高质量代码，已成为提升软件开发效率与质量的关键所在。本文将围绕“结构化提示词驱动开发”这一主题，从设计理念、实践路径到治理策略，全面解析提示词在软">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Challenge_and_Solution.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Background_of_Project.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Construct_prompts_effectively.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Component_Description.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Structured_prompts_strategy.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/prompts_governance_policy.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Examples_of_project_practices.png">
-<meta property="og:image" content="hhttps://gszhangwei.github.io/images/Advice_of_practice.png">
-<meta property="article:published_time" content="2025-02-27T09:00:00.000Z">
-<meta property="article:modified_time" content="2025-02-28T08:48:41.663Z">
-<meta property="article:author" content="Wiilie Zhang">
-<meta property="article:tag" content="AI">
-<meta property="article:tag" content="Prompts">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="hhttps://gszhangwei.github.io/images/Challenge_and_Solution.png">
-
-<link rel="canonical" href="hhttps://gszhangwei.github.io/2025/02/27/prompts-driven-development/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
-
-  <title>结构化提示词驱动开发实践 | Willie's Blog</title>
-  
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
-</head>
-
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
-
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">Willie's Blog</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-tags">
-
-    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-  </ul>
-</nav>
-
-
-
-
-</div>
-    </header>
-
-    
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
-
-
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
-
-          <div class="content post posts-expand">
-            
-
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="hhttps://gszhangwei.github.io/2025/02/27/prompts-driven-development/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Wiilie Zhang">
-      <meta itemprop="description" content="">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Willie's Blog">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          结构化提示词驱动开发实践
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2025-02-27 17:00:00" itemprop="dateCreated datePublished" datetime="2025-02-27T17:00:00+08:00">2025-02-27</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-28 16:48:41" itemprop="dateModified" datetime="2025-02-28T16:48:41+08:00">2025-02-28</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-        <p>上周六参加了公司组织的关于AI实践的对外直播，我分享的内容是《结构化提示词驱动开发实践》。现在将其记录成一篇博客，在此与大家分享我们团队在提示词驱动开发领域的一些实践与思考。随着大语言模型的不断成熟，我们逐步认识到，如何高效运用结构化提示词，引导AI生成高质量代码，已成为提升软件开发效率与质量的关键所在。本文将围绕“<strong>结构化提示词驱动开发</strong>”这一主题，从设计理念、实践路径到治理策略，全面解析提示词在软件开发中如何落地应用，并以数据与实例展示其显著成效。</p>
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2"/><meta name="theme-color" content="#222"/><meta http-equiv="X-UA-COMPATIBLE" content="IE=edge,chrome=1"/><meta name="renderer" content="webkit"/><link rel="icon" type="image/ico" sizes="32x32" href="/assets/favicon.ico"/><link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png"/><link rel="alternate" href="/rss.xml" title="Willie's Blog" type="application/rss+xml"><link rel="alternate" href="/atom.xml" title="Willie's Blog" type="application/atom+xml"><link rel="alternate" type="application/json" title="Willie's Blog" href="https://gszhangwei.github.io/feed.json"/><link rel="preconnect" href="https://s4.zstatic.net"/><link rel="preconnect" href="https://at.alicdn.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mulish:400,400italic,700,700italic%7CFredericka%20the%20Great:400,400italic,700,700italic%7CNoto%20Serif%20JP:400,400italic,700,700italic%7CNoto%20Serif%20SC:400,400italic,700,700italic%7CInconsolata:400,400italic,700,700italic&display=swap&subset=latin,latin-ext" media="none" onload="this.media&#x3D;&#39;all&#39;"><link rel="modulepreload" href="/js/siteInit.js"></link><link rel="modulepreload" href="/js/nyx-player-JFTCVABQ.js"></link><link rel="modulepreload" href="/js/copy-tex-KPZ64GCQ.js"></link><link rel="modulepreload" href="/js/post-6LLEVWGV.js"></link><link rel="modulepreload" href="/js/chunk-W6DPBPDY.js"></link><link rel="modulepreload" href="/js/index.esm-B5QALZBA.js"></link><link rel="modulepreload" href="/js/chunk-D4ZSMMI3.js"></link><link rel="modulepreload" href="/js/chunk-O3IWFEXF.js"></link><link rel="stylesheet" href="/css/siteInit.css" media="none" onload="this.media&#x3D;&#39;all&#39;"></link><link rel="preload" href="https://source.unsplash.com/1920x1080/?mountain,forest" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?sky,clouds" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?abstract,geometric" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?nature,landscape" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?space,stars" as="image" fetchpriority="high"><link rel="preload" href="https://source.unsplash.com/1920x1080/?ocean,water" as="image" fetchpriority="high"><meta name="keywords" content="AI,"/><link rel="canonical" href="https://gszhangwei.github.io/2025/02/27/prompts-driven-development/"><link rel="stylesheet" href="/css/post.css?v=0.5.4"><link rel="stylesheet" href="/css/mermaid.css?v=0.5.4"><!-- 临时处理--><link rel="stylesheet" media="none" onload="this.media='all'" href="https://s4.zstatic.net/ajax/libs/KaTeX/0.16.9/katex.min.css"><title>结构化提示词驱动开发实践</title><meta name="generator" content="Hexo 6.3.0"></head><body itemscope itemtype="http://schema.org/WebPage"><div id="loading"><div class="cat"><div class="body"></div><div class="head"><div class="face"></div></div><div class="foot"><div class="tummy-end"></div><div class="bottom"></div><div class="legs left"></div><div class="legs right"></div></div><div class="paw"><div class="hands left"></div><div class="hands right"></div></div></div></div><div id="pagefind_mount"></div><div id="container"><header id="header" itemscope itemtype="http://schema.org/WPHeader"><div class="inner"><div id="brand"><div class="pjax"><h1 itemprop="name headline">结构化提示词驱动开发实践</h1><div class="meta"><span class="item" title="创建时间：2025-02-27 17:00:00"><span class="icon"><i class="ic i-calendar"></i></span><span class="text">发表于</span><time itemprop="dateCreated datePublished" datetime="2025-02-27T17:00:00+08:00">2025-02-27</time></span><span class="item" title="本文字数"><span class="icon"><i class="ic i-pen"></i></span><span class="text">本文字数</span><span>5k</span><span class="text">字</span></span><span class="item" title="阅读时长"><span class="icon"><i class="ic i-clock"></i></span><span class="text">阅读时长</span><span>5 分钟</span></span></div></div></div><nav id="nav"><div class="inner"><div class="toggle"><div class="lines" aria-label="切换导航栏"><span class="line"></span><span class="line"></span><span class="line"></span></div></div><ul class="menu"><li class="item title"><a href="/" rel="start">testName</a></li></ul><ul class="right" id="rightNav"><li class="item theme"><i class="ic i-sun"></i></li><li class="item search"><i class="ic i-search"></i></li></ul></div></nav></div><div class="pjax" id="imgs"><ul><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?mountain,forest&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?sky,clouds&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?abstract,geometric&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?nature,landscape&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?space,stars&quot;);"></li><li class="item" style="background-image: url(&quot;https://source.unsplash.com/1920x1080/?ocean,water&quot;);"></li></ul></div></header><div id="waves"><svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto"><defs><path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path></defs><g class="parallax"><use xlink:href="#gentle-wave" x="48" y="0"></use><use xlink:href="#gentle-wave" x="48" y="3"></use><use xlink:href="#gentle-wave" x="48" y="5"></use><use xlink:href="#gentle-wave" x="48" y="7"></use></g></svg></div><main><div class="inner"><div class="pjax" id="main"><div class="article wrap"><div class="breadcrumb" itemListElement itemscope itemtype="https://schema.org/BreadcrumbList"><i class="ic i-home"></i><span><a href="/">首页</a></span><i class="ic i-angle-right"></i><span class="current" itemprop="itemListElement" itemscope="itemscope" itemtype="https://schema.org/ListItem"><a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="item" rel="index" title="分类于技术"><span itemprop="name">技术<meta itemprop="position" content="0"/></span></a></span></div><article class="post block" itemscope="itemscope" itemtype="http://schema.org/Article" data-pagefind-body="data-pagefind-body" lang="zh-CN"><link itemprop="mainEntityOfPage" href="https://gszhangwei.github.io/2025/02/27/prompts-driven-development/"/><span hidden="hidden" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><meta itemprop="image" content="/assets/avatar.jpg"/><meta itemprop="name" content="Wiilie Zhang"/><meta itemprop="description" content=", "/></span><span hidden="hidden" itemprop="publisher" itemscope="itemscope" itemtype="http://schema.org/Organization"><meta itemprop="name" content="Willie's Blog"/></span><div class="body md" itemprop="articleBody"><p>上周六参加了公司组织的关于AI实践的对外直播，我分享的内容是《结构化提示词驱动开发实践》。现在将其记录成一篇博客，在此与大家分享我们团队在提示词驱动开发领域的一些实践与思考。随着大语言模型的不断成熟，我们逐步认识到，如何高效运用结构化提示词，引导AI生成高质量代码，已成为提升软件开发效率与质量的关键所在。本文将围绕“<strong>结构化提示词驱动开发</strong>”这一主题，从设计理念、实践路径到治理策略，全面解析提示词在软件开发中如何落地应用，并以数据与实例展示其显著成效。</p>
 <h2 id="解锁解决方案：克服关键挑战"><a href="#解锁解决方案：克服关键挑战" class="headerlink" title="解锁解决方案：克服关键挑战"></a>解锁解决方案：克服关键挑战</h2><p>在早期的AI辅助开发过程中，我们曾经深刻体会到传统开发模式的诸多局限。常规的对话式代码生成往往存在如下问题：生成的代码可用性不足、质量参差不齐，以至于后续大量人工返工成为常态；同时，对话式生成方案不易形成固化、可复用的工程产物，制约了AI在工程级项目中的大规模应用。数据显示，AI生成代码的采纳率普遍低于50%，而代码质量的波动也使得实际交付面临诸多风险。</p>
 <p>正因如此，我们开始思考：如果能够突破这些障碍，充分激发AI在交付过程中的潜能，那么软件开发的方式将会迎来怎样的变革？经过反复探索与实践，我们认为解决这一问题需要三大能力作支撑：</p>
 <ul>
 <li>第一是迅速分析问题，并精准识别出根本原因，从而为后续提供有效解决方案；</li>
 <li>第二是依托严谨的工程实践，通过标准流程来保障代码质量；</li>
-<li>第三也是最为关键的，即通过使用结构化提示词，让AI生成的代码具备可解释性、可追溯性和高采纳率。<br><img src="/../images/Challenge_and_Solution.png" alt="Challenge_and_Solution.png"><br>正是这三大支柱构成了我们突破传统模式、推动AI赋能开发的核心思路，也为后续实践提供了坚实的理论基础和指导方向。</li>
+<li>第三也是最为关键的，即通过使用结构化提示词，让AI生成的代码具备可解释性、可追溯性和高采纳率。<br><img loading="lazy" src="/../images/Challenge_and_Solution.png" alt="Challenge_and_Solution.png"><br>正是这三大支柱构成了我们突破传统模式、推动AI赋能开发的核心思路，也为后续实践提供了坚实的理论基础和指导方向。</li>
 </ul>
 <h2 id="试点项目探索与验证"><a href="#试点项目探索与验证" class="headerlink" title="试点项目探索与验证"></a>试点项目探索与验证</h2><p>为了验证这一方法论的可行性，我们开展了一系列试点项目，尽管具体业务细节不便透露，但整体项目任务包括了前端服务的初始化、基础设施及持续集成（CI）的搭建、前后端代码与测试的新编写，以及现有前端系统的重构。项目交付后，通过对数据的详细采集与对比分析，我们获得了非常振奋的成果。</p>
-<p>例如，在从零开始构建系统的任务中，传统开发模式需要消耗约19人天，而采用结构化提示词模式后，仅耗时7人天，且代码采纳率高达95%，这不仅大幅缩短了开发周期，也使得生产力实现近3倍的提升。而针对遗留系统的需求响应，开发时间则由原先的5人天缩短至3人天，生产效率提升约1.7倍。此外，我们还观察到，通过这种模式，代码重复率显著降低，单元测试覆盖率由65%增加至96%。这些数据充分说明，结构化提示词不仅提高了交付效率，更在实际工程中提升了代码质量和系统稳定性。<br><img src="/../images/Background_of_Project.png" alt="Background_of_Project.png"><br>数据背后的意义在于，我们成功为AI赋能软件开发找到了一条有效路径，这种路径打破了传统开发方式的局限，将原本模糊难控的生成过程转化为可管理、可复制的工程实践，为整个团队带来了崭新的开发体验和惊人的效率提升。</p>
+<p>例如，在从零开始构建系统的任务中，传统开发模式需要消耗约19人天，而采用结构化提示词模式后，仅耗时7人天，且代码采纳率高达95%，这不仅大幅缩短了开发周期，也使得生产力实现近3倍的提升。而针对遗留系统的需求响应，开发时间则由原先的5人天缩短至3人天，生产效率提升约1.7倍。此外，我们还观察到，通过这种模式，代码重复率显著降低，单元测试覆盖率由65%增加至96%。这些数据充分说明，结构化提示词不仅提高了交付效率，更在实际工程中提升了代码质量和系统稳定性。<br><img loading="lazy" src="/../images/Background_of_Project.png" alt="Background_of_Project.png"><br>数据背后的意义在于，我们成功为AI赋能软件开发找到了一条有效路径，这种路径打破了传统开发方式的局限，将原本模糊难控的生成过程转化为可管理、可复制的工程实践，为整个团队带来了崭新的开发体验和惊人的效率提升。</p>
 <p>让我们先探讨如何在软件开发领域中构建有效提示词，再逐步回顾我们所做的具体实践。</p>
 <h2 id="结构化提示词设计框架"><a href="#结构化提示词设计框架" class="headerlink" title="结构化提示词设计框架"></a>结构化提示词设计框架</h2><h3 id="如何有效构建提示词？"><a href="#如何有效构建提示词？" class="headerlink" title="如何有效构建提示词？"></a>如何有效构建提示词？</h3><p>在软件开发领域利用自然语言驱动AI生成代码过程中，一个根本性矛盾一直存在：人类思维具有天然的发散性，而AI执行指令则要求极高的结构化和精确性。传统提示词设计容易陷入两种误区：一方面，开发者可能过分依赖表面化描述，如直接要求“生成800字带小标题的营销文案”，这种方式虽然直白，但往往流于形式；另一方面，则可能陷入抽象概念的模糊描述，让AI自行揣测具体意图，从而导致输出偏离预期目标。</p>
-<p>为突破这一矛盾，我们强调思维方式的跃迁，即要从简单的特征描述（例如颜色、形状等外在属性）转向对事物本质的抽象提炼（例如功能内核与运行机制）。只有当我们首先明确定义对象的核心功能与本质特性，再辅以具体细节描述，才能为AI提供一条唯一且明确的生成路径，最大程度降低AI的幻觉。例如，在需要生成一个“白色冰箱”的场景中（假设我们并不知道冰箱这一名词概念），如果仅以“生成一个四方形白色物体，下方有四个小轮子”进行描述，可能误导AI产生与冰箱无关的对象；而若从本质出发，先定义“维持低温环境”这一核心功能，然后再补充其它特征，便能精准锁定冰箱这一概念，同时也为其它如冷库、冷链车留下一定扩展空间。正如我们所倡导的，“特征决定细节，本质决定边界”，只有先明晰本质，后注重具体细节，才能确保生成结果符合预期。<br><img src="/../images/Construct_prompts_effectively.png" alt="Construct_prompts_effectively.png"></p>
-<h3 id="组件描述法在提示词构建中的实践"><a href="#组件描述法在提示词构建中的实践" class="headerlink" title="组件描述法在提示词构建中的实践"></a>组件描述法在提示词构建中的实践</h3><p>基于上述理念，在构建提示词时我们引入了组件描述法。以后端开发为例，我们为每个组件设计了涵盖类名、方法名、异常处理等在内的多达10个标准化维度。通过这种方法，每个组件不仅能够明确界定其功能边界，也实现了逻辑上的严谨封装。需要说明的是，这里的“组件”概念与传统开发框架中的概念有所不同，它指的是构成结构化提示词的基本单元，是对功能职责和实现过程的细致拆解。<br><img src="/../images/Component_Description.png" alt="Component_Description.png"><br>组件描述法的引入，使得每个提示词单元既自成体系又相互衔接，在明确各自核心职责的同时，通过精准定义其属性和操作范围，有效避免了各组件之间的混淆和重叠，保障了整体提示词的严密性和生成代码的一致性。这样的设计不仅极大增强了系统的可维护性，也为处理复杂业务场景提供了有力支撑。</p>
+<p>为突破这一矛盾，我们强调思维方式的跃迁，即要从简单的特征描述（例如颜色、形状等外在属性）转向对事物本质的抽象提炼（例如功能内核与运行机制）。只有当我们首先明确定义对象的核心功能与本质特性，再辅以具体细节描述，才能为AI提供一条唯一且明确的生成路径，最大程度降低AI的幻觉。例如，在需要生成一个“白色冰箱”的场景中（假设我们并不知道冰箱这一名词概念），如果仅以“生成一个四方形白色物体，下方有四个小轮子”进行描述，可能误导AI产生与冰箱无关的对象；而若从本质出发，先定义“维持低温环境”这一核心功能，然后再补充其它特征，便能精准锁定冰箱这一概念，同时也为其它如冷库、冷链车留下一定扩展空间。正如我们所倡导的，“特征决定细节，本质决定边界”，只有先明晰本质，后注重具体细节，才能确保生成结果符合预期。<br><img loading="lazy" src="/../images/Construct_prompts_effectively.png" alt="Construct_prompts_effectively.png"></p>
+<h3 id="组件描述法在提示词构建中的实践"><a href="#组件描述法在提示词构建中的实践" class="headerlink" title="组件描述法在提示词构建中的实践"></a>组件描述法在提示词构建中的实践</h3><p>基于上述理念，在构建提示词时我们引入了组件描述法。以后端开发为例，我们为每个组件设计了涵盖类名、方法名、异常处理等在内的多达10个标准化维度。通过这种方法，每个组件不仅能够明确界定其功能边界，也实现了逻辑上的严谨封装。需要说明的是，这里的“组件”概念与传统开发框架中的概念有所不同，它指的是构成结构化提示词的基本单元，是对功能职责和实现过程的细致拆解。<br><img loading="lazy" src="/../images/Component_Description.png" alt="Component_Description.png"><br>组件描述法的引入，使得每个提示词单元既自成体系又相互衔接，在明确各自核心职责的同时，通过精准定义其属性和操作范围，有效避免了各组件之间的混淆和重叠，保障了整体提示词的严密性和生成代码的一致性。这样的设计不仅极大增强了系统的可维护性，也为处理复杂业务场景提供了有力支撑。</p>
 <h3 id="结构化Prompt设计整体框架"><a href="#结构化Prompt设计整体框架" class="headerlink" title="结构化Prompt设计整体框架"></a>结构化Prompt设计整体框架</h3><p>在组件定义的基础上，我们进一步构建了完整的结构化Prompt设计框架，该框架总体分为以下五个部分：</p>
 <p>需求锚定阶段要求我们准确描述业务需求，确保开发目标的精准定位；结构定义阶段则负责明确实现功能所需模块之间的依赖关系和相互作用；任务编排阶段将整体需求拆解成具体操作单元，通过逐一定义各组件来形成连续的工作流；在通用任务阶段，我们对数据校验、异常处理等高频操作进行标准化处理，以模板化的方式复用解决方案；最后，约束控制阶段为整个系统设置安全围栏，限定组件调用的范围和引用关系，防止因边界不清引发的潜在问题。</p>
-<p>在此过程中，我们始终坚持两个黄金准则：首先，本质抽象必须优先于特征描述，只有清晰定义组件的核心职责，才能避免陷入形式化穷举的困境；其次，组件应被视为逻辑单元，而非仅仅是代码片段，就如一部优秀剧本强调刻画人物内在动机，而非干涉演员细微表现。正是在这两个准则的指引下，结构化Prompt设计框架为团队构建了一套系统、严谨且高效的提示词应用体系，极大地提升了整体开发效率和代码质量。<br><img src="/../images/Structured_prompts_strategy.png" alt="Structured_prompts_strategy.png"></p>
-<h2 id="提示词工程：AI资产的治理策略"><a href="#提示词工程：AI资产的治理策略" class="headerlink" title="提示词工程：AI资产的治理策略"></a>提示词工程：AI资产的治理策略</h2><p>要确保提示词在长期开发过程中的持续有效性，仅仅构建高质量提示词是不够的，还需要建立一套完善的治理策略。我们将提示词治理分为多个层级：规则层、行业垂直方案抽象层、解决方案具体实现层以及AI执行层。各层级之间分工明确，架构师、技术负责人与开发工程师各自履行职责，共同维护提示词资产的高标准和可持续性。<br><img src="/../images/prompts_governance_policy.png" alt="prompts_governance_policy.png"><br>目前，在试点项目中，我们已经通过预定义工作流引入日志规则，将其置于规则层，确保在代码生成前通过提示词预先注入必要的安全和质量标准。这不仅使得生成代码符合日志规范，同时也为整个系统构建起一道坚固的防护屏障。随着实施的不断推进，这一治理策略将逐步完善并推广到更广泛的开发场景中，为软件工程在质量控制和流程管理上提供制度化保障。</p>
+<p>在此过程中，我们始终坚持两个黄金准则：首先，本质抽象必须优先于特征描述，只有清晰定义组件的核心职责，才能避免陷入形式化穷举的困境；其次，组件应被视为逻辑单元，而非仅仅是代码片段，就如一部优秀剧本强调刻画人物内在动机，而非干涉演员细微表现。正是在这两个准则的指引下，结构化Prompt设计框架为团队构建了一套系统、严谨且高效的提示词应用体系，极大地提升了整体开发效率和代码质量。<br><img loading="lazy" src="/../images/Structured_prompts_strategy.png" alt="Structured_prompts_strategy.png"></p>
+<h2 id="提示词工程：AI资产的治理策略"><a href="#提示词工程：AI资产的治理策略" class="headerlink" title="提示词工程：AI资产的治理策略"></a>提示词工程：AI资产的治理策略</h2><p>要确保提示词在长期开发过程中的持续有效性，仅仅构建高质量提示词是不够的，还需要建立一套完善的治理策略。我们将提示词治理分为多个层级：规则层、行业垂直方案抽象层、解决方案具体实现层以及AI执行层。各层级之间分工明确，架构师、技术负责人与开发工程师各自履行职责，共同维护提示词资产的高标准和可持续性。<br><img loading="lazy" src="/../images/prompts_governance_policy.png" alt="prompts_governance_policy.png"><br>目前，在试点项目中，我们已经通过预定义工作流引入日志规则，将其置于规则层，确保在代码生成前通过提示词预先注入必要的安全和质量标准。这不仅使得生成代码符合日志规范，同时也为整个系统构建起一道坚固的防护屏障。随着实施的不断推进，这一治理策略将逐步完善并推广到更广泛的开发场景中，为软件工程在质量控制和流程管理上提供制度化保障。</p>
 <h2 id="项目实践实例解析"><a href="#项目实践实例解析" class="headerlink" title="项目实践实例解析"></a>项目实践实例解析</h2><p>为了更直观地展示结构化提示词的应用效果，我们以一个获取用户权限信息的API项目为例进行说明。该API不仅需支持根据用户ID、邮箱、姓名及角色进行多条件查询，还要求具备分页、排序以及对数据进行分组合并的功能。在实际开发中，我们依照需求、结构、任务、通用任务与约束控制等模块，系统地组织和编写提示词，同时在组件定义中严格遵循组件描述法和构建提示词的核心指导思想。依托这一完备的体系，我们最终实现了一个能够根据多参数动态构建查询条件，并对数据进行复杂分组与合并操作的API。</p>
-<p>统计结果显示，在后端实现API模块，团队共使用6组提示词，总行数达592行，最终生成代码1849行，涉及37个文件的新增或修改。如此覆盖复杂业务场景的实践成果，不仅充分验证了结构化提示词模式的可行性，也大大提升了交付效率和代码质量，为传统开发模式带来了全新的变革思路。<br><img src="/../images/Examples_of_project_practices.png" alt="Examples_of_project_practices.png"><br>在项目推进过程中，我们也直面了一些实际问题，并据此积累了宝贵经验。尤其对于初次接触该模式的团队而言，我们发现并不需要从零开始书写提示词，而可以从现有代码中提炼有效提示，从而逐步优化和完善提示体系，实现快速落地和迭代。</p>
+<p>统计结果显示，在后端实现API模块，团队共使用6组提示词，总行数达592行，最终生成代码1849行，涉及37个文件的新增或修改。如此覆盖复杂业务场景的实践成果，不仅充分验证了结构化提示词模式的可行性，也大大提升了交付效率和代码质量，为传统开发模式带来了全新的变革思路。<br><img loading="lazy" src="/../images/Examples_of_project_practices.png" alt="Examples_of_project_practices.png"><br>在项目推进过程中，我们也直面了一些实际问题，并据此积累了宝贵经验。尤其对于初次接触该模式的团队而言，我们发现并不需要从零开始书写提示词，而可以从现有代码中提炼有效提示，从而逐步优化和完善提示体系，实现快速落地和迭代。</p>
 <h2 id="有效撰写提示词的技巧与实战建议"><a href="#有效撰写提示词的技巧与实战建议" class="headerlink" title="有效撰写提示词的技巧与实战建议"></a>有效撰写提示词的技巧与实战建议</h2><p>通过多次项目实践，我们总结出如下几种撰写高质量提示词的有效策略。首先，当解决方案已经存在于现有代码中时，可以利用AI自动解析代码，提取出有效提示词，并在此基础上进行优化，这种做法既节约了时间，也避免了从零开始的风险。其次，当解决方案尚存于开发者脑海时，借助可复用的结构化策略，并根据不同任务灵活调整细节，能迅速形成符合预期的提示词。对于那些暂时无解的情况，我们建议先与AI展开开放性协作探索，通过不断收敛思路后，借助结构化模板生成初步提示词，再由开发者进行必要的人工微调和确认。</p>
-<p>在实践中我们还发现，写作提示词时应特别注意避免过度抽象。对于简单场景，往往无需构建复杂的提示体系，此时采用直接的对话式编程反而更为高效。此外，提示词的撰写要做到本质与特征兼顾——既要确保功能和职责的清晰表述，又不能忽略细节描述的重要性。最关键的是，无论是为了让AI生成优秀代码，还是为了便于开发者后期审核修正，最终形成的提示词都必须具备良好的可读性和实用性，能够以清晰自然的语言传达预期意图。<br><img src="/../images/Advice_of_practice.png" alt="Advice_of_practice.png"></p>
+<p>在实践中我们还发现，写作提示词时应特别注意避免过度抽象。对于简单场景，往往无需构建复杂的提示体系，此时采用直接的对话式编程反而更为高效。此外，提示词的撰写要做到本质与特征兼顾——既要确保功能和职责的清晰表述，又不能忽略细节描述的重要性。最关键的是，无论是为了让AI生成优秀代码，还是为了便于开发者后期审核修正，最终形成的提示词都必须具备良好的可读性和实用性，能够以清晰自然的语言传达预期意图。<br><img loading="lazy" src="/../images/Advice_of_practice.png" alt="Advice_of_practice.png"></p>
 <h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>总体而言，提示词驱动开发作为一种全新的软件开发模式，展现出前所未有的创新潜力。凭借结构化提示词的系统设计与严格治理策略，我们不仅成功激发了AI在代码生成中的潜能，还显著提升了开发效率和代码质量，为我们团队引入了全新的思考方式和工作模式。</p>
 <p>展望未来，我们将持续关注AI技术的前沿动态，并在更为复杂的实际场景下不断完善提示词设计与治理体系。我们期待，在广大开发者不断探索和实践的推动下，人与AI的深度融合能够开启软件开发的新纪元，共同推动整个行业迈向更高效、更智能的未来。通过不断迭代与优化，相信结构化提示词必将成为工程实践中的一项核心技术，为软件开发注入源源不断的创新动力和竞争优势。</p>
 <h2 id="附录"><a href="#附录" class="headerlink" title="附录"></a>附录</h2><p>这篇文章在外部发表后，大家围绕“特征决定细节，本质决定边界”展开了一些讨论。但我发现，大家对“特征”和“本质”的基本定义可能存在不同理解。为此，我在这里补充了它们的基本定义，以便统一认知，从而帮助大家更好地理解这句话的深层含义。<br>特征（Features）：指问题或需求中可观测、可描述的具体属性，包括输入输出形式、约束条件、交互场景、技术参数等显性要素。核心特点：可量化，可验证，具象化（容易观察到的）。<br>本质（Essence）：指问题背后需要解决的根本矛盾或核心目标，是决定解决方案有效性的底层逻辑。核心特点：抽象性，方向性，不可妥协性（那个能够决定成为它的东西）。</p>
-
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/AI/" rel="tag"># AI</a>
-              <a href="/tags/Prompts/" rel="tag"># Prompts</a>
-          </div>
-
-        
-
-
-        
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2025/02/27/prompt-driven-development-en/" rel="prev" title="Structured prompts driven development">
-      <i class="fa fa-chevron-left"></i> Structured prompts driven development
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="next" title="AI-Workflow革命：2天任务仅需50分钟！">
-      AI-Workflow革命：2天任务仅需50分钟！ <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
-    
-  </article>
-  
-  
-  
-
-
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
+<div class="tags"><a href="/tags/AI/" rel="tag"><i class="ic i-tag"></i>AI</a><a href="/tags/Prompts/" rel="tag"><i class="ic i-tag"></i>Prompts</a></div></div><footer><div class="meta"><span class="item"><span class="icon"><i class="ic i-calendar-check"></i></span><span class="text">更新于 </span><time title="修改时间：2025-02-28 16:48:41" itemprop="dateModified" datetime="2025-02-28T16:48:41+08:00">2025-02-28</time></span></div><div class="reward"><button><i class="ic i-heartbeat"></i>赞赏</button><p>请我喝[茶]~(￣▽￣)~*</p><div id="qr"><div><img loading="lazy" src="/assets/wechatpay.png" alt="Wiilie Zhang 微信支付"/><p>微信支付</p></div><div><img loading="lazy" src="/assets/alipay.png" alt="Wiilie Zhang 支付宝"/><p>支付宝</p></div></div></div><div id="copyright"><ul><li class="author"><strong>本文作者：</strong>Wiilie Zhang<i class="ic i-at"><em>@</em></i>Willie's Blog</li><li class="link"><strong>本文链接：</strong><a href="https://gszhangwei.github.io/2025/02/27/prompts-driven-development/" title="结构化提示词驱动开发实践">https://gszhangwei.github.io/2025/02/27/prompts-driven-development/</a></li><li class="license"><strong>版权声明：</strong>本站所有文章除特别声明外，均采用 <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</a> 许可协议。转载请注明出处！</li></ul></div></footer></article></div><div class="post-nav"><div class="item left"><a href="/2025/02/27/prompt-driven-development-en/" rel="prev" itemprop="url" data-background-image="https:&#x2F;&#x2F;source.unsplash.com&#x2F;1920x1080&#x2F;?technology,computer" title="Structured prompts driven development"><span class="type">上一篇</span><span class="category"><i class="ic i-flag"></i>Tech</span><h3>Structured prompts driven development</h3></a></div><div class="item right"><a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="next" itemprop="url" data-background-image="https:&#x2F;&#x2F;source.unsplash.com&#x2F;1920x1080&#x2F;?space,stars" title="AI-Workflow革命：2天任务仅需50分钟！"><span class="type">下一篇</span><span class="category"><i class="ic i-flag"></i>技术</span><h3>AI-Workflow革命：2天任务仅需50分钟！</h3></a></div></div><div class="wrap" id="comments"></div></div><div id="sidebar"><div class="inner"><div class="panels"><div class="inner"><div class="contents panel pjax" data-title="文章目录"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%94%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%85%8B%E6%9C%8D%E5%85%B3%E9%94%AE%E6%8C%91%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">解锁解决方案：克服关键挑战</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%95%E7%82%B9%E9%A1%B9%E7%9B%AE%E6%8E%A2%E7%B4%A2%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="toc-number">2.</span> <span class="toc-text">试点项目探索与验证</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E8%AF%8D%E8%AE%BE%E8%AE%A1%E6%A1%86%E6%9E%B6"><span class="toc-number">3.</span> <span class="toc-text">结构化提示词设计框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9C%89%E6%95%88%E6%9E%84%E5%BB%BA%E6%8F%90%E7%A4%BA%E8%AF%8D%EF%BC%9F"><span class="toc-number">3.1.</span> <span class="toc-text">如何有效构建提示词？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E6%8F%8F%E8%BF%B0%E6%B3%95%E5%9C%A8%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%9E%84%E5%BB%BA%E4%B8%AD%E7%9A%84%E5%AE%9E%E8%B7%B5"><span class="toc-number">3.2.</span> <span class="toc-text">组件描述法在提示词构建中的实践</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96Prompt%E8%AE%BE%E8%AE%A1%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="toc-number">3.3.</span> <span class="toc-text">结构化Prompt设计整体框架</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%EF%BC%9AAI%E8%B5%84%E4%BA%A7%E7%9A%84%E6%B2%BB%E7%90%86%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">提示词工程：AI资产的治理策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E5%AE%9E%E4%BE%8B%E8%A7%A3%E6%9E%90"><span class="toc-number">5.</span> <span class="toc-text">项目实践实例解析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E6%95%88%E6%92%B0%E5%86%99%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%9A%84%E6%8A%80%E5%B7%A7%E4%B8%8E%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="toc-number">6.</span> <span class="toc-text">有效撰写提示词的技巧与实战建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">7.</span> <span class="toc-text">结语</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%99%84%E5%BD%95"><span class="toc-number">8.</span> <span class="toc-text">附录</span></a></li></ol></div><div class="related panel pjax" data-title="系列文章"><ul><li ><a href="/2022/08/31/hello-world/" rel="bookmark" title="Hello World">Hello World</a></li><li ><a href="/2022/08/31/article-title/" rel="bookmark" title="当我们点开一个网站，电脑是怎么知道该去哪个网站？">当我们点开一个网站，电脑是怎么知道该去哪个网站？</a></li><li ><a href="/2024/12/11/guidelines-prompts-driven-development/" rel="bookmark" title="Guidelines of Prompts Driven Development">Guidelines of Prompts Driven Development</a></li><li  class="active"><a href="/2025/02/27/prompts-driven-development/" rel="bookmark" title="结构化提示词驱动开发实践">结构化提示词驱动开发实践</a></li><li ><a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="bookmark" title="AI-Workflow革命：2天任务仅需50分钟！">AI-Workflow革命：2天任务仅需50分钟！</a></li><li ><a href="/2025/05/22/PDD-in-Data-Domain/" rel="bookmark" title="PDD在DATA领域的应用实践">PDD在DATA领域的应用实践</a></li><li ><a href="/2025/06/03/AI-assisted-development-of-new-qualitative-productivity-methodology/" rel="bookmark" title="AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology">AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology</a></li><li ><a href="/2025/06/03/AI-assisted-software-delivery-full-process-maturity-model-white-paper/" rel="bookmark" title="AI辅助软件交付全流程成熟度模型白皮书">AI辅助软件交付全流程成熟度模型白皮书</a></li><li ><a href="/2025/06/09/AI-assisted-software-delivery-full-process-maturity-model-white-paper-en/" rel="bookmark" title="AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5">AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5</a></li><li ><a href="/2025/06/18/PDD-practice-in-the-field-of-data/" rel="bookmark" title="Structured prompt driven development, practiced in the field of data">Structured prompt driven development, practiced in the field of data</a></li></ul></div><div class="overview panel" data-title="站点概览"><div class="author" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><img class="image" loading="lazy" decoding="async" itemprop="image" alt="Wiilie Zhang" src="/assets/avatar.jpg"/><p class="name" itemprop="name">Wiilie Zhang</p><div class="description" itemprop="description"></div></div><nav class="state"><div class="item posts"><a href="/archives/"><span class="count">15</span><span class="name">文章</span></a></div><div class="item categories"><a href="/categories/"><span class="count">4</span><span class="name">分类</span></a></div><div class="item tags"><a href="/tags/"><span class="count">7</span><span class="name">标签</span></a></div></nav><div class="social"><a target="_blank" rel="noopener" href="https://github.com/yourname" class="item github" title="https:&#x2F;&#x2F;github.com&#x2F;yourname"><i class="ic i-github"></i></a></div><div class="menu"><li class="item"><a href="/" rel="section"><i class="ic i-home"></i>首页</a></li></div></div></div></div><ul id="quick"><li class="prev pjax"><a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/" rel="prev" title="上一篇"><i class="ic i-chevron-left"></i></a></li><li class="up"><i class="ic i-arrow-up"></i></li><li class="down"><i class="ic i-arrow-down"></i></li><li class="next pjax"><a href="/2025/02/27/prompt-driven-development-en/" rel="next" title="下一篇"><i class="ic i-chevron-right"></i></a></li><li class="percent"></li></ul></div></div><div class="dimmer"></div></div><div id="player"></div></main><footer id="footer"><div class="inner"><div class="widgets"><div class="rpost pjax"><h2>随机文章</h2><ul><li class="item"><div class="breadcrumb"><a href="/categories/AI/" title="分类于AI">AI</a></div><span><a href="/2024/09/26/AI_explore_Cursor/">AI工具探索：震惊🤯，使用Cursor仅用半天就完成了AI工具的实现</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/Technology/" title="分类于Technology">Technology</a></div><span><a href="/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/">Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/02/27/prompts-driven-development/">结构化提示词驱动开发实践</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2024/12/11/guidelines-prompts-driven-development/">Guidelines of Prompts Driven Development</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/03/AI-assisted-development-of-new-qualitative-productivity-methodology/">AI-enabled software delivery maturity model interpretation and AI-assisted development of new qualitative productivity methodology</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/09/AI-assisted-software-delivery-full-process-maturity-model-white-paper-en/">AI-Assisted Software Delivery Maturity Model:A Comprehensive Guide from L0 to L5</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/AI/" title="分类于AI">AI</a></div><span><a href="/2024/11/04/refactoring-with-cursor/">参考ReAct框架构建Prompt，使用Cursor高效对代码进行重构</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/06/18/PDD-practice-in-the-field-of-data/">Structured prompt driven development, practiced in the field of data</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2022/08/31/article-title/">当我们点开一个网站，电脑是怎么知道该去哪个网站？</a></span></li><li class="item"><div class="breadcrumb"><a href="/categories/%E6%8A%80%E6%9C%AF/" title="分类于技术">技术</a></div><span><a href="/2025/03/21/AI-workflows-improve-software-development-efficiencyt/">AI-Workflow革命：2天任务仅需50分钟！</a></span></li></ul></div><div class="rpost pjax"><h2>最新评论</h2></div></div><div class="status"><div class="copyright">&copy; 2022 -<span itemprop="copyrightYear">2025</span><span class="with-love"><i class="ic i-sakura rotate"></i></span><span class="author" itemprop="copyrightHolder">Wiilie Zhang @ testName</span></div><div class="count"><span class="post-meta-item-icon"><i class="ic i-chart-area"></i></span><span title="站点总字数">207k 字</span><span class="post-meta-divider"> | </span><span class="post-meta-item-icon"><i class="ic i-coffee"></i></span><span title="站点阅读时长">3:08</span></div><div class="powered-by">基于 <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> & Theme.<a target="_blank" rel="noopener" href="https://github.com/theme-shoka-x/hexo-theme-shokaX/">ShokaX</a></div></div></div></footer></div><script data-config type="text/javascript">var LOCAL = {
+    ispost: true,
+    path: `2025/02/27/prompts-driven-development/`,
+    favicon: {
+        show: `（●´3｀●）やれやれだぜ`,
+        hide: `(´Д｀)大変だ！`
+    },
+    search: {
+        placeholder: "文章搜索",
+        empty: "关于 「 ${query} 」，什么也没搜到",
+        stats: "${time} ms 内找到 ${hits} 条结果"
+    },
+    nocopy: "false",
+    copyright: `复制成功，转载请遵守 <i class="ic i-creative-commons"></i>BY-NC-SA 协议。`,
+    copy_tex: false,
+    katex: false,
+    mermaid: false,
+    audio: undefined,
+    nocopy: false,
+    outime: true,
+    template: `<div class="note warning"><p><span class="label warning">文章时效性提示</span><br>这是一篇发布于 {{publish}} 天前，最后一次更新在 {{updated}} 天前的文章，部分信息可能已经发生改变，请注意甄别。</p></div>`,
+    quiz: {
+        choice: `单选题`,
+        multiple: `多选题`,
+        true_false: `判断题`,
+        essay: `问答题`,
+        gap_fill: `填空题`,
+        mistake: `错题备注`
     }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
-
-        </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
-
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E9%94%81%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88%EF%BC%9A%E5%85%8B%E6%9C%8D%E5%85%B3%E9%94%AE%E6%8C%91%E6%88%98"><span class="nav-number">1.</span> <span class="nav-text">解锁解决方案：克服关键挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AF%95%E7%82%B9%E9%A1%B9%E7%9B%AE%E6%8E%A2%E7%B4%A2%E4%B8%8E%E9%AA%8C%E8%AF%81"><span class="nav-number">2.</span> <span class="nav-text">试点项目探索与验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E6%8F%90%E7%A4%BA%E8%AF%8D%E8%AE%BE%E8%AE%A1%E6%A1%86%E6%9E%B6"><span class="nav-number">3.</span> <span class="nav-text">结构化提示词设计框架</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%9C%89%E6%95%88%E6%9E%84%E5%BB%BA%E6%8F%90%E7%A4%BA%E8%AF%8D%EF%BC%9F"><span class="nav-number">3.1.</span> <span class="nav-text">如何有效构建提示词？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E6%8F%8F%E8%BF%B0%E6%B3%95%E5%9C%A8%E6%8F%90%E7%A4%BA%E8%AF%8D%E6%9E%84%E5%BB%BA%E4%B8%AD%E7%9A%84%E5%AE%9E%E8%B7%B5"><span class="nav-number">3.2.</span> <span class="nav-text">组件描述法在提示词构建中的实践</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96Prompt%E8%AE%BE%E8%AE%A1%E6%95%B4%E4%BD%93%E6%A1%86%E6%9E%B6"><span class="nav-number">3.3.</span> <span class="nav-text">结构化Prompt设计整体框架</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8F%90%E7%A4%BA%E8%AF%8D%E5%B7%A5%E7%A8%8B%EF%BC%9AAI%E8%B5%84%E4%BA%A7%E7%9A%84%E6%B2%BB%E7%90%86%E7%AD%96%E7%95%A5"><span class="nav-number">4.</span> <span class="nav-text">提示词工程：AI资产的治理策略</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%AE%9E%E8%B7%B5%E5%AE%9E%E4%BE%8B%E8%A7%A3%E6%9E%90"><span class="nav-number">5.</span> <span class="nav-text">项目实践实例解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%89%E6%95%88%E6%92%B0%E5%86%99%E6%8F%90%E7%A4%BA%E8%AF%8D%E7%9A%84%E6%8A%80%E5%B7%A7%E4%B8%8E%E5%AE%9E%E6%88%98%E5%BB%BA%E8%AE%AE"><span class="nav-number">6.</span> <span class="nav-text">有效撰写提示词的技巧与实战建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-number">7.</span> <span class="nav-text">结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%99%84%E5%BD%95"><span class="nav-number">8.</span> <span class="nav-text">附录</span></a></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">Wiilie Zhang</p>
-  <div class="site-description" itemprop="description"></div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
-        
-          <span class="site-state-item-count">14</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">4</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-            <a href="/tags/">
-          
-        <span class="site-state-item-count">7</span>
-        <span class="site-state-item-name">标签</span></a>
-      </div>
-  </nav>
-</div>
-
-
-
-      </div>
-
-    </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
-
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 
-  <span itemprop="copyrightYear">2025</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">Wiilie Zhang</span>
-</div>
-  <div class="powered-by">
-  </div>
-
-        
-
-
-
-
-
-
-
-
-      </div>
-    </footer>
-  </div>
-
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
-
-
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
-
-
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-</body>
-</html>
+};
+</script><script src="/js/siteInit.js?v=0.5.4" type="module" fetchpriority="high" defer></script></body></html>

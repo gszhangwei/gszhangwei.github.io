@@ -1,0 +1,172 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://gszhangwei.github.io</id>
+    <title>Willie&#39;s Blog • Posts by &#34;technology&#34; category</title>
+    <link href="https://gszhangwei.github.io" />
+    <updated>2025-04-10T04:00:00.000Z</updated>
+    <category term="AI" />
+    <category term="Prompts" />
+    <category term="Governance" />
+    <category term="Cursor" />
+    <category term="ip" />
+    <category term="port" />
+    <category term="Hexo" />
+    <entry>
+        <id>https://gszhangwei.github.io/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/</id>
+        <title>Structured Prompt-Driven Development Workflow - Transforming Software Development from 2 Days to 1 Hour</title>
+        <link rel="alternate" href="https://gszhangwei.github.io/2025/04/10/AI-workflows-improve-software-development-efficiencyt-en/"/>
+        <content type="html">&lt;h2 id=&#34;Introduction&#34;&gt;&lt;a href=&#34;#Introduction&#34; class=&#34;headerlink&#34; title=&#34;Introduction&#34;&gt;&lt;/a&gt;Introduction&lt;/h2&gt;&lt;p&gt;Since the publication of &lt;a href=&#34;https://central.thoughtworks.net/blogs/ls/content/136117101053029/structured-prompts-driven-development-1781b9ae-3d4b-458d-8b8b-0265fa34e1cb&#34;&gt;Structured Prompt-Driven Development in Practice&lt;/a&gt;, the feedback I’ve received highlights &lt;strong&gt;two core needs&lt;/strong&gt;: &lt;strong&gt;lowering the methodology application threshold&lt;/strong&gt; and &lt;strong&gt;providing directly reusable practice templates&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;As a practitioner who has experienced the transition from traditional development to AI-assisted programming, I deeply feel that software development is currently undergoing a dual transformation: accelerating industry iteration and an efficiency revolution triggered by generative AI. When AI-generated code acceptance rates jump from 30% to 95%, this signals a fundamental paradigm shift in development.&lt;/p&gt;
+&lt;p&gt;Facing the reality that methodology is &lt;strong&gt;“easy to understand but difficult to implement”&lt;/strong&gt;, could we adopt a progressive model of &lt;strong&gt;“use-understand-innovate”&lt;/strong&gt; to help developers naturally master methodological essentials while achieving immediate results?&lt;/p&gt;
+&lt;p&gt;In fact, the &lt;strong&gt;universal solution layer&lt;/strong&gt; in the structured prompt-driven development methodology can serve as the key breakthrough - &lt;strong&gt;building reusable abstract solution templates&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;[Prompts Strategy Image Placeholder]&lt;/p&gt;
+&lt;p&gt;Our practicing confirms that these templated solutions can reduce the time novices need to build effective prompts &lt;strong&gt;from 2 hours to 30 minutes&lt;/strong&gt;, with prompt output quality improving by over 50%.&lt;/p&gt;
+&lt;p&gt;This article introduces a battle-tested AI-enhanced software development workflow that has been applied and verified in over a hundred actual development tasks. Through a systematic 5-stage, 14-step process, we’ve observed significant efficiency improvements: development tasks that traditionally required 2 days can now be completed in under 1 hour, achieving nearly 16x speed improvement in optimal cases. This workflow integrates structured prompt engineering with software development best practices, suitable for developers at all experience levels—whether you’re new to AI-assisted development or an experienced engineer seeking efficiency breakthroughs—I hope everyone can derive substantial value from it, significantly accelerating development pace while maintaining or even improving code quality.&lt;/p&gt;
+&lt;h2 id=&#34;Background-and-Tool-Ecosystem&#34;&gt;&lt;a href=&#34;#Background-and-Tool-Ecosystem&#34; class=&#34;headerlink&#34; title=&#34;Background and Tool Ecosystem&#34;&gt;&lt;/a&gt;Background and Tool Ecosystem&lt;/h2&gt;&lt;h3 id=&#34;Limitations-of-Traditional-Development-Processes&#34;&gt;&lt;a href=&#34;#Limitations-of-Traditional-Development-Processes&#34; class=&#34;headerlink&#34; title=&#34;Limitations of Traditional Development Processes&#34;&gt;&lt;/a&gt;Limitations of Traditional Development Processes&lt;/h3&gt;&lt;p&gt;Traditional software development processes typically include requirements analysis, design, coding, testing, and deployment. Although agile methodologies have improved iteration speed, developers still need to manually complete numerous repetitive tasks: writing boilerplate code, building test cases, handling edge conditions, etc. While necessary, these tasks consume time that could be used for innovation and solving core business problems.&lt;/p&gt;
+&lt;h3 id=&#34;Core-Tools-Introduction&#34;&gt;&lt;a href=&#34;#Core-Tools-Introduction&#34; class=&#34;headerlink&#34; title=&#34;Core Tools Introduction&#34;&gt;&lt;/a&gt;Core Tools Introduction&lt;/h3&gt;&lt;p&gt;My AI-assisted development workflow is primarily built on the following tools:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Cursor&lt;/strong&gt;: AI-driven code editor supporting code generation, completion, refactoring, and intelligent dialogue&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Jira MCP Server&lt;/strong&gt;: For obtaining and managing business requirements&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Aupro&lt;/strong&gt;: Our engineering practice governance platform, including MCP end, page end, and server end, enabling technology governance teams to establish and share code delivery standards so AI code assistants can generate high-quality code. (&lt;strong&gt;For teams without similar platforms, lightweight alternatives can be adopted&lt;/strong&gt;: organizing structured prompt templates in local version control systems through structured folders and clear naming conventions to achieve template management, which can still yield significant benefits)&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Various testing frameworks&lt;/strong&gt;: Such as JUnit 5 (Jupiter), etc., working with workflows to implement automated testing&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;[AI Development Process Abstract Image Placeholder]&lt;/p&gt;
+&lt;h2 id=&#34;AI-Enhanced-Software-Development-Workflow-Detailed-Analysis-of-5-Stages-and-14-Steps&#34;&gt;&lt;a href=&#34;#AI-Enhanced-Software-Development-Workflow-Detailed-Analysis-of-5-Stages-and-14-Steps&#34; class=&#34;headerlink&#34; title=&#34;AI-Enhanced Software Development Workflow: Detailed Analysis of 5 Stages and 14 Steps&#34;&gt;&lt;/a&gt;AI-Enhanced Software Development Workflow: Detailed Analysis of 5 Stages and 14 Steps&lt;/h2&gt;&lt;h3 id=&#34;Requirements-Analysis-and-Planning-Stage&#34;&gt;&lt;a href=&#34;#Requirements-Analysis-and-Planning-Stage&#34; class=&#34;headerlink&#34; title=&#34;Requirements Analysis and Planning Stage&#34;&gt;&lt;/a&gt;Requirements Analysis and Planning Stage&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Requirements Analysis and Solution Conceptualization&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;First, retrieve historical implementations and best practices for similar tasks to establish a knowledge base&lt;/li&gt;
+&lt;li&gt;Collaborate with AI to explore technical solutions, quickly evaluating feasibility and tradeoffs of different implementation paths&lt;/li&gt;
+&lt;li&gt;Clearly define specific problems AI needs to solve, setting expected outcomes and success metrics&lt;/li&gt;
+&lt;li&gt;This step lays the foundation for the entire development process; clear problem definition makes subsequent AI generation more precise and efficient&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Requirements Structuring&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Leverage AI’s natural language processing capabilities to convert business requirements into structured user stories&lt;/li&gt;
+&lt;li&gt;Ensure requirement descriptions are complete and include clear acceptance criteria and expected results&lt;/li&gt;
+&lt;li&gt;This step transforms abstract business concepts into clear technical tasks, reducing requirement understanding deviations&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;Design-and-Solution-Definition-Stage&#34;&gt;&lt;a href=&#34;#Design-and-Solution-Definition-Stage&#34; class=&#34;headerlink&#34; title=&#34;Design and Solution Definition Stage&#34;&gt;&lt;/a&gt;Design and Solution Definition Stage&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Implementation Solution Design&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Apply pre-summarized solution templates to generate structured prompts&lt;/li&gt;
+&lt;li&gt;Clearly define technical path, data structures, interface definitions, and key business logic implementation details&lt;/li&gt;
+&lt;li&gt;Design staged implementation strategies for complex functionalities, breaking large tasks into manageable small modules&lt;/li&gt;
+&lt;li&gt;High-quality prompts are key to obtaining high-quality code output, requiring a combination of business knowledge and technical experience&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Solution Detail Adjustment and Optimization&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Comprehensively evaluate quality, completeness, and technical feasibility of generated prompts&lt;/li&gt;
+&lt;li&gt;Analyze whether the solution considers scalability, performance, and long-term maintenance requirements&lt;/li&gt;
+&lt;li&gt;Adjust implementation strategies based on business requirements and technical constraints, anticipating potential problems&lt;/li&gt;
+&lt;li&gt;This step is equivalent to architecture review in traditional development, ensuring implementation direction is correct&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;Code-Development-and-Implementation-Stage&#34;&gt;&lt;a href=&#34;#Code-Development-and-Implementation-Stage&#34; class=&#34;headerlink&#34; title=&#34;Code Development and Implementation Stage&#34;&gt;&lt;/a&gt;Code Development and Implementation Stage&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Code Generation and Initial Verification&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Use optimized prompts to generate implementation code, including basic architecture and core functionality&lt;/li&gt;
+&lt;li&gt;Perform quick validation to check if basic functions and code structure meet expectations&lt;/li&gt;
+&lt;li&gt;Evaluate whether generated code follows project coding standards and best practices&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Code Review and Prompt Fine-tuning&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Carefully examine code quality, performance, security, and boundary handling&lt;/li&gt;
+&lt;li&gt;Identify potential “code smells” and optimization points in the code&lt;/li&gt;
+&lt;li&gt;Make targeted adjustments to prompts to address discovered issues, providing clear correction guidance&lt;/li&gt;
+&lt;li&gt;This is an iterative optimization process, continuously improving code quality through precise prompt adjustments&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Final Code Generation&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Use finalized prompts to regenerate optimized implementation code&lt;/li&gt;
+&lt;li&gt;Ensure code style consistency, readability, and adherence to best practices&lt;/li&gt;
+&lt;li&gt;The finalized prompts incorporate optimization experiences from previous iterations, significantly improving generated code quality&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Functionality Verification&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Manually verify core functionality and boundary scenarios to ensure functional completeness&lt;/li&gt;
+&lt;li&gt;Perform static code analysis to check code quality metrics and potential issues&lt;/li&gt;
+&lt;li&gt;Verify code compatibility and integration points with existing systems&lt;/li&gt;
+&lt;li&gt;The verification process checks both functional correctness and code maintainability and performance optimization space&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;Testing-and-Quality-Assurance-Stage&#34;&gt;&lt;a href=&#34;#Testing-and-Quality-Assurance-Stage&#34; class=&#34;headerlink&#34; title=&#34;Testing and Quality Assurance Stage&#34;&gt;&lt;/a&gt;Testing and Quality Assurance Stage&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Test Prompt Generation&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Based on solution implementation detail prompts, combined with summarized test prompt templates, generate structured test cases&lt;/li&gt;
+&lt;li&gt;Ensure tests cover normal processes, boundary conditions, and exception handling scenarios&lt;/li&gt;
+&lt;li&gt;Good test design can prevent future regression issues and serve as living documentation of code functionality&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Test Planning Confirmation&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Review completeness and appropriateness of test scenarios to ensure comprehensive test coverage&lt;/li&gt;
+&lt;li&gt;Ensure tests cover not only normal situations but also exception handling and various boundary conditions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Test Code Generation and Execution&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Use test prompts to generate automated test code, ensuring test code quality&lt;/li&gt;
+&lt;li&gt;Execute automated tests and collect detailed results, analyzing test coverage&lt;/li&gt;
+&lt;li&gt;Verify whether tests can effectively discover potential problems and boundary situations&lt;/li&gt;
+&lt;li&gt;AI-generated tests are often more comprehensive than manually written tests, covering more boundary situations and exception paths&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Problem Fixing and Iteration&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Categorize problem causes based on test results and establish priority fix order&lt;/li&gt;
+&lt;li&gt;Make targeted fixes, distinguishing handling strategies: &lt;strong&gt;For uncovered boundary scenarios&lt;/strong&gt;, modify implementation code and update corresponding prompts; &lt;strong&gt;For test data issues&lt;/strong&gt;, optimize test data without changing implementation logic&lt;/li&gt;
+&lt;li&gt;Repeat testing until all tests pass, ensuring code quality and stability&lt;/li&gt;
+&lt;li&gt;Record experiences and discoveries during the fixing process as material for prompt template optimization&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;Delivery-and-Knowledge-Management-Stage&#34;&gt;&lt;a href=&#34;#Delivery-and-Knowledge-Management-Stage&#34; class=&#34;headerlink&#34; title=&#34;Delivery and Knowledge Management Stage&#34;&gt;&lt;/a&gt;Delivery and Knowledge Management Stage&lt;/h3&gt;&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Integration and Submission&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Ensure code compatibility with existing systems, verifying integration points work properly&lt;/li&gt;
+&lt;li&gt;Submit code and structured prompts solutions to facilitate team understanding of development ideas&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Knowledge Precipitation&lt;/strong&gt;&lt;ul&gt;
+&lt;li&gt;Extract effective prompt patterns and update team template library, forming reusable assets&lt;/li&gt;
+&lt;li&gt;Summarize lessons learned, recording successful strategies and challenges encountered&lt;/li&gt;
+&lt;li&gt;Share innovative practices and technological breakthroughs, promoting overall team capability improvement&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;Core-Advantages-and-Potential-Challenges&#34;&gt;&lt;a href=&#34;#Core-Advantages-and-Potential-Challenges&#34; class=&#34;headerlink&#34; title=&#34;Core Advantages and Potential Challenges&#34;&gt;&lt;/a&gt;Core Advantages and Potential Challenges&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Core Advantages:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Structural Benefits&lt;/strong&gt;: Structured prompts implement a systematic approach to code generation, creating a more organized and predictable development process while providing a stable framework for consistency.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Standardization Improvements&lt;/strong&gt;: The integration of templates with AI generation techniques significantly enhances both code and test case consistency and completeness, effectively minimizing variations that typically arise from manual development.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Quality Assurance Framework&lt;/strong&gt;: A comprehensive multi-level verification system—spanning from design conception through implementation to functional testing—creates a complete quality control loop that thoroughly ensures code reliability at every stage.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Significant Efficiency Gains&lt;/strong&gt;: Through this optimized methodology, development efficiency achieves remarkable improvement, transforming work that traditionally required two full days into tasks completable within a single hour—representing an approximate 95% reduction in time investment.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;strong&gt;Potential Challenges:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Skill Requirement&lt;/strong&gt;: Effective prompt engineering mastery requires both technical skill depth and a persistent refinement mindset&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Quality Standard&lt;/strong&gt;: It is essential to ensure high-quality structured-prompt documentation and maintainable generated code&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;AI Dependency Risk&lt;/strong&gt;: Over-reliance dependence on AI may lead to insufficient understanding of generated code&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;Practical-Case&#34;&gt;&lt;a href=&#34;#Practical-Case&#34; class=&#34;headerlink&#34; title=&#34;Practical Case&#34;&gt;&lt;/a&gt;Practical Case&lt;/h2&gt;&lt;p&gt;Theory needs verification through practice. To better demonstrate the methodology and workflow’s actual effects, I’ve recorded a complete development example video. Welcome to watch and provide valuable suggestions.&lt;br&gt;[Video Placeholder]&lt;/p&gt;
+&lt;p&gt;The process shown in the video is mainly summarized as follows:&lt;br&gt;[Sequence Diagram Placeholder]&lt;/p&gt;
+&lt;h2 id=&#34;Best-Practices-and-Experience-Summary&#34;&gt;&lt;a href=&#34;#Best-Practices-and-Experience-Summary&#34; class=&#34;headerlink&#34; title=&#34;Best Practices and Experience Summary&#34;&gt;&lt;/a&gt;Best Practices and Experience Summary&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;Effective prompts&lt;/strong&gt; are the core of the entire workflow. Here are some key techniques:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Abstract first, then concrete&lt;/strong&gt;: Start with task decomposition and framework building, rather than getting bogged down in details initially. First clearly define the abstract steps for implementing functionality and relationships between these steps, then elaborate on each abstract step according to effective prompt construction principles. This “top-down” approach ensures generated code has reasonable structure and clear layers.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Structured information provision&lt;/strong&gt;: Describe solutions following structured prompt-driven development principles, clarifying code generation paths. Structured prompts not only make it easier for AI to understand development intentions but also make subsequent iterations and adjustments clearer and more controllable, laying the foundation for code quality.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Context association management&lt;/strong&gt;: Include necessary association information in prompts, such as inheritance relationships between business models and call relationships between framework layers. Good context association enables AI to understand overall system architecture, generating code that conforms to established architectural styles and design philosophies, reducing later refactoring needs.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Prompt governance&lt;/strong&gt;: Manage effective prompts to form a reusable template library. As projects progress, continuously accumulate and optimize prompt templates, gradually forming a prompt asset library suitable for team and project characteristics, improving long-term efficiency.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;Conclusion&#34;&gt;&lt;a href=&#34;#Conclusion&#34; class=&#34;headerlink&#34; title=&#34;Conclusion&#34;&gt;&lt;/a&gt;Conclusion&lt;/h2&gt;&lt;p&gt;&lt;strong&gt;AI-assisted development&lt;/strong&gt; is not just introducing efficiency tools, but &lt;strong&gt;a transformation of software development paradigms&lt;/strong&gt;. Through the AI-assisted development workflow introduced in this article, developers can achieve efficient collaboration with AI, delegating repetitive work to AI while &lt;strong&gt;focusing&lt;/strong&gt; on more &lt;strong&gt;creative&lt;/strong&gt; and &lt;strong&gt;strategic&lt;/strong&gt; tasks.&lt;/p&gt;
+&lt;p&gt;Practice has proven that using this workflow, after becoming proficient, &lt;strong&gt;development efficiency can improve by at least 3 times&lt;/strong&gt; while maintaining or even improving code quality. With continuous advancement of AI technology, there’s even more room for efficiency improvement. For individual developers and teams, now is the best time to embrace this transformation.&lt;/p&gt;
+&lt;p&gt;Mastering AI-assisted development is not about replacing developers, but redefining how we work. The real value lies in human-machine collaboration—AI handles execution and assistance, while humans handle innovation and decision-making. Future top developers will be compound talents who both master technology itself and can effectively guide AI to complete tasks.&lt;/p&gt;
+&lt;h2 id=&#34;Some-Thoughts-on-the-Essence-of-Code&#34;&gt;&lt;a href=&#34;#Some-Thoughts-on-the-Essence-of-Code&#34; class=&#34;headerlink&#34; title=&#34;Some Thoughts on the Essence of Code&#34;&gt;&lt;/a&gt;Some Thoughts on the Essence of Code&lt;/h2&gt;&lt;p&gt;This transformation also prompts me to rethink the essence of code: &lt;strong&gt;Code itself is a symbolic expression of human intent, constantly evolving with technological development.&lt;/strong&gt; From punched paper tapes to assembly language, to high-level languages like C++, Python, Java, etc., each technological innovation has expanded the boundaries of &lt;strong&gt;“what is code.”&lt;/strong&gt; Today, as AI can precisely understand human language and intent through specific methods, &lt;strong&gt;natural language programming&lt;/strong&gt; becomes a &lt;strong&gt;new stage&lt;/strong&gt; in programming paradigms’ natural evolution—not replacing traditional programming but extending it.&lt;/p&gt;
+&lt;p&gt;Different programming paradigms each have their value and scenarios, just as in transportation’s historical evolution, new technology doesn’t mean complete elimination of old technology. Forward-thinking developers will be inclusive—mastering traditional programming’s rigorous structure while using that experience to explore more possibilities in prompt engineering, perhaps even developing more direct human-machine interaction methods in the future. In technological change waves, understanding essential principles behind technology and maintaining an open learning attitude are far more important than adhering to specific implementation forms—&lt;strong&gt;Code forms will continue to iterate, while the spirit of innovation remains constant.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Let us actively embrace this transformation, rethink the essence of software development, and create greater value in the new era of human-machine collaboration.&lt;/p&gt;
+&lt;h2 id=&#34;Appendix&#34;&gt;&lt;a href=&#34;#Appendix&#34; class=&#34;headerlink&#34; title=&#34;Appendix&#34;&gt;&lt;/a&gt;Appendix&lt;/h2&gt;&lt;p&gt;As a practical tool for this methodology, we provide a set of battle-tested prompt templates covering API CRUD operations and accompanying test strategies (click this link to view the complete template library). These templates can not only be used directly in daily development but also serve as examples for learning structured prompt engineering.&lt;/p&gt;
+&lt;p&gt;We sincerely invite all developers to innovate and expand based on their own project needs while using these basic templates, jointly promoting the continuous evolution of this methodology.&lt;/p&gt;
+</content>
+        <category term="AI" />
+        <category term="Prompts" />
+        <updated>2025-04-10T04:00:00.000Z</updated>
+    </entry>
+</feed>
