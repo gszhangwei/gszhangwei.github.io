@@ -11,8 +11,6 @@
         <category>Prompts</category>
         <category>Governance</category>
         <category>Cursor</category>
-        <category>ip</category>
-        <category>port</category>
         <category>Hexo</category>
         <item>
             <guid isPermalink="true">https://gszhangwei.github.io/2025/06/18/PDD-practice-in-the-field-of-data/</guid>
@@ -1146,15 +1144,6 @@
 &lt;h3 id=&#34;Testing-Strategy&#34;&gt;&lt;a href=&#34;#Testing-Strategy&#34; class=&#34;headerlink&#34; title=&#34;Testing Strategy&#34;&gt;&lt;/a&gt;Testing Strategy&lt;/h3&gt;&lt;p&gt;Generate unit tests and integration tests based on the methods defined in each layer. Use tools and frameworks appropriate for your programming environment to facilitate this process.&lt;/p&gt;
 &lt;h3 id=&#34;Conclusion&#34;&gt;&lt;a href=&#34;#Conclusion&#34; class=&#34;headerlink&#34; title=&#34;Conclusion&#34;&gt;&lt;/a&gt;Conclusion&lt;/h3&gt;&lt;p&gt;Implementing a business function requires careful planning and adherence to structured guidelines across various layers of an application. By following these guidelines, developers can ensure that their applications are robust, maintainable, and scalable.&lt;/p&gt;
  ]]></description>
-        </item>
-        <item>
-            <guid isPermalink="true">https://gszhangwei.github.io/2022/08/31/article-title/</guid>
-            <title>当我们点开一个网站，电脑是怎么知道该去哪个网站？</title>
-            <link>https://gszhangwei.github.io/2022/08/31/article-title/</link>
-            <category>ip</category>
-            <category>port</category>
-            <pubDate>Wed, 31 Aug 2022 12:36:38 +0800</pubDate>
-            <description><![CDATA[  ]]></description>
         </item>
         <item>
             <guid isPermalink="true">https://gszhangwei.github.io/2022/08/31/hello-world/</guid>

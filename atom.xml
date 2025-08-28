@@ -8,8 +8,6 @@
     <category term="Prompts" />
     <category term="Governance" />
     <category term="Cursor" />
-    <category term="ip" />
-    <category term="port" />
     <category term="Hexo" />
     <entry>
         <id>https://gszhangwei.github.io/2025/06/18/PDD-practice-in-the-field-of-data/</id>
@@ -1658,15 +1656,6 @@
 </content>
         <category term="Cursor" />
         <updated>2024-09-26T11:42:26.000Z</updated>
-    </entry>
-    <entry>
-        <id>https://gszhangwei.github.io/2022/08/31/article-title/</id>
-        <title>当我们点开一个网站，电脑是怎么知道该去哪个网站？</title>
-        <link rel="alternate" href="https://gszhangwei.github.io/2022/08/31/article-title/"/>
-        <content type="html"></content>
-        <category term="ip" />
-        <category term="port" />
-        <updated>2022-08-31T04:36:38.000Z</updated>
     </entry>
     <entry>
         <id>https://gszhangwei.github.io/2022/08/31/hello-world/</id>
